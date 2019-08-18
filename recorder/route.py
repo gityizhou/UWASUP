@@ -16,8 +16,29 @@ def login():
 def logout():
     pass
 
+
 # register function
 def register():
+    pass
+
+
+# forgot password
+def forgot_password():
+    pass
+
+
+# delete user
+def delete_user():
+    pass
+
+
+# assign tasks
+def assign_tasks():
+    pass
+
+
+# delete tasks
+def delete_tasks():
     pass
 
 
