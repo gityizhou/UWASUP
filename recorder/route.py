@@ -27,9 +27,15 @@ def forgot_password():
     pass
 
 
-# delete user
-def delete_user():
+# download a record
+def download_record(id):
     pass
+
+
+# save a record
+def save_record(id):
+    pass
+
 
 
 # assign tasks

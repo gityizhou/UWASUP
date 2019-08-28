@@ -23,6 +23,7 @@ def create_app(config_name='development'):
     app.add_url_rule('/register', 'register', register, methods=['GET', 'POST'])
     app.add_url_rule('/upload', 'upload', upload, methods=['GET', 'POST'])
     app.add_url_rule('/download', 'download', download, methods=['GET', 'POST'])
+    # result for uploading a mp3
     app.add_url_rule('/result', 'result', show_result)
 
     return app
