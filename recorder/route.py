@@ -1,4 +1,9 @@
 from flask import render_template
+from recorder.models.user import Student, Teacher
+from recorder.models.comment import Comment
+from recorder.models.task import Task
+from recorder.models.unit import Unit
+from recorder.models.record import Record
 
 
 # index
@@ -35,7 +40,6 @@ def download_record(id):
 # save a record
 def save_record(id):
     pass
-
 
 
 # assign tasks
