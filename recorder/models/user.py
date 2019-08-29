@@ -2,19 +2,22 @@ from recorder import db
 from werkzeug.security import generate_password_hash, check_password_hash
 
 association_student_unit = db.Table('association_student_unit', db.Model.metadata,
-                              db.Column('Student', db.Integer, db.ForeignKey('student.id')),
-                              db.Column('Unit', db.Integer, db.ForeignKey('unit.unit_id'))
-                              )
+                                    db.Column('Student', db.Integer, db.ForeignKey('student.id')),
+                                    db.Column('Unit', db.Integer, db.ForeignKey('unit.unit_id'))
+                                    )
 
-association_teacher_unit = db.Table('association_teacher_unit', db.Model.metadata,
-                              db.Column('Teacher', db.Integer, db.ForeignKey('teacher.id')),
-                              db.Column('Unit', db.Integer, db.ForeignKey('unit.unit_id'))
-                              )
+
+# association_teacher_unit = db.Table('association_teacher_unit', db.Model.metadata,
+#                                     db.Column('Teacher', db.Integer, db.ForeignKey('teacher.id')),
+#                                     db.Column('Unit', db.Integer, db.ForeignKey('unit.unit_id'))
+#                                     )
 
 
 class Student(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     student_number = db.Column(db.String(64), unique=True, index=True)
+    first_name = db.Column(db.String(40))
+    last_name = db.Column(db.String(40))
     email = db.Column(db.String(64), unique=True, index=True)
     password_hash = db.Column(db.String(128))
     unit = db.relationship('Unit', secondary=association_student_unit, backref='student_unit_owner', lazy='dynamic')
@@ -22,9 +25,7 @@ class Student(db.Model):
     records = db.relationship('Record', backref='student_records_owner', lazy='dynamic')
 
     def __repr__(self):
-        return 'id={}, student_number={},email={},password_hash={}'.format(
-            self.id, self.student_number, self.email, self.password_hash
-        )
+        return f'id={self.id}, student_number={self.student_number}, first_name={self.first_name}, last_name={self.last_name}, email={self.email},password_hash={self.password_hash}'
 
     def as_dict(self):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}
@@ -52,14 +53,16 @@ class Student(db.Model):
 class Teacher(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     teacher_number = db.Column(db.String(64), unique=True, index=True)
+    first_name = db.Column(db.String(40))
+    last_name = db.Column(db.String(40))
     email = db.Column(db.String(64), unique=True, index=True)
     password_hash = db.Column(db.String(128))
-    unit = db.relationship('Unit', secondary=association_teacher_unit, backref='teacher_unit_owner', lazy='dynamic')
+    unit = db.relationship('Unit', backref='unit_owner', lazy='dynamic')
+
+    # unit = db.relationship('Unit', secondary=association_teacher_unit, backref='teacher_unit_owner', lazy='dynamic')
 
     def __repr__(self):
-        return 'id={}, student_number={},email={},password_hash={}'.format(
-            self.id, self.student_number, self.email, self.password_hash
-        )
+        return f'id={self.id}, teacher_number={self.teacher_number}, first_name={self.first_name}, last_name={self.last_name}, email={self.email},password_hash={self.password_hash}'
 
     def as_dict(self):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}

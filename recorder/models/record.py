@@ -14,7 +14,7 @@ class Record(db.Model):
     task_id = db.Column(db.Integer, db.ForeignKey('task.id'))
 
     def __repr__(self):
-        return 'id={}, url={},comment={}, mark={},create_time={},ownerId={},'.format(
+        return 'id={}, url={},comment={}, mark={},create_time={},ownerId={}'.format(
             self.id, self.url, self.comment, self.mark, self.create_time,self.owner_id
         )
 
