@@ -1,15 +1,14 @@
-from datetime import datetime
 from recorder import db
 
 
 class Task(db.Model):
+    __tablename__ = 'task'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     task_name = db.Column(db.String(64))
     description = db.Column(db.String(200))
-    create_time = db.Column(db.DateTime, default=datetime.utcnow)
-    due_time = db.Column(db.DateTime)
-    unit_id = db.Column(db.Integer, db.ForeignKey('unit.unit_id'))
-    records = db.relationship('Record', backref='task_records_owner', lazy='dynamic')
+    assignment_id = db.Column(db.Integer, db.ForeignKey('assignment.id'))
+
+    # students = db.relationship("Task", secondary='student_task_link')
 
     def __repr__(self):
         return 'id={}, task_name={},description={}, create_time={},due_time={},unit_id={},'.format(

@@ -1,21 +1,24 @@
 from datetime import datetime
 
-
 from recorder import db
 
 
 class Record(db.Model):
+    __tablename__ = 'record'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     url = db.Column(db.String(128), unique=True, index=True)
     mark = db.Column(db.Float)
     create_time = db.Column(db.DateTime, default=datetime.utcnow)
-    comment_id = db.relationship('Comment', backref='record_comment', lazy='dynamic')
-    owner_id = db.Column(db.Integer, db.ForeignKey('student.id'))
-    task_id = db.Column(db.Integer, db.ForeignKey('task.id'))
+    comment = db.relationship("Comment")
+    student_id = db.Column(db.Integer)
+    task_id = db.Column(db.Integer)
+    student_task_foreign_key = db.ForeignKeyConstraint(['student_id', 'task_id'],
+                                                       ['student_task_link.student_id',
+                                                        'student_task_link.task_id'])
 
     def __repr__(self):
         return 'id={}, url={},comment={}, mark={},create_time={},ownerId={}'.format(
-            self.id, self.url, self.comment, self.mark, self.create_time,self.owner_id
+            self.id, self.url, self.comment, self.mark, self.create_time, self.owner_id
         )
 
     def add(self):

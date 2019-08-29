@@ -1,11 +1,16 @@
 from recorder import db
+from recorder.models.student import student_unit_association
 
 
 class Unit(db.Model):
-    unit_id = db.Column(db.String(20), primary_key=True)
+    __tablename__ = 'unit'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    unit_id = db.Column(db.String(20))
     unit_name = db.Column(db.String(64))
-    task = db.relationship('Task', backref='unit_task_owner', lazy='dynamic')
+    # foreign key to teacher table
     teacher_id = db.Column(db.Integer, db.ForeignKey('teacher.id'))
+    assignments = db.relationship("Assignment")
+    students = db.relationship("Student", backref="unit_students", secondary=student_unit_association)
 
     def __repr__(self):
         return 'unit_id={}, unit_name={}, teacher_id={}'.format(
