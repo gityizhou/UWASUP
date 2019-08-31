@@ -2,14 +2,14 @@ from datetime import datetime
 from recorder import db
 
 
-class Assignment(db.Model):
-    __tablename__ = 'assignment'
+class Task(db.Model):
+    __tablename__ = 'task'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    assignment_name = db.Column(db.String(64))
+    task_name = db.Column(db.String(64))
     description = db.Column(db.String(200))
     create_time = db.Column(db.DateTime, default=datetime.utcnow)
     due_time = db.Column(db.DateTime)
-    task = db.relationship("Task")
+    question = db.relationship("Question")
     # foreign key to unit table
     unit_id = db.Column(db.Integer, db.ForeignKey('unit.id'))
     students = db.relationship("Student", secondary='student_assignment_link')

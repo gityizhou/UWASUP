@@ -5,7 +5,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 class Teacher(db.Model):
     __tablename__ = 'teacher'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    teacher_number = db.Column(db.String(64), unique=True, index=True)
+    staff_number = db.Column(db.String(64), unique=True, index=True)
     first_name = db.Column(db.String(40))
     last_name = db.Column(db.String(40))
     email = db.Column(db.String(64), unique=True, index=True)
@@ -13,7 +13,7 @@ class Teacher(db.Model):
     units = db.relationship("Unit")
 
     def __repr__(self):
-        return f'id={self.id}, teacher_number={self.teacher_number}, first_name={self.first_name}, last_name={self.last_name}, email={self.email},password_hash={self.password_hash}'
+        return f'id={self.id}, staff_number={self.staff_number}, first_name={self.first_name}, last_name={self.last_name}, email={self.email},password_hash={self.password_hash}'
 
     def as_dict(self):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}

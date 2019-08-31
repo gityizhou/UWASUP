@@ -1,7 +1,7 @@
 from recorder import db
 from werkzeug.security import generate_password_hash, check_password_hash
+from recorder.models.student_question_association import StudentQuestionAssociation
 from recorder.models.student_task_association import StudentTaskAssociation
-from recorder.models.student_assignment_association import StudentAssignmentAssociation
 
 student_unit_association = db.Table(
     "student_unit_association",
@@ -29,8 +29,8 @@ class Student(db.Model):
     email = db.Column(db.String(64), unique=True, index=True)
     password_hash = db.Column(db.String(128))
     # tasks = db.relationship("Task", backref="student_tasks", secondary=student_task_association)
-    tasks = db.relationship("Student", secondary='student_task_link')
-    assignments = db.relationship("Assignment", secondary='student_assignment_link')
+    tasks = db.relationship("Task", secondary='student_task_link')
+    questions = db.relationship("Question", secondary='student_question_link')
 
     def __repr__(self):
         return f'id={self.id}, student_number={self.student_number}, first_name={self.first_name}, last_name={self.last_name}, email={self.email},password_hash={self.password_hash}'

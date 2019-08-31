@@ -11,10 +11,10 @@ class Record(db.Model):
     create_time = db.Column(db.DateTime, default=datetime.utcnow)
     comment = db.relationship("Comment")
     student_id = db.Column(db.Integer)
-    task_id = db.Column(db.Integer)
-    student_task_foreign_key = db.ForeignKeyConstraint(['student_id', 'task_id'],
-                                                       ['student_task_link.student_id',
-                                                        'student_task_link.task_id'])
+    question_id = db.Column(db.Integer)
+    student_question_foreign_key = db.ForeignKeyConstraint(['student_id', 'question_id'],
+                                                       ['student_question_link.student_id',
+                                                        'student_question_link.task_id'])
 
     def __repr__(self):
         return 'id={}, url={},comment={}, mark={},create_time={},ownerId={}'.format(

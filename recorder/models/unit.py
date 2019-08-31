@@ -9,7 +9,7 @@ class Unit(db.Model):
     unit_name = db.Column(db.String(64))
     # foreign key to teacher table
     teacher_id = db.Column(db.Integer, db.ForeignKey('teacher.id'))
-    assignments = db.relationship("Assignment")
+    tasks = db.relationship("Task")
     students = db.relationship("Student", backref="unit_students", secondary=student_unit_association)
 
     def __repr__(self):

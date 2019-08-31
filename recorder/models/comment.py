@@ -7,10 +7,10 @@ class Comment(db.Model):
     comment = db.Column(db.String(200))
     record_id = db.Column(db.Integer, db.ForeignKey('record.id'))
     student_id = db.Column(db.Integer)
-    assignment_id = db.Column(db.Integer)
-    student_assignment_foreign_key = db.ForeignKeyConstraint(['student_id', 'assignment_id'],
-                                                             ['student_assignment_link.student_id',
-                                                              'student_assignment_link.assignment_id'])
+    task_id = db.Column(db.Integer)
+    student_task_foreign_key = db.ForeignKeyConstraint(['student_id', 'task_id'],
+                                                       ['student_task_link.student_id',
+                                                        'student_task_link.assignment_id'])
 
     def __repr__(self):
         return 'id={}, comment={}'.format(

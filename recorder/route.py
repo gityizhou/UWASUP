@@ -3,12 +3,12 @@ from recorder.models.student import Student, student_unit_association
 # student_task_association
 from recorder.models.teacher import Teacher
 from recorder.models.comment import Comment
-from recorder.models.task import Task
+from recorder.models.question import Question
 from recorder.models.unit import Unit
 from recorder.models.record import Record
-from recorder.models.assignment import Assignment
+from recorder.models.task import Task
+from recorder.models.student_question_association import StudentQuestionAssociation
 from recorder.models.student_task_association import StudentTaskAssociation
-
 # index
 def index():
     output = "Hello guys"
