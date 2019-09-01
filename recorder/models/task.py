@@ -6,13 +6,13 @@ class Task(db.Model):
     __tablename__ = 'task'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     task_name = db.Column(db.String(64))
-    description = db.Column(db.String(200))
+    description = db.Column(db.String(500))
     create_time = db.Column(db.DateTime, default=datetime.utcnow)
     due_time = db.Column(db.DateTime)
     question = db.relationship("Question")
     # foreign key to unit table
     unit_id = db.Column(db.Integer, db.ForeignKey('unit.id'))
-    students = db.relationship("Student", secondary='student_assignment_link')
+    students = db.relationship("Student", secondary='student_task_link')
 
     def __repr__(self):
         return 'id={}, task_name={},description={}, create_time={},due_time={},unit_id={},'.format(

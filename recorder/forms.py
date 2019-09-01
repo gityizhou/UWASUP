@@ -1,9 +1,18 @@
 from flask_wtf import FlaskForm
+from wtforms import StringField, PasswordField, BooleanField, SubmitField
+from wtforms.validators import DataRequired
+
+from recorder.models.teacher import Teacher
+from recorder.models.student import Student
 
 
-# user login form
 class LoginForm(FlaskForm):
-    pass
+    class Meta:
+        csrf = False
+
+    username = StringField("Username", validators=[DataRequired()])
+    password = PasswordField("Password", validators=[DataRequired()])
+    submit = SubmitField('Sign In')
 
 
 # user register form
