@@ -8,4 +8,4 @@ manager = Manager(app)
 manager.add_command('db', MigrateCommand)   # add migrate command to control db process
 
 if __name__ == "__main__":
-    manager.run()
+    app.run()
