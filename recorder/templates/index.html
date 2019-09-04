@@ -21,6 +21,9 @@
         <a href="{{ url_for('register') }}">New User?</a>or
         <a href="">Forgot Password?</a>
     </p>
+    <div>
+        <a style="color: red">{{get_flashed_messages()[0]}}</a>
+    </div>
 </form>
 </body>
 </html>
