@@ -21,7 +21,7 @@
             <p>
                 {{ form.firstname.label }}
                 {{ form.firstname() }}<br>
-                {% for error in form.fistname.errors %}
+                {% for error in form.firstname.errors %}
                     <span style="color: red;">[{{ error }}]</span>
                 {% endfor %}
             </p>
@@ -29,13 +29,6 @@
                 {{ form.lastname.label }}
                 {{ form.lastname() }}<br>
                 {% for error in form.lastname.errors %}
-                    <span style="color: red;">[{{ error }}]</span>
-                {% endfor %}
-            </p>
-            <p>
-                {{ form.selectunit.label }}
-                {{ form.selectunit() }}<br>
-                {% for error in form.selectunit.errors %}
                     <span style="color: red;">[{{ error }}]</span>
                 {% endfor %}
             </p>

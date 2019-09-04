@@ -1,5 +1,4 @@
 from flask import render_template, redirect, url_for, flash, request
-from flask_login import login_user, current_user, logout_user, login_required
 
 from recorder import db
 from recorder.forms import LoginForm, RegisterForm
@@ -46,18 +45,17 @@ def logout():
 
 # register function
 def register():
-    if current_user.is_authenticated:
-        return redirect(url_for('index'))
+
     form = RegisterForm()
     if form.validate_on_submit():
         student = Student(student_number=form.username.data,
-                          first_name=form.firstname,
+                          first_name=form.firstname.data,
                           last_name=form.lastname.data,
                           email=form.email.data)
         student.set_password(form.password.data)
         db.session.add(student)
         db.session.commit()
-        return redirect(url_for('login'))
+        return redirect(url_for('index'))
     return render_template('register.html', title='Registration', form=form)
 
 
