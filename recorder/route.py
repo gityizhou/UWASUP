@@ -1,7 +1,8 @@
 from flask import render_template, redirect, url_for, flash, request
 from flask_login import login_user, current_user, logout_user, login_required
 
-from recorder.forms import LoginForm
+from recorder import db
+from recorder.forms import LoginForm, RegisterForm
 from recorder.models.student import Student, student_unit_association
 # student_task_association
 from recorder.models.teacher import Teacher
@@ -20,13 +21,13 @@ def index():
     if form.validate_on_submit():
         # print(form.username.data)
         student = Student.query.filter_by(student_number=form.username.data).first()
-        if student is None:
-            if student is None or not student.check_password(form.password.data):
-                print('invalid username or password')
-                return redirect(url_for('index'))
-            print('invalid username or password')
+        teacher = Teacher.query.filter_by(staff_number=form.username.data).first()
+        if student is not None and student.check_password(form.password.data):
+            return redirect(url_for('student_view'))
+        if teacher is not None and teacher.check_password(form.password.data):
+            return redirect(url_for('teacher_view'))
+        else:
             return redirect(url_for('index'))
-        return redirect(url_for('student_view'))
     return render_template('index.html', title="Index", form=form)
 
 
@@ -38,11 +39,6 @@ def teacher_view():
     return render_template('teacher_view.html')
 
 
-# login function
-def login():
-    pass
-
-
 # logout function
 def logout():
     pass
@@ -50,7 +46,19 @@ def logout():
 
 # register function
 def register():
-    pass
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+    form = RegisterForm()
+    if form.validate_on_submit():
+        student = Student(student_number=form.username.data,
+                          first_name=form.firstname,
+                          last_name=form.lastname.data,
+                          email=form.email.data)
+        student.set_password(form.password.data)
+        db.session.add(student)
+        db.session.commit()
+        return redirect(url_for('login'))
+    return render_template('register.html', title='Registration', form=form)
 
 
 # forgot password

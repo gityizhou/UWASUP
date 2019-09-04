@@ -15,10 +15,9 @@ def create_app(config_name='development'):
     migrate.init_app(app, db)  # db migrate initialization
 
     # app route url
-    from recorder.route import index, login, student_view, teacher_view, logout, register, upload, download, show_result
+    from recorder.route import index, student_view, teacher_view, logout, register, upload, download, show_result
     app.add_url_rule('/', 'index', index, methods=['GET', 'POST'])
     app.add_url_rule('/index', 'index', index, methods=['GET', 'POST'])
-    app.add_url_rule('/login', 'login', login, methods=['GET', 'POST'])
     app.add_url_rule('/logout', 'logout', logout)
     app.add_url_rule('/register', 'register', register, methods=['GET', 'POST'])
     app.add_url_rule('/student_view', 'student_view', student_view, methods=['GET', 'POST'])
