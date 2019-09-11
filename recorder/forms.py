@@ -37,8 +37,11 @@ class RegisterForm(FlaskForm):
             raise ValidationError('existed staff/student number')
 
     def validate_email(self, email):
+        if "@" not in email.data:
+            raise ValidationError('please input a valid email address')
         email_prefix = email.data.split("@")[0]
         email_suffix = email.data.split("@")[1]
+
         if email_suffix != "student.uwa.edu.au" and email_suffix != "uwa.edu.au":
             raise ValidationError('please use uwa mail')
         if email_prefix != self.username.data:
