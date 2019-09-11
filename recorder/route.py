@@ -26,7 +26,8 @@ def index():
         if teacher is not None and teacher.check_password(form.password.data):
             return redirect(url_for('teacher_view'))
         else:
-            return redirect(url_for('index'))
+            flash("Invalid username or password, please try again.")
+            # return redirect(url_for('index'))
     return render_template('index.html', title="Index", form=form)
 
 
