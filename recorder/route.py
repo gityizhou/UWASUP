@@ -5,6 +5,7 @@ from recorder.forms import LoginForm, RegisterForm
 from recorder.models.student import Student, student_unit_association
 # student_task_association
 from recorder.models.teacher import Teacher
+from flask_login import login_user, current_user, logout_user, login_required
 from recorder.models.comment import Comment
 from recorder.models.question import Question
 from recorder.models.unit import Unit
@@ -16,32 +17,37 @@ from recorder.models.student_task_association import StudentTaskAssociation
 
 # index
 def index():
+    if current_user.is_authenticated:
+        return redirect(url_for("student_view"))          # after student, teacher finish, redirect to their pages
     form = LoginForm()
     if form.validate_on_submit():
         # print(form.username.data)
         student = Student.query.filter_by(student_number=form.username.data).first()
         teacher = Teacher.query.filter_by(staff_number=form.username.data).first()
         if student is not None and student.check_password(form.password.data):
+            login_user(student, remember=form.remember_me.data)
             return redirect(url_for('student_view'))
         if teacher is not None and teacher.check_password(form.password.data):
+            login_user(teacher, remember=form.remember_me.data)
             return redirect(url_for('teacher_view'))
         else:
             flash("Invalid username or password, please try again.")
             # return redirect(url_for('index'))
     return render_template('index.html', title="Index", form=form)
 
-
+@login_required
 def student_view():
     return render_template('student_view.html')
 
-
+@login_required
 def teacher_view():
     return render_template('teacher_view.html')
 
 
 # logout function
 def logout():
-    pass
+    logout_user()
+    return redirect(url_for('index'))
 
 
 # register function

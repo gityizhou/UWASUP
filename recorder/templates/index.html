@@ -2,9 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>HomePage</title>
+    <title>Login</title>
 </head>
 <body>
+    <h1>Login</h1>
 <form action="" method="post">
     <p>
         {{ form.username.label }}
@@ -13,6 +14,10 @@
     <p>
         {{ form.password.label }}
         {{ form.password() }}
+    </p>
+    <p>
+        {{ form.remember_me() }}
+        {{ form.remember_me.label }}
     </p>
     <p>
         {{ form.submit() }}

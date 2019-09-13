@@ -1,8 +1,9 @@
-from recorder import db
+from recorder import db, loginManager
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import UserMixin
 
 
-class Teacher(db.Model):
+class Teacher(db.Model, UserMixin):
     __tablename__ = 'teacher'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     staff_number = db.Column(db.String(64), unique=True, index=True)
@@ -36,3 +37,8 @@ class Teacher(db.Model):
 
     def update(self):
         db.session.commit()
+
+# get the id from session
+@loginManager.user_loader
+def load_teacher(id):
+    return Teacher.query.get(int(id))
