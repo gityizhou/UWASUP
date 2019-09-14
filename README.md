@@ -44,7 +44,7 @@ flask db upgrade
 
 Start the application:
 ```
-flask run CITS5206.py
+python manager.py runserver
 Check if a poll already exists into db
 * Running on http://0.0.0.0:5000/ (Press CTRL+C to quit)
 ```
