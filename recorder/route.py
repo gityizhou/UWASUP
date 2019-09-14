@@ -26,10 +26,12 @@ def index():
         teacher = Teacher.query.filter_by(staff_number=form.username.data).first()
         if student is not None and student.check_password(form.password.data):
             login_user(student, remember=form.remember_me.data)
-            return redirect(url_for('student_view', student_number=student.student_number))
+
+            return redirect(url_for('student_view', student_number=current_user.student_number))
         if teacher is not None and teacher.check_password(form.password.data):
             login_user(teacher, remember=form.remember_me.data)
-            return redirect(url_for('teacher_view', staff_number=teacher.staff_number))
+            print(current_user.last_name)
+            return redirect(url_for('teacher_view', staff_number=current_user.staff_number))
         else:
             flash("Invalid username or password, please try again.")
             # return redirect(url_for('index'))

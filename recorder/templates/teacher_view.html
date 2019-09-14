@@ -2,12 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>hello, {{ teacher.first_name }}</title>
 </head>
 <body>
     <a href="{{ url_for('logout') }}">Logout</a> <br>
-    staff number: {{ current_user.staff_number }} <br>
-    first name: {{ current_user.first_name }}<br>
-    last name: {{ current_user.last_name }}<br>
+    staff number: {{ teacher.staff_number }} <br>
+    first name: {{ teacher.first_name }}<br>
+    last name: {{ teacher.last_name }}<br>
 </body>
 </html>
