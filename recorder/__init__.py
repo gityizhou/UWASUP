@@ -25,8 +25,8 @@ def create_app(config_name='development'):
     app.add_url_rule('/index', 'index', index, methods=['GET', 'POST'])
     app.add_url_rule('/logout', 'logout', logout)
     app.add_url_rule('/register', 'register', register, methods=['GET', 'POST'])
-    app.add_url_rule('/student/<username>', 'student_view', student_view, methods=['GET', 'POST'])
-    app.add_url_rule('/teacher_view', 'teacher_view', teacher_view, methods=['GET', 'POST'])
+    app.add_url_rule('/student/<student_number>', 'student_view', student_view, methods=['GET', 'POST'])
+    app.add_url_rule('/teacher/<staff_number>', 'teacher_view', teacher_view, methods=['GET', 'POST'])
     app.add_url_rule('/upload', 'upload', upload, methods=['GET', 'POST'])
     app.add_url_rule('/download', 'download', download, methods=['GET', 'POST'])
     # result for uploading a mp3

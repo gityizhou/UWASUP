@@ -18,7 +18,7 @@ from recorder.models.student_task_association import StudentTaskAssociation
 # index
 def index():
     if current_user.is_authenticated:
-        return redirect(url_for('student_view', username=current_user.student_number))         # after student, teacher finish, redirect to their pages
+        return redirect(url_for('student_view', student_number=current_user.student_number))         # after student, teacher finish, redirect to their pages
     form = LoginForm()
     if form.validate_on_submit():
         # print(form.username.data)
@@ -26,23 +26,24 @@ def index():
         teacher = Teacher.query.filter_by(staff_number=form.username.data).first()
         if student is not None and student.check_password(form.password.data):
             login_user(student, remember=form.remember_me.data)
-            return redirect(url_for('student_view', username=student.student_number))
+            return redirect(url_for('student_view', student_number=student.student_number))
         if teacher is not None and teacher.check_password(form.password.data):
             login_user(teacher, remember=form.remember_me.data)
-            return redirect(url_for('teacher_view'))
+            return redirect(url_for('teacher_view', staff_number=teacher.staff_number))
         else:
             flash("Invalid username or password, please try again.")
             # return redirect(url_for('index'))
     return render_template('index.html', title="Index", form=form)
 
 @login_required
-def student_view(username):
-    student = Student.query.filter_by(student_number=username).first()
+def student_view(student_number):
+    student = Student.query.filter_by(student_number=student_number).first()
     return render_template('student_view.html', student=student)
 
 @login_required
-def teacher_view():
-    return render_template('teacher_view.html')
+def teacher_view(staff_number):
+    teacher = Teacher.query.filter_by(staff_number=staff_number).first()
+    return render_template('teacher_view.html', teacher=teacher)
 
 
 # logout function

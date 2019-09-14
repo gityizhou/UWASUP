@@ -5,6 +5,9 @@
     <title>Title</title>
 </head>
 <body>
-
+    <a href="{{ url_for('logout') }}">Logout</a> <br>
+    staff number: {{ current_user.staff_number }} <br>
+    first name: {{ current_user.first_name }}<br>
+    last name: {{ current_user.last_name }}<br>
 </body>
 </html>
