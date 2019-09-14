@@ -3,6 +3,10 @@ import unittest
 from recorder import create_app, db
 from recorder.models.user import User
 from recorder.models.unit import Unit
+from recorder.models.task import Task
+from recorder.models.question import Question
+from recorder.models.user_task import User_task
+from recorder.models.user_question import User_question
 
 
 class TestUser(unittest.TestCase):
@@ -34,13 +38,32 @@ class TestUser(unittest.TestCase):
 
 
     def test_user_add_unit(self):
-        user1 = db.session.query(User).filter(User.id == '3').one()
+        user1 = db.session.query(User).filter(User.id == '1').one()
         unit = db.session.query(Unit).filter(Unit.id == '1').one()
         user1.add_unit(unit)
 
     def test_user_unit_query(self):
         user1 = db.session.query(User).filter(User.id == '3').one()
         print(user1.units.all())
+
+    def test_add_user_task(self):
+        task = db.session.query(Task).filter(Task.id == '1').one()
+        user1 = db.session.query(User).filter(User.id == '1').one()
+        comment = "well done"
+        record_url = "www.google.com"
+        user_has_task = User_task(user=user1, task=task,comment=comment,recorder_url=record_url)
+        db.session.add(user_has_task)
+        db.session.commit()
+
+    def test_add_user_question(self):
+        user1 = db.session.query(User).filter(User.id == '1').one()
+        question = db.session.query(Question).filter(Question.id == '5').one()
+        record_url = "www.google.com"
+        user_has_question = User_question(user=user1, question=question,recorder_url=record_url)
+        db.session.add(user_has_question)
+        db.session.commit()
+
+
 
     def test_user_delete(self):
         # self.student.add()
