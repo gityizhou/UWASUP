@@ -1,2 +1,10 @@
 venv
-.idea
+.idea/
+
+__pycache__/
+
+*pyc
+
+.env
+.vscode/
+setting.json
