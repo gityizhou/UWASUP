@@ -26,7 +26,7 @@ def index():
         teacher = Teacher.query.filter_by(staff_number=form.username.data).first()
         if student is not None and student.check_password(form.password.data):
             login_user(student, remember=form.remember_me.data)
-            return redirect(url_for('student_view'))
+            return redirect(url_for('student_view', username=student.student_number))
         if teacher is not None and teacher.check_password(form.password.data):
             login_user(teacher, remember=form.remember_me.data)
             return redirect(url_for('teacher_view'))
@@ -36,8 +36,9 @@ def index():
     return render_template('index.html', title="Index", form=form)
 
 @login_required
-def student_view():
-    return render_template('student_view.html')
+def student_view(username):
+    student = Student.query.filter_by(student_number=username).first()
+    return render_template('student_view.html', student=student)
 
 @login_required
 def teacher_view():
