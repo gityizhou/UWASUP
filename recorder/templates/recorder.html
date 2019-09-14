@@ -9,6 +9,20 @@
 </head>
 <body>
 <!--Load the core library, other types of support libraries in the following according to the user click select load-->
-<script src="src/recorder-core.js"></script>
+<!-- <script src="src/recorder-core.js"></script> -->
 
+<input type="file" accept="audio/*" capture="microphone" id="recorder">
+<audio id="player" controls></audio>
+<script>
+  var recorder = document.getElementById('recorder');
+  var player = document.getElementById('player');
+
+  recorder.addEventListener('change', function(e) {
+    var file = e.target.files[0];
+    // Do something with the audio file.
+    player.src =  URL.createObjectURL(file);
+  });
+
+  
+</script>
 </body>
