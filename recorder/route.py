@@ -17,8 +17,8 @@ from recorder.models.student_task_association import StudentTaskAssociation
 
 # index
 def index():
-    if current_user.is_authenticated:
-        return redirect(url_for('student_view', student_number=current_user.student_number))         # after student, teacher finish, redirect to their pages
+    # if current_user.is_authenticated:
+    #     return redirect(url_for('student_view', student_number=current_user.student_number))         # after student, teacher finish, redirect to their pages
     form = LoginForm()
     if form.validate_on_submit():
         # print(form.username.data)
