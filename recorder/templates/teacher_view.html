@@ -9,5 +9,8 @@
     staff number: {{ teacher.user_number }} <br>
     first name: {{ teacher.first_name }}<br>
     last name: {{ teacher.last_name }}<br>
+    Your unit: {{ teacher.units.all() }}<br>
+    Your unit tasks: {{ teacher.units[0].tasks}}<br>
+    Your task questions: {{ teacher.units[0].tasks[0].questions }}
 </body>
 </html>
