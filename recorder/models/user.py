@@ -22,7 +22,7 @@ class User(db.Model, UserMixin):
                             backref=db.backref('users', lazy='dynamic'),
                             lazy='dynamic')
     tasks = db.relationship("User_task", back_populates="user")
-    questions = db.relationship("User_question", back_populates="student")
+    questions = db.relationship("User_question", back_populates="user")
 
     def __repr__(self):
         return f'id={self.id}, user_number={self.user_number}, first_name={self.first_name}, last_name={self.last_name}, email={self.email},password_hash={self.password_hash}, is_teacher={self.is_teacher} '

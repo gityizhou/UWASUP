@@ -9,9 +9,6 @@ class TestUnit(unittest.TestCase):
     def setUp(self):
         self.app = create_app()
         self.client = self.app.test_client
-        self.unit = Unit(unit_id="CITS1401",
-                         unit_name="Python",
-                         teacher_id="1")
         self.app.app_context().push()
         db.create_all()
 
@@ -22,9 +19,9 @@ class TestUnit(unittest.TestCase):
         pass
 
     def test_unit_create(self):
-        self.unit.add()
-        checkunit = db.session.query(Unit).filter(Unit.id == '1').one()
-        self.assertEqual(checkunit, self.unit)
+        unit = Unit(unit_id="CITS1401",
+                         unit_name="Python")
+        unit.add()
 
     def test_unit_update(self):
         self.unit.add()
