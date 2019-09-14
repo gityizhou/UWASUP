@@ -2,8 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, BooleanField
 from wtforms.validators import DataRequired, EqualTo, Email, ValidationError, Length, Regexp
 
-from recorder.models.teacher import Teacher
-from recorder.models.student import Student
+from recorder.models.user import User
 
 
 class LoginForm(FlaskForm):
@@ -32,9 +31,8 @@ class RegisterForm(FlaskForm):
     submit = SubmitField('Register')
 
     def validate_username(self, username):
-        teacher = Teacher.query.filter_by(staff_number=username.data).first()
-        student = Student.query.filter_by(student_number=username.data).first()
-        if teacher is not None or student is not None:
+        user = User.query.filter_by(user_number=username.data).first()
+        if user is not None:
             raise ValidationError('existed staff/student number')
 
     def validate_email(self, email):
@@ -47,9 +45,8 @@ class RegisterForm(FlaskForm):
             raise ValidationError('please use uwa mail')
         if email_prefix != self.username.data:
             raise ValidationError('please use your own uwa mail')
-        teacher = Teacher.query.filter_by(email=email.data).first()
-        student = Student.query.filter_by(email=email.data).first()
-        if teacher is not None or student is not None:
+        user = User.query.filter_by(email=email.data).first()
+        if user is not None:
             raise ValidationError('existed email address')
 
 

@@ -1,5 +1,4 @@
 from recorder import db
-from recorder.models.student import student_unit_association
 
 
 class Unit(db.Model):
@@ -7,14 +6,11 @@ class Unit(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     unit_id = db.Column(db.String(20))
     unit_name = db.Column(db.String(64))
-    # foreign key to teacher table
-    teacher_id = db.Column(db.Integer, db.ForeignKey('teacher.id'))
-    tasks = db.relationship("Task")
-    students = db.relationship("Student", backref="unit_students", secondary=student_unit_association)
+    tasks = db.relationship("Task", back_populates="unit")
 
     def __repr__(self):
-        return 'unit_id={}, unit_name={}, teacher_id={}'.format(
-            self.unit_id, self.unit_name, self.teacher_id
+        return 'unit_id={}, unit_name={}'.format(
+            self.unit_id, self.unit_name
         )
 
     def add(self):
@@ -27,3 +23,5 @@ class Unit(db.Model):
 
     def update(self):
         db.session.commit()
+
+

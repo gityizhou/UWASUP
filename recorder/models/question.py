@@ -7,12 +7,13 @@ class Question(db.Model):
     question_name = db.Column(db.String(64))
     description = db.Column(db.String(200))
     task_id = db.Column(db.Integer, db.ForeignKey('task.id'))
-
+    task = db.relationship("Task", back_populates="questions")
     # students = db.relationship("Task", secondary='student_task_link')
+    questions = db.relationship("User_question", back_populates="question")
 
     def __repr__(self):
-        return 'id={}, task_name={},description={}, create_time={},due_time={},unit_id={},'.format(
-            self.id, self.task_name, self.description, self.create_time, self.due_time, self.unit_id
+        return 'id={}, task_name={},description={}'.format(
+            self.id, self.task_name, self.description
         )
 
     def add(self):
@@ -24,4 +25,8 @@ class Question(db.Model):
         db.session.commit()
 
     def update(self):
+        db.session.commit()
+
+    def add_question2task(self, task):
+        self.task_id = task.id
         db.session.commit()
