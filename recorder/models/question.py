@@ -13,8 +13,8 @@ class Question(db.Model):
 
 
     def __repr__(self):
-        return 'id={}, task_name={},description={}'.format(
-            self.id, self.task_name, self.description
+        return 'id={}, question_name={},description={}'.format(
+            self.id, self.question_name, self.description
         )
 
     def add(self):

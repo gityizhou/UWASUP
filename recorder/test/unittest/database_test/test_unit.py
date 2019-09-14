@@ -23,12 +23,10 @@ class TestUnit(unittest.TestCase):
                          unit_name="Python")
         unit.add()
 
-    def test_unit_update(self):
-        self.unit.add()
-        checkunit = db.session.query(Unit).filter(Unit.id == '1').one()
-        checkunit.unit_name = "Java"
-        checkunit.update()
-        self.assertEqual(checkunit.unit_name, "Java")
+    def test_unit_get_tasks(self):
+        tasks = db.session.query(Unit).filter(Unit.id == '1').first().tasks
+        print(tasks)
+
 
     def test_unit_delete(self):
         self.unit.add()

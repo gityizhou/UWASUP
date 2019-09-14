@@ -5,7 +5,7 @@ from recorder.models.user import User
 from recorder.models.unit import Unit
 
 
-class TestStudent(unittest.TestCase):
+class TestUser(unittest.TestCase):
 
     def setUp(self):
         self.app = create_app()

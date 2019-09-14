@@ -24,6 +24,10 @@ class Unit(db.Model):
     def update(self):
         db.session.commit()
 
+    # def get_all_tasks(self):
+    #     return self.tasks
+
+
 
 
 

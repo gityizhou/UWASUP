@@ -16,8 +16,8 @@ class Task(db.Model):
     users = db.relationship("User_task", back_populates="task")
 
     def __repr__(self):
-        return 'id={}, task_name={},description={}, create_time={},due_time={},pdf_url={},'.format(
-            self.id, self.task_name, self.description, self.create_time, self.due_time, self.pdf_url
+        return 'id={}, task_name={},description={}'.format(
+            self.id, self.task_name, self.description
         )
 
     def add(self):
