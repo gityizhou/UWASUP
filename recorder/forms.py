@@ -44,11 +44,15 @@ class RegisterForm(FlaskForm):
     submit = SubmitField('Register')
 
     def validate_username(self, username):
+        # check if your username is already existed in database
         user = User.query.filter_by(user_number=username.data).first()
         if user is not None:
             raise ValidationError('existed staff/student number')
 
     def validate_email(self, email):
+        # this function will basicly split the address into 2 parts
+        # check if your mail is UWA mail
+        # check if your mail is already existed in database
         if "@" not in email.data:
             raise ValidationError('please input a valid email address')
         email_prefix = email.data.split("@")[0]
