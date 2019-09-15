@@ -5,10 +5,12 @@ from wtforms.validators import DataRequired, EqualTo, Email, ValidationError, Le
 from recorder.models.user import User
 
 
+# user login form
 class LoginForm(FlaskForm):
     class Meta:
         csrf = False
 
+    # data required validation for username and password
     username = StringField("Username", validators=[DataRequired()])
     password = PasswordField("Password", validators=[DataRequired()])
     remember_me = BooleanField("Remember Me")
@@ -17,9 +19,20 @@ class LoginForm(FlaskForm):
 
 # user register form
 class RegisterForm(FlaskForm):
+    """ registration form validation rules
+    1. all data required
+    2. username must be 8-digit number
+    3. email must be valid and should be UWA mail
+        student.uwa.edu.au   or   uwa.edu.au, can add more because I dont know others
+    4. password should be longer than 8-digit and should be a mixture of alphabets and number
+    5. repeat password should be the same as password
+    6. username, email should not be existed in current database.
+    """
+
     username = StringField("Student Number / Staff Number", validators=[DataRequired(),
                                                                         Length(min=8, max=8,
                                                                                message="UWA student/staff number should be 8 digits number.")])
+
     firstname = StringField("First Name", validators=[DataRequired()])
     lastname = StringField("Last Name", validators=[DataRequired()])
     email = StringField("Email Address", validators=[DataRequired(), Email()])
@@ -48,8 +61,3 @@ class RegisterForm(FlaskForm):
         user = User.query.filter_by(email=email.data).first()
         if user is not None:
             raise ValidationError('existed email address')
-
-
-# task assign form
-class TaskAssignForm(FlaskForm):
-    pass

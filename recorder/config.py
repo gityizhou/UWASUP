@@ -2,7 +2,11 @@ import os
 
 config_path = os.path.abspath(os.path.dirname(__file__))
 
+"""
+two environments for development and testing, can change environment in __init__.py
+using different database
 
+"""
 class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 

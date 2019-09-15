@@ -45,12 +45,13 @@ def index():
     return render_template('index.html', title="Index", form=form)
 
 
+# After login, student will be redirected to this page
 @login_required
 def student_view(student_number):
     student = current_user
     return render_template('student_view.html', student=student)
 
-
+# After login, teacher will be redirected to this page
 @login_required
 def teacher_view(staff_number):
     teacher = current_user
@@ -65,15 +66,18 @@ def logout():
 
 # register function
 def register():
+    # get the register form object
     form = RegisterForm()
     if form.validate_on_submit():
+        # read user data from form
         user = User(user_number=form.username.data,
                     first_name=form.firstname.data,
                     last_name=form.lastname.data,
                     email=form.email.data)
+        # set the password to hash code
         user.set_password(form.password.data)
-        db.session.add(user)
-        db.session.commit()
+        # add the new user to database
+        user.add()
         return redirect(url_for('index'))
     return render_template('register.html', title='Registration', form=form)
 
