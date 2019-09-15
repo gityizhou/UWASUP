@@ -20,20 +20,20 @@ Generate a virtual environment and install dependencies:
 ```
 Unix:
 $ python3 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
+$ source venv/bin/activate
+(venv) $ pip install -r requirements.txt
 
 Windows:
-$ venv\Scripts\activate
-(venv) $ _
-pip install -r requirements.txt
+$ python -m venv venv
+$ venv\Scripts\activate.bat
+(venv) $ pip install -r requirements.txt
 ```
 
 Start the application:
 ```
 python manager.py runserver
-Check if a poll already exists into db
-* Running on http://localhost:5000/ (Press CTRL+C to quit)
+* Running on http://localhost:5000/ 
+   (Press CTRL+C to quit)
 ```
 
 ## Authors
