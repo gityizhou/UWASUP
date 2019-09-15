@@ -5,6 +5,12 @@ from recorder.forms import LoginForm, RegisterForm
 from flask_login import login_user, current_user, logout_user, login_required
 from recorder.models.user import User
 
+from recorder.models.unit import Unit
+from recorder.models.question import Question
+from recorder.models.task import Task
+from recorder.models.user_question import User_question
+from recorder.models.user_task import User_task
+
 """
 Index page but also our login page!
 1. it will check if you are authenticated firstly, if authenticated, redirect to the personal page
@@ -78,3 +84,7 @@ def register():
         user.add()
         return redirect(url_for('index'))
     return render_template('register.html', title='Registration', form=form)
+
+
+
+
