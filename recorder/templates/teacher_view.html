@@ -1,10 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>hello, {{ teacher.first_name }}</title>
-</head>
-<body>
+{% block content %}
     <a href="{{ url_for('logout') }}">Logout</a> <br>
     staff number: {{ teacher.user_number }} <br>
     first name: {{ teacher.first_name }}<br>
@@ -12,5 +6,4 @@
     Your unit: {{ teacher.units.all() }}<br>
     Your unit tasks: {{ teacher.units[0].tasks}}<br>
     Your task questions: {{ teacher.units[0].tasks[0].questions }}
-</body>
-</html>
+{% endblock %}

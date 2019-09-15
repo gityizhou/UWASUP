@@ -1,13 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>hello, {{ student.first_name }}</title>
-</head>
-<body>
+{% block content %}
     <a href="{{ url_for('logout') }}">Logout</a> <br>
     student number: {{ student.user_number }} <br>
     first name: {{ student.first_name }}<br>
     last name: {{ student.last_name }}<br>
-</body>
-</html>
+{% endblock %}
