@@ -11,7 +11,6 @@ class Question(db.Model):
     # students = db.relationship("Task", secondary='student_task_link')
     users = db.relationship("User_question", back_populates="question")
 
-
     def __repr__(self):
         return 'id={}, question_name={},description={}'.format(
             self.id, self.question_name, self.description
