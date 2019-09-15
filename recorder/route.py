@@ -63,7 +63,9 @@ def teacher_view(staff_number):
     teacher = current_user
     teacher_units = teacher.units.all()
     all_units = Unit.query.all()
-    return render_template('teacher_view.html', teacher=teacher, teacher_units=teacher_units, all_units=all_units)
+    all_users = User.query.all()
+    return render_template('teacher_view.html', teacher=teacher, teacher_units=teacher_units, all_units=all_units,
+                           all_users=all_users)
 
 
 # logout function
