@@ -30,8 +30,12 @@ class TestUnit(unittest.TestCase):
         tasks = db.session.query(Unit).filter(Unit.id == '1').first().tasks
         print(tasks)
 
+    def test_query_all_units(self):
+        units = Unit.query.all()
+        print(units)
+
     # update the unit
-    def test_update_delete(self):
+    def test_unit_update(self):
         unit = db.session.query(Unit).filter(Unit.id == '1').one()
         unit.unit_name = "someunit4test"
         unit.update()
@@ -41,3 +45,5 @@ class TestUnit(unittest.TestCase):
         self.unit.add()
         unit = db.session.query(Unit).filter(Unit.id == '1').one()
         unit.delete()
+
+
