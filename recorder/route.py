@@ -52,14 +52,20 @@ def index():
 @login_required
 def student_view(student_number):
     student = current_user
-    return render_template('student_view.html', student=student)
+    student_units = student.units.all()
+    all_units = Unit.query.all()
+    return render_template('student_view.html', student=student, student_units=student_units, all_units=all_units)
 
 
 # After login, teacher will be redirected to this page
 @login_required
 def teacher_view(staff_number):
     teacher = current_user
-    return render_template('teacher_view.html', teacher=teacher)
+    teacher_units = teacher.units.all()
+    all_units = Unit.query.all()
+    all_users = User.query.all()
+    return render_template('teacher_view.html', teacher=teacher, teacher_units=teacher_units, all_units=all_units,
+                           all_users=all_users)
 
 
 # logout function
