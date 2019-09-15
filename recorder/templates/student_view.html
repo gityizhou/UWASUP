@@ -1,10 +1,16 @@
+{% extends "base.html" %}
+
 {% block content %}
+    <!-- Student details -->
     <div>
         <p>Hello, {{ student.first_name }}!</p>
         <p>Student Number: {{ student.user_number }}</p>
+        <button id="subscribe-student-to-unit">Subscribe to Unit</button>
         <a href="{{ url_for('logout') }}">Logout</a>
     </div>
     <div>
-        
+        {% for unit in student.units %}
+            <p>{{ unit }}</p>
+        {% endfor %}
     </div>
 {% endblock %}
