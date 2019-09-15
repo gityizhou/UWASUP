@@ -7,7 +7,6 @@ from recorder.models.question import Question
 
 class TestQuestion(unittest.TestCase):
 
-
     def setUp(self):
         self.app = create_app()
         self.client = self.app.test_client
@@ -15,11 +14,13 @@ class TestQuestion(unittest.TestCase):
         db.create_all()
 
     def tearDown(self):
+        # will delete all data after each test
         # with self.app.app_context():
         #     db.session.remove()
         #     db.drop_all()
         pass
 
+    # create questions
     def test_question_create(self):
         question1 = Question(question_name="1st essay", description="write your first essay")
         question2 = Question(question_name="2nd essay", description="write your second essay")
@@ -32,6 +33,7 @@ class TestQuestion(unittest.TestCase):
         question4.add()
         question5.add()
 
+    # add questions to a task
     def test_addquestions2task(self):
         task = db.session.query(Task).filter(Task.id == '1').one()
         question1 = db.session.query(Question).filter(Question.id == '1').one()
@@ -45,8 +47,13 @@ class TestQuestion(unittest.TestCase):
         question4.add_question2task(task)
         question5.add_question2task(task)
 
+    # update a question
+    def test_question_update(self):
+        question = db.session.query(Question).filter(Question.id == '5').one()
+        question.question_name = "something test question"
+        question.update()
 
-    def test_task_delete(self):
-        self.unit.add()
-        checkunit = db.session.query(Unit).filter(Unit.id == '1').one()
-        checkunit.delete()
+    # !!!!delete a question
+    def test_question_delete(self):
+        question = db.session.query(Question).filter(Question.id == '5').one()
+        question.delete()
