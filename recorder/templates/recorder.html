@@ -48,19 +48,25 @@ function countTime(){
 		ms+=4;
     	if(ms>=1000){
         	secs+=1;
-        	ms = 0;
+        	ms = 00;
     	}
     	if(secs>=60){
         mins+=1;    
-        secs = 0;
+        secs = 00;
     	}
     	if(mins>=60){
         hours+=1;
-        mins = 0;    
+        mins = 00;    
 		
 	}   
-    document.getElementById("showTime").innerHTML = mins + " : " + secs;
+    document.getElementById("showTime").innerHTML = checkTime(mins) + " : " + checkTime(secs);
 }
+
+// ms = checkTime(ms);
+// secs = checkTime(secs);
+// mins = checkTime(mins);
+// hours = checkTime(hours);
+    
 
 function checkTime(time)
 {
@@ -74,14 +80,13 @@ function resetTime()
 {
     ms = 0;
     secs = 0;
-    mins = 0;
-    hours = 0;        
+    mins = 0;     
 }
 
 function clearTime()
 {
     resetTime();
-    document.getElementById("showTime").innerHTML = mins + " : " + secs;
+    document.getElementById("showTime").innerHTML = checkTime(mins) + " : " + checkTime(secs);
     if(!isCounting)
         document.getElementById("start").value = "Start timing";
 }
