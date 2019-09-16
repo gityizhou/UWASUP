@@ -21,11 +21,6 @@
                     <button  id="btn-top-close-subscribe-to-unit-modal" type="button" class="close" data-dismiss="modal">&times;</button>
                     </div>
                     <!-- modal body -->
-                    <div class="modal-body">
-                        {% for unit in all_units %}
-                            <p>{{ unit }}</p>
-                        {% endfor %}
-                    </div>
                     <!-- modal footer -->
                     <div class="modal-footer">
                     <button id="btn-btm-close-subscribe-to-unit-modal" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
@@ -37,6 +32,20 @@
         <a href="{{ url_for('logout') }}">Logout</a>
     </div>
     <!-- end student details and actions -->
+
+    <div class="modal-body">
+        <form class="form" action="" method="post" novalidate>
+            {{ form.hidden_tag() }}
+            <p>
+                {{ form.subscribe_units.label }}<br>
+                {{ form.subscribe_units }}<br>
+                {% for error in form.subscribe_units.errors %}
+                    <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
+            </p>
+            <a>{{ form.submit }}</a>
+        </form>
+    </div>
 
     <!-- list of units, tasks and questions -->
     <div>

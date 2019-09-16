@@ -1,12 +1,10 @@
 from flask import render_template, redirect, url_for, flash, request
 from flask_uploads import UploadSet, ALL
-
-from recorder.forms import LoginForm, RegisterForm
-
 from flask_login import login_user, current_user, logout_user, login_required
+import sys
 
+from recorder.forms import LoginForm, RegisterForm, SubscribeUnitForm
 from recorder.models.user import User
-
 from recorder.models.unit import Unit
 from recorder.models.question import Question
 from recorder.models.task import Task
@@ -53,10 +51,33 @@ def index():
 # After login, student will be redirected to this page
 @login_required
 def student_view(student_number):
+    print("routes student view function")
+    sys.stdout.flush()
     student = current_user
-    student_units = student.units.all()
     all_units = Unit.query.all()
-    return render_template('student_view.html', student=student, student_units=student_units, all_units=all_units)
+    form = SubscribeUnitForm()
+    form.subscribe_units.choices = [(unit.id, ("{} ({})".format(unit.unit_id, unit.unit_name))) for unit in Unit.query.all()]
+    if form.validate_on_submit():
+        print("...........................")
+        print("")
+        print("form validated")
+        print("")
+        print("...........................")
+        sys.stdout.flush()
+        for unit_id in form.subscribe_units.data:
+            print("...........................")
+            print("")
+            print("selected unit is ", unit_id)
+            print("")
+            print("...........................")
+            sys.stdout.flush()
+            unit_object = Unit.query.get(unit_id)
+            student.add_unit(unit_object)
+        flash('You have been subscribed to the selected units.')
+        student_units = student.units.all()
+        return render_template('student_view.html', student=student, student_units=student_units, all_units=all_units, form=form)
+    student_units = student.units.all()
+    return render_template('student_view.html', student=student, student_units=student_units, all_units=all_units, form=form)
 
 
 # After login, teacher will be redirected to this page
