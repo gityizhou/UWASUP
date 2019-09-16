@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+</head>
+<body>
+  <div class="container text-center">
+    <h1>CITS5206 Recording test demo</h1>
+
+    <hr />
+
+    <button class="btn btn-primary">Start recording</button>
+    <input type="button" class="btn btn-primary" onclick="uploadRec()" value="upload Record">
+
+    <br />
+    <br />
+    <br />
+
+    <ul id="playlist"></ul>
+  </div>
+
+  <script src="../static/js/index.js"></script>
+  <script>
+    const button = document.querySelector('button');
+    const recorder = new MicRecorder({
+      bitRate: 128
+    });
+
+    button.addEventListener('click', startRecording);
+
+    function startRecording() {
+      recorder.start().then(() => {
+        button.textContent = 'Stop recording';
+        button.classList.toggle('btn-danger');
+        button.removeEventListener('click', startRecording);
+        button.addEventListener('click', stopRecording);
+      }).catch((e) => {
+        console.error(e);
+      });
+    }
+
+    function stopRecording() {
+      recorder.stop().getMp3().then(([buffer, blob]) => {
+        console.log(buffer, blob);
+        const file = new File(buffer, 'music.mp3', {
+          type: blob.type,
+          lastModified: Date.now()
+        });
+
+        const li = document.createElement('li');
+        const player = new Audio(URL.createObjectURL(file));
+        player.controls = true;
+        li.appendChild(player);
+        document.querySelector('#playlist').appendChild(li);
+
+        button.textContent = 'Start recording';
+        button.classList.toggle('btn-danger');
+        button.removeEventListener('click', stopRecording);
+        button.addEventListener('click', startRecording);
+      }).catch((e) => {
+        console.error(e);
+      });
+    }
+
+    function uploadRec() {
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "http://baidu.com/<Change it to your upload address>");//This fake address can see the request data and format in the console network, and the result of the request is irrelevant
+        
+        alert("upload successful");
+        
+        //xhr.onreadystatechange = function () {
+        //    if (xhr.readyState == 4) {
+        //        alert(xhr.status == 200 ? "upload successful" : "Test by opening the browser console, and then re-recording, you can see the upload request data and format in the network option card");
+        //    }   
+    }
+  </script>
+  
+        
+</body>
+</html>
