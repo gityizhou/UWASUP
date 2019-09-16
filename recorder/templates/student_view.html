@@ -2,10 +2,13 @@
 
 {% block content %}
 
-    <!-- student details and actions -->
     <div>
+        <!-- student details and actions -->
         <p>Hello, {{ student.first_name }}!</p>
         <p>Student Number: {{ student.user_number }}</p>
+        <a href="{{ url_for('logout') }}">Logout</a>
+        <!-- end student details and actions -->
+
         <!-- subscribe to unit modal -->
         <!-- button to open the modal -->
         <button id="btn-subscribe-to-unit" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-subscribe-to-unit">
@@ -21,6 +24,19 @@
                     <button  id="btn-top-close-subscribe-to-unit-modal" type="button" class="close" data-dismiss="modal">&times;</button>
                     </div>
                     <!-- modal body -->
+                    <div class="modal-body">
+                        <form class="form" action="" method="post" novalidate>
+                            {{ form.hidden_tag() }}
+                            <p>
+                                {{ form.subscribe_units.label }}<br>
+                                {{ form.subscribe_units }}<br>
+                                {% for error in form.subscribe_units.errors %}
+                                    <span style="color: red;">[{{ error }}]</span>
+                                {% endfor %}
+                            </p>
+                            <a>{{ form.submit }}</a>
+                        </form>
+                    </div>
                     <!-- modal footer -->
                     <div class="modal-footer">
                     <button id="btn-btm-close-subscribe-to-unit-modal" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
@@ -29,28 +45,16 @@
             </div>
         </div>
         <!-- end subscribe to unit modal -->
-        <a href="{{ url_for('logout') }}">Logout</a>
-    </div>
-    <!-- end student details and actions -->
-
-    <div class="modal-body">
-        <form class="form" action="" method="post" novalidate>
-            {{ form.hidden_tag() }}
-            <p>
-                {{ form.subscribe_units.label }}<br>
-                {{ form.subscribe_units }}<br>
-                {% for error in form.subscribe_units.errors %}
-                    <span style="color: red;">[{{ error }}]</span>
-                {% endfor %}
-            </p>
-            <a>{{ form.submit }}</a>
-        </form>
     </div>
 
     <!-- list of units, tasks and questions -->
     <div>
         {% for sUnit in student.units %}
-            <p>{{ sUnit }}</p>
+            <p>{{ sUnit.unit_id }}</p>
+            <p>{{ sUnit.unit_name }}</p>
+            {% for task in sUnit.tasks %}
+                <p>{{ task.task_name }}</p>
+            {% endfor %}
         {% endfor %}
     </div>
     <!-- end list of units, tasks and questions -->

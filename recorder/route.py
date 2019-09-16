@@ -51,26 +51,12 @@ def index():
 # After login, student will be redirected to this page
 @login_required
 def student_view(student_number):
-    print("routes student view function")
-    sys.stdout.flush()
     student = current_user
     all_units = Unit.query.all()
     form = SubscribeUnitForm()
     form.subscribe_units.choices = [(unit.id, ("{} ({})".format(unit.unit_id, unit.unit_name))) for unit in Unit.query.all()]
     if form.validate_on_submit():
-        print("...........................")
-        print("")
-        print("form validated")
-        print("")
-        print("...........................")
-        sys.stdout.flush()
         for unit_id in form.subscribe_units.data:
-            print("...........................")
-            print("")
-            print("selected unit is ", unit_id)
-            print("")
-            print("...........................")
-            sys.stdout.flush()
             unit_object = Unit.query.get(unit_id)
             student.add_unit(unit_object)
         flash('You have been subscribed to the selected units.')
@@ -78,7 +64,6 @@ def student_view(student_number):
         return render_template('student_view.html', student=student, student_units=student_units, all_units=all_units, form=form)
     student_units = student.units.all()
     return render_template('student_view.html', student=student, student_units=student_units, all_units=all_units, form=form)
-
 
 # After login, teacher will be redirected to this page
 @login_required
