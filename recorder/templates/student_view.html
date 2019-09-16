@@ -22,7 +22,7 @@
                     </div>
                     <!-- modal body -->
                     <div class="modal-body">
-                        {% for unit in student.units %}
+                        {% for unit in all_units %}
                             <p>{{ unit }}</p>
                         {% endfor %}
                     </div>
@@ -40,8 +40,8 @@
 
     <!-- list of units, tasks and questions -->
     <div>
-        {% for unit in student.units %}
-            <p>{{ unit }}</p>
+        {% for sUnit in student.units %}
+            <p>{{ sUnit }}</p>
         {% endfor %}
     </div>
     <!-- end list of units, tasks and questions -->
