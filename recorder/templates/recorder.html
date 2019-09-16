@@ -6,10 +6,86 @@
 </head>
 <body>
 <script src="https://xiangyuecn.github.io/Recorder/recorder.mp3.min.js"></script>
-<input type="button" onclick="startRec()" value="start recording">
+<input type="button" onclick="startRec();startTime()" value="start recording">
 <hr>
-<input type="button" onclick="playRec()" value="stop it and play it!">
-<input type="button" onclick="uploadRec()" value="stop it and upload it to server!">
+<input type="button" onclick="playRec();stopTime()" value="stop it and play it!">
+<input type="button" onclick="uploadRec();stopTime()" value="stop it and upload it to server!">
+<!-- Add Timer -->
+<p id="showTime">00 : 00</p> 
+
+<script>
+    var ms = 0;
+    var secs = 0;
+    var mins = 0;
+    var hours = 0;
+    var timeoutId;
+
+var isCounting = false;    
+
+function startTime()
+{    
+    if(!isCounting)
+    {
+        isCounting = true;
+        timeoutId = setInterval(countTime,1);        //指定时间执行任务
+    }
+
+    document.getElementById("start").value = "计时中";
+}
+
+function stopTime()
+{
+    if(isCounting)
+    {
+        isCounting = false;
+        clearTimeout(timeoutId); //清除指定id计时器
+        document.getElementById("start").value = "继续";
+    }
+}
+
+function countTime(){
+
+		ms+=4;
+    	if(ms>=1000){
+        	secs+=1;
+        	ms = 0;
+    	}
+    	if(secs>=60){
+        mins+=1;    
+        secs = 0;
+    	}
+    	if(mins>=60){
+        hours+=1;
+        mins = 0;    
+		
+	}   
+    document.getElementById("showTime").innerHTML = mins + " : " + secs;
+}
+
+function checkTime(time)
+{
+    if(time<10)
+        time = "0"+time;
+    
+    return time;
+}
+
+function resetTime()
+{
+    ms = 0;
+    secs = 0;
+    mins = 0;
+    hours = 0;        
+}
+
+function clearTime()
+{
+    resetTime();
+    document.getElementById("showTime").innerHTML = mins + " : " + secs;
+    if(!isCounting)
+        document.getElementById("start").value = "Start timing";
+}
+</script>
 
 <script>
     var rec;
