@@ -41,7 +41,7 @@
 
             //Upload directly with ajax
             var xhr = new XMLHttpRequest();
-            xhr.open("POST", "http://baidu.com/<Change it to your upload address>");//This fake address can see the request data and format in the console network, and the result of the request is irrelevant
+            xhr.open("POST", "/recorder");//This fake address can see the request data and format in the console network, and the result of the request is irrelevant
             xhr.onreadystatechange = function () {
                 if (xhr.readyState == 4) {
                     alert(xhr.status == 200 ? "upload successful" : "Test by opening the browser console, and then re-recording, you can see the upload request data and format in the network option card");
