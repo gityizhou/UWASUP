@@ -1,8 +1,10 @@
-from flask import render_template, redirect, url_for, flash
+from flask import render_template, redirect, url_for, flash, request
+from flask_uploads import UploadSet, ALL
 
 from recorder.forms import LoginForm, RegisterForm
 
 from flask_login import login_user, current_user, logout_user, login_required
+
 from recorder.models.user import User
 
 from recorder.models.unit import Unit
@@ -92,5 +94,10 @@ def register():
     return render_template('register.html', title='Registration', form=form)
 
 
-
-
+# recorder upload function, the folder now is default /uploads/files/
+def upload():
+    files = UploadSet('files', ALL)
+    if request.method == 'POST' and 'upfile' in request.files:
+        filename = files.save(request.files['upfile'])
+        url = files.url(filename)
+    return render_template('recorder.html')
