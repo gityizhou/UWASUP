@@ -1,13 +1,47 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-    <a href="{{ url_for('logout') }}">Logout</a> <br>
-    student number: {{ current_user.student_number }} <br>
-    first name: {{ current_user.first_name }}<br>
-    last name: {{ current_user.last_name }}<br>
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block content %}
+
+    <!-- student details and actions -->
+    <div>
+        <p>Hello, {{ student.first_name }}!</p>
+        <p>Student Number: {{ student.user_number }}</p>
+        <!-- subscribe to unit modal -->
+        <!-- button to open the modal -->
+        <button id="btn-subscribe-to-unit" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-subscribe-to-unit">
+            Subscribe to a Unit
+        </button>
+        <!-- code for modal window -->
+        <div class="modal" id="modal-subscribe-to-unit">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <!-- modal header -->
+                    <div class="modal-header">
+                    <h4 class="modal-title">Modal Heading</h4>
+                    <button  id="btn-top-close-subscribe-to-unit-modal" type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <!-- modal body -->
+                    <div class="modal-body">
+                    Modal body..
+                    </div>
+                    <!-- modal footer -->
+                    <div class="modal-footer">
+                    <button id="btn-btm-close-subscribe-to-unit-modal" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end subscribe to unit modal -->
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
+    <!-- end student details and actions -->
+
+    <!-- list of units, tasks and questions -->
+    <div>
+        {% for unit in student.units %}
+            <p>{{ unit }}</p>
+        {% endfor %}
+    </div>
+    <!-- end list of units, tasks and questions -->
+
+{% endblock %}

@@ -1,48 +1,73 @@
 from flask import render_template, redirect, url_for, flash, request
+from flask_uploads import UploadSet, ALL
 
-from recorder import db
 from recorder.forms import LoginForm, RegisterForm
-from recorder.models.student import Student, student_unit_association
-# student_task_association
-from recorder.models.teacher import Teacher
+
 from flask_login import login_user, current_user, logout_user, login_required
-from recorder.models.comment import Comment
-from recorder.models.question import Question
+
+from recorder.models.user import User
+
 from recorder.models.unit import Unit
-from recorder.models.record import Record
+from recorder.models.question import Question
 from recorder.models.task import Task
-from recorder.models.student_question_association import StudentQuestionAssociation
-from recorder.models.student_task_association import StudentTaskAssociation
+from recorder.models.user_question import User_question
+from recorder.models.user_task import User_task
+
+"""
+Index page but also our login page!
+1. it will check if you are authenticated firstly, if authenticated, redirect to the personal page
+2. after click the submit button, it will check account and password
+3. teacher: redirect to teacher page
+student: redirect to student page
+"""
 
 
-# index
 def index():
+    # Confirm the login status of the user
+    # if authenticated, redirect to his page directly
     if current_user.is_authenticated:
-        return redirect(url_for('student_view', username=current_user.student_number))         # after student, teacher finish, redirect to their pages
+        if current_user.is_teacher == 1:
+            return redirect(url_for('teacher_view', staff_number=current_user.user_number))
+        if current_user.is_teacher == 0:
+            return redirect(url_for('student_view', student_number=current_user.user_number))
+    # get the loginForm object
     form = LoginForm()
     if form.validate_on_submit():
         # print(form.username.data)
-        student = Student.query.filter_by(student_number=form.username.data).first()
-        teacher = Teacher.query.filter_by(staff_number=form.username.data).first()
-        if student is not None and student.check_password(form.password.data):
-            login_user(student, remember=form.remember_me.data)
-            return redirect(url_for('student_view', username=student.student_number))
-        if teacher is not None and teacher.check_password(form.password.data):
-            login_user(teacher, remember=form.remember_me.data)
-            return redirect(url_for('teacher_view'))
+        user = User.query.filter_by(user_number=form.username.data).first()
+        # Verify that the user exists and that the password is correct
+        if user is not None and user.check_password(form.password.data):
+            # Determine user identity
+            if user.is_teacher == 1:  # teacher
+                login_user(user, remember=form.remember_me.data)
+                return redirect(url_for('teacher_view', staff_number=current_user.user_number))
+            if user.is_teacher == 0:  # student
+                login_user(user, remember=form.remember_me.data)
+                return redirect(url_for('student_view', student_number=current_user.user_number))
         else:
+            # if user not exist or wrong password, give error message
             flash("Invalid username or password, please try again.")
-            # return redirect(url_for('index'))
     return render_template('index.html', title="Index", form=form)
 
-@login_required
-def student_view(username):
-    student = Student.query.filter_by(student_number=username).first()
-    return render_template('student_view.html', student=student)
 
+# After login, student will be redirected to this page
 @login_required
-def teacher_view():
-    return render_template('teacher_view.html')
+def student_view(student_number):
+    student = current_user
+    student_units = student.units.all()
+    all_units = Unit.query.all()
+    return render_template('student_view.html', student=student, student_units=student_units, all_units=all_units)
+
+
+# After login, teacher will be redirected to this page
+@login_required
+def teacher_view(staff_number):
+    teacher = current_user
+    teacher_units = teacher.units.all()
+    all_units = Unit.query.all()
+    all_users = User.query.all()
+    return render_template('teacher_view.html', teacher=teacher, teacher_units=teacher_units, all_units=all_units,
+                           all_users=all_users)
 
 
 # logout function
@@ -53,55 +78,26 @@ def logout():
 
 # register function
 def register():
-
+    # get the register form object
     form = RegisterForm()
     if form.validate_on_submit():
-        student = Student(student_number=form.username.data,
-                          first_name=form.firstname.data,
-                          last_name=form.lastname.data,
-                          email=form.email.data)
-        student.set_password(form.password.data)
-        db.session.add(student)
-        db.session.commit()
+        # read user data from form
+        user = User(user_number=form.username.data,
+                    first_name=form.firstname.data,
+                    last_name=form.lastname.data,
+                    email=form.email.data)
+        # set the password to hash code
+        user.set_password(form.password.data)
+        # add the new user to database
+        user.add()
         return redirect(url_for('index'))
     return render_template('register.html', title='Registration', form=form)
 
 
-# forgot password
-def forgot_password():
-    pass
-
-
-# download a record
-def download_record(id):
-    pass
-
-
-# save a record
-def save_record(id):
-    pass
-
-
-# assign tasks
-def assign_tasks():
-    pass
-
-
-# delete tasks
-def delete_tasks():
-    pass
-
-
-# upload function
+# recorder upload function, the folder now is default /uploads/files/
 def upload():
-    pass
-
-
-# download function
-def download():
-    pass
-
-
-# show result
-def show_result():
-    pass
+    files = UploadSet('files', ALL)
+    if request.method == 'POST' and 'upfile' in request.files:
+        filename = files.save(request.files['upfile'])
+        url = files.url(filename)
+    return render_template('recorder.html')

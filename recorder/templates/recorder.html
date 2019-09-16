@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE HTML>
 <html>
 <head>
@@ -102,3 +103,78 @@
     </script>    
 
 </body>
+=======
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CITS5206 Recording test demo</title>
+</head>
+<body>
+<script src="https://xiangyuecn.github.io/Recorder/recorder.mp3.min.js"></script>
+<input type="button" onclick="startRec()" value="start recording">
+<hr>
+<input type="button" onclick="playRec()" value="stop it and play it!">
+<input type="button" onclick="uploadRec()" value="stop it and upload it to server!">
+
+<script>
+    var rec;
+
+    function startRec() {
+        rec = Recorder();//Use the default configuration, mp3 format
+
+        //Turn on the microphone and authorize resources
+        rec.open(function () {
+            //start recording
+            rec.start();
+        }, function (msg, isUserNotAllow) {
+            //The user has refused permission or the browser does not support it
+            alert((isUserNotAllow ? "User denied permission，" : "") + "not able to record:" + msg);
+        });
+    };
+</script>
+<script>
+    function uploadRec() {
+        //Stop recording and get the blob binary object of the recording file
+        rec.stop(function (blob, duration) {
+            /*
+            Blob file object, which can be read and fetched with FileReader
+            ，Or use FormData upload, which in this case uploads the binary directly
+            ，from normal application/x-www-form-urlencoded form upload
+            */
+            var form = new FormData();
+            form.append("upfile", blob, "recorder.mp3"); //Similar to ordinary form forms, files with upfile parameters, named recorder. Mp3, are received by the back-end
+
+            //Upload directly with ajax
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/recorder");//This fake address can see the request data and format in the console network, and the result of the request is irrelevant
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4) {
+                    alert(xhr.status == 200 ? "upload successful" : "Test by opening the browser console, and then re-recording, you can see the upload request data and format in the network option card");
+                }
+            }
+            xhr.send(form);
+        }, function (msg) {
+            alert("fail to record:" + msg);
+        });
+    };</script>
+<script>
+    function playRec() {
+        //Stop recording and get the blob binary object of the recording file
+        rec.stop(function (blob, duration) {
+            var audio = document.createElement("audio");
+            audio.controls = true;
+            document.body.appendChild(audio);
+
+            //get the blob audio url
+            audio.src = URL.createObjectURL(blob);
+            audio.play();
+        }, function (msg) {
+            alert("fail to record:" + msg);
+        });
+    };</script>
+
+
+</body>
+</html>
+>>>>>>> master

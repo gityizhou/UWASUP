@@ -1,10 +1,14 @@
+# ignore virtual environment
 venv
+
+# ignore IDE workspace settings
 .idea/
-
-__pycache__/
-
-*pyc
-
-.env
 .vscode/
 setting.json
+
+# ignore compiled python files
+__pycache__/
+*/*/*/__pycache__/
+*/*/__pycache__/
+*/__pycache__/
+*.pyc

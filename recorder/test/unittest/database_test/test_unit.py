@@ -9,31 +9,41 @@ class TestUnit(unittest.TestCase):
     def setUp(self):
         self.app = create_app()
         self.client = self.app.test_client
-        self.unit = Unit(unit_id="CITS1401",
-                         unit_name="Python",
-                         teacher_id="1")
         self.app.app_context().push()
         db.create_all()
 
     def tearDown(self):
+        # will delete all data after each test
         # with self.app.app_context():
         #     db.session.remove()
         #     db.drop_all()
         pass
 
+    # create a unit
     def test_unit_create(self):
-        self.unit.add()
-        checkunit = db.session.query(Unit).filter(Unit.id == '1').one()
-        self.assertEqual(checkunit, self.unit)
+        unit = Unit(unit_id="CITS1401",
+                    unit_name="Python")
+        unit.add()
 
+    # query tasks in this unit
+    def test_unit_get_tasks(self):
+        tasks = db.session.query(Unit).filter(Unit.id == '1').first().tasks
+        print(tasks)
+
+    def test_query_all_units(self):
+        units = Unit.query.all()
+        print(units)
+
+    # update the unit
     def test_unit_update(self):
-        self.unit.add()
-        checkunit = db.session.query(Unit).filter(Unit.id == '1').one()
-        checkunit.unit_name = "Java"
-        checkunit.update()
-        self.assertEqual(checkunit.unit_name, "Java")
+        unit = db.session.query(Unit).filter(Unit.id == '1').one()
+        unit.unit_name = "someunit4test"
+        unit.update()
 
+    # !!!!delete the unit
     def test_unit_delete(self):
         self.unit.add()
-        checkunit = db.session.query(Unit).filter(Unit.id == '1').one()
-        checkunit.delete()
+        unit = db.session.query(Unit).filter(Unit.id == '1').one()
+        unit.delete()
+
+
