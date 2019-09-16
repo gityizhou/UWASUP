@@ -3,7 +3,7 @@ from flask_uploads import UploadSet, ALL
 from flask_login import login_user, current_user, logout_user, login_required
 import sys
 
-from recorder.forms import LoginForm, RegisterForm, SubscribeUnitForm
+from recorder.forms import LoginForm, RegisterForm, SubscribeUnitForm, MakeTeacherForm
 from recorder.models.user import User
 from recorder.models.unit import Unit
 from recorder.models.question import Question
@@ -60,8 +60,6 @@ def student_view(student_number):
             unit_object = Unit.query.get(unit_id)
             student.add_unit(unit_object)
         flash('You have been subscribed to the selected units.')
-        student_units = student.units.all()
-        return render_template('student_view.html', student=student, student_units=student_units, all_units=all_units, form=form)
     student_units = student.units.all()
     return render_template('student_view.html', student=student, student_units=student_units, all_units=all_units, form=form)
 
@@ -69,12 +67,16 @@ def student_view(student_number):
 @login_required
 def teacher_view(staff_number):
     teacher = current_user
+    form_teacher = MakeTeacherForm()
+    if form_teacher.validate_on_submit():
+        user = User.query.filter_by(user_number=form_teacher.userNumber.data).first()
+        user.student2teacher()          
+        flash('The user now has teacher privileges.')
     teacher_units = teacher.units.all()
     all_units = Unit.query.all()
     all_users = User.query.all()
     return render_template('teacher_view.html', teacher=teacher, teacher_units=teacher_units, all_units=all_units,
-                           all_users=all_users)
-
+                           all_users=all_users, form_teacher=form_teacher)
 
 # logout function
 def logout():

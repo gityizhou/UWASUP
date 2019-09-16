@@ -1,6 +1,57 @@
 {% extends "base.html" %}
 
 {% block content %}
+    <div>
+        <!-- teacher details and actions -->
+        <p>Hello, {{ teacher.first_name }}!</p>
+        <p>Staff Number: {{ teacher.user_number }}</p>
+        <a href="{{ url_for('logout') }}">Logout</a>
+        <hr>
+        <!-- end teacher details and actions -->
+
+        <!-- make user a teacher modal -->
+        <!-- button to open the modal -->
+        <button id="btn-make-teacher" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-make-teacher">
+            Make a User a Teacher
+        </button>
+        <!-- code for modal window -->
+        <div class="modal" id="modal-make-teacher">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <!-- modal header -->
+                    <div class="modal-header">
+                    <h4 class="modal-title">Make a User a Teacher</h4>
+                    <button  id="btn-top-close-make-teacher-modal" type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <!-- modal body -->
+                    <div class="modal-body">
+                        <form class="form" action="" method="post" novalidate>
+                            {{ form_teacher.hidden_tag() }}
+                            <p>
+                                {{ form_teacher.userNumber.label }}<br>
+                                {{ form_teacher.userNumber(size=32, class="form-field") }}<br>
+                                {% for error in form_teacher.userNumber.errors %}
+                                    <span style="color: red;">[{{ error }}]</span>
+                                {% endfor %}
+                            </p>
+                            <a>{{ form_teacher.submit }}</a>
+                        </form>
+                    </div>
+                    <!-- modal footer -->
+                    <div class="modal-footer">
+                    <button id="btn-btm-close-subscribe-to-unit-modal" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end subscribe to unit modal -->
+    </div>
+    <hr>
+
+    <!-- list of units, tasks, students and questions as a Bootstrap4 accordion -->
+
+    <!-- end list of units, tasks, students and questions -->
+
     <a href="{{ url_for('logout') }}">Logout</a> <br>
     staff number: {{ teacher.user_number }} <br>
     first name: {{ teacher.first_name }}<br>
