@@ -13,6 +13,8 @@ class Task(db.Model):
     unit_id = db.Column(db.Integer, db.ForeignKey('unit.id'))
     unit = db.relationship("Unit", back_populates="tasks")
     questions = db.relationship("Question", back_populates="task")
+    # TODO: ask Joey if this can return list of user objects, at the moment
+    # returns tuple from User_task e.g. <User_task 1, 1>
     users = db.relationship("User_task", back_populates="task")
 
     def __repr__(self):

@@ -1,8 +1,11 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, BooleanField
-from wtforms.validators import DataRequired, EqualTo, Email, ValidationError, Length, Regexp
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, SelectMultipleField
+from wtforms.validators import DataRequired, EqualTo, Email, ValidationError, Length, Regexp, Required
+from wtforms.widgets import ListWidget, CheckboxInput
 
 from recorder.models.user import User
+
+import sys
 
 
 # user login form
@@ -65,3 +68,21 @@ class RegisterForm(FlaskForm):
         user = User.query.filter_by(email=email.data).first()
         if user is not None:
             raise ValidationError('existed email address')
+
+# form for students to subscribe themselves to units (student_view.html)
+class MultiCheckboxField(SelectMultipleField):
+    widget			= ListWidget(prefix_label=False)
+    option_widget	= CheckboxInput()
+class SubscribeUnitForm(FlaskForm):
+    subscribe_units = MultiCheckboxField('Units', [Required(message='Please select one or more units.')], coerce=int)
+    submit = SubmitField('Subscribe')
+
+class MakeTeacherForm(FlaskForm):
+    userNumber = StringField('Staff Number', validators=[DataRequired()])
+    submit = SubmitField('Make User a Teacher')
+
+    def validate_username(self, user_number):
+        user = User.query.filter_by(user_number=userNumber.data).first()
+        if user is None:
+            raise ValidationError('This user does not exist.')
+
