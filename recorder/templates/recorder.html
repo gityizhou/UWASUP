@@ -59,7 +59,7 @@ function countTime(){
         mins = 0;    
 		
 	}   
-    document.getElementById("showTime").innerHTML = mins + " : " + secs;
+    document.getElementById("showTime").innerHTML = checkTime(mins) + " : " + checkTime(secs);
 }
 
 function checkTime(time)
@@ -81,7 +81,7 @@ function resetTime()
 function clearTime()
 {
     resetTime();
-    document.getElementById("showTime").innerHTML = mins + " : " + secs;
+    document.getElementById("showTime").innerHTML = checkTime(mins) + " : " + checkTime(secs);
     if(!isCounting)
         document.getElementById("start").value = "Start timing";
 }

@@ -207,7 +207,7 @@ RandomKey.idx=0;
 		resetTime();
 		document.getElementById("showTime").innerHTML = checkTime(mins) + " : " + checkTime(secs);
 		if(!isCounting)
-			document.getElementById("start").value = "开始计时";
+			document.getElementById("start").value = "start timing";
 	}
 	</script>
 
@@ -469,7 +469,7 @@ function recdown64(key, cls){
 	reader.readAsDataURL(o.blob);
 };
 $(".recinfo").html(BuildHtml($(".tp_recinfo").html()));
-reclog("click [Open recorder]，this browser <span style='color:"+(Recorder.Support()?"green'>":"red'>not")+"support recording</span>");
+reclog("click [Open recorder]，this browser does<span style='color:"+(Recorder.Support()?"green'>":"red'>not")+"support recording!</span>");
 //reclog("WaveView Extensions已启用");
 
 
