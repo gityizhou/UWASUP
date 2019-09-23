@@ -15,6 +15,8 @@ class User_task(db.Model):
     #     db.session.add(user_has_task)
     #     db.session.commit()
 
+
+
 """
 example association:
 user_has_task = User_task(user=<someuser>, task=<sometask>, comment="......", recorder_url=<url>)

@@ -46,3 +46,9 @@ class TestTask(unittest.TestCase):
     def test_task_delete(self):
         task = db.session.query(Task).filter(Task.id == '1').one()
         task.delete()
+
+    def test_task_users(self):
+        task = db.session.query(Task).filter(Task.id == '1').one()
+        users = task.get_task_users()
+        for user in users:
+            print(user.email)

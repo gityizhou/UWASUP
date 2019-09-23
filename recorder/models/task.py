@@ -1,5 +1,6 @@
 from datetime import datetime
 from recorder import db
+from recorder.models.user import User
 
 
 class Task(db.Model):
@@ -36,3 +37,11 @@ class Task(db.Model):
     def add_task2unit(self, unit):
         self.unit_id = unit.id
         db.session.commit()
+
+    def get_task_users(self):
+        users = []
+        for user_task in self.users:
+            user_id = user_task.user_id
+            users.append(db.session.query(User).filter(User.id == user_id).one())
+        return users
+

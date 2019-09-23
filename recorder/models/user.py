@@ -61,6 +61,39 @@ class User(db.Model, UserMixin):
         self.units.remove(unit)
         db.session.commit()
 
+    @staticmethod
+    def get_user_list():
+        return db.session.query(User).all()
+
+    @staticmethod
+    def get_by_user_number(usernumber):
+        return db.session.query(User).filter(
+            User.user_number == usernumber
+        ).first()
+
+    @staticmethod
+    def get_by_id(user_id):
+        return db.session.query(User).filter(
+            User.id == user_id
+        ).first()
+
+    @staticmethod
+    def get_user_list():
+        return db.session.query(User).all()
+
+    @staticmethod
+    def authenticate(username, password):
+        user = User.get_by_username(username)
+        if user:
+            # check password
+            if user.check_password(password):
+                return user
+
+    @staticmethod
+    def identity(payload):
+        user_id = payload['identity']
+        user = User.get_by_id(user_id)
+        return user
 
 
 # get the id from session
