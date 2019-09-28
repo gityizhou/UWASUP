@@ -6,16 +6,13 @@
 </head>
 <body>
 <script src="https://xiangyuecn.github.io/Recorder/recorder.mp3.min.js"></script>
-<input type="button" onclick="startRec();resetTime();startTime()" value="start recording">
-<input type="button" onclick="pauseRec();stopTime()" value="pause recording">
-<input type="button" onclick="resumeRec();startTime()" value="resume recording">
+<input type="button" onclick="startRec();resetTime();startTime()" value="Start recording">
+<input type="button" onclick="stopRec();stopTime()" value="Finish recording">
 <hr>
-<input type="button" onclick="stopRec();stopTime()" value="finish recording">
 <input type="button" onclick="playRec();stopTime()" value="play the record">
 <input type="button" onclick="uploadRec();stopTime()" value="upload the record">
 <!-- Add Timer -->
 <p id="showTime">00 : 00</p>
-<script src="https://github.com/HaloMartin/MCVoiceWave/blob/f6dc28975fbe0f7fc6cc4dbc2e61b0aa5574e9bc/MCVoiceWave/MCVoiceWaveView.m"></script>
 
 
 <script>
@@ -56,8 +53,12 @@
             audio.controls = true;
             document.body.appendChild(audio);
             //get the blob audio url
+            if(audio.src==false){
             audio.src = URL.createObjectURL(recFile);
             audio.play();
+            }else{
+                audio.play();
+            }
         };
 
     function uploadRec() {
@@ -90,17 +91,6 @@
     var mins = 0;
     var hours = 0;
     var timeoutId;
-    var wave;
-    var rec=Recorder({
-        onProcess:function(buffers,powerLevel,bufferDuration,bufferSampleRate){
-            wave.input(buffers[buffers.length-1],powerLevel,bufferSampleRate);//输入音频数据，更新显示波形
-        }
-    });
-    rec.open(function(){
-        wave=Recorder.WaveView({elem:".elem"}); //创建wave对象，写这里面浏览器妥妥的
-        
-        rec.start();
-    });
 
     var isCounting = false;
 
@@ -160,7 +150,6 @@
         if (!isCounting)
             document.getElementById("start").value = "Start timing";
     }
-
 </script>
 
 </body>
