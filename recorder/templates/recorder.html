@@ -15,6 +15,7 @@
 <input type="button" onclick="uploadRec();stopTime()" value="upload the record">
 <!-- Add Timer -->
 <p id="showTime">00 : 00</p>
+<script src="https://github.com/HaloMartin/MCVoiceWave/blob/f6dc28975fbe0f7fc6cc4dbc2e61b0aa5574e9bc/MCVoiceWave/MCVoiceWaveView.m"></script>
 
 
 <script>
@@ -89,6 +90,17 @@
     var mins = 0;
     var hours = 0;
     var timeoutId;
+    var wave;
+    var rec=Recorder({
+        onProcess:function(buffers,powerLevel,bufferDuration,bufferSampleRate){
+            wave.input(buffers[buffers.length-1],powerLevel,bufferSampleRate);//输入音频数据，更新显示波形
+        }
+    });
+    rec.open(function(){
+        wave=Recorder.WaveView({elem:".elem"}); //创建wave对象，写这里面浏览器妥妥的
+        
+        rec.start();
+    });
 
     var isCounting = false;
 
@@ -148,6 +160,7 @@
         if (!isCounting)
             document.getElementById("start").value = "Start timing";
     }
+
 </script>
 
 </body>
