@@ -79,3 +79,12 @@ class TestUser(unittest.TestCase):
         # self.student.add()
         user = db.session.query(User).filter(User.id == '1').one()
         user.delete()
+
+    def test_task_mark(self):
+        user = db.session.query(User).filter(User.id == '1').one()
+        print(user.get_task_mark(1))
+
+
+    def test_get_task_question(self):
+        user = db.session.query(User).filter(User.id == '1').one()
+        print(user.get_task_questions(2))
