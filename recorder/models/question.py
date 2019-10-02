@@ -8,7 +8,6 @@ class Question(db.Model):
     description = db.Column(db.String(200))
     task_id = db.Column(db.Integer, db.ForeignKey('task.id'))
     task = db.relationship("Task", back_populates="questions")
-    # students = db.relationship("Task", secondary='student_task_link')
     users = db.relationship("User_question", back_populates="question")
 
     def __repr__(self):

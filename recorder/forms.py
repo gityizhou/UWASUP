@@ -69,20 +69,24 @@ class RegisterForm(FlaskForm):
         if user is not None:
             raise ValidationError('existed email address')
 
+
 # form for students to subscribe themselves to units (student_view.html)
 class MultiCheckboxField(SelectMultipleField):
-    widget			= ListWidget(prefix_label=False)
-    option_widget	= CheckboxInput()
+    widget = ListWidget(prefix_label=False)
+    option_widget = CheckboxInput()
+
+
 class SubscribeUnitForm(FlaskForm):
-    subscribe_units = MultiCheckboxField('Units', [Required(message='Please select one or more units.')], coerce=int)
+    subscribe_units = MultiCheckboxField('Units', [DataRequired(message='Please select one or more units.')],
+                                         coerce=int)
     submit = SubmitField('Subscribe')
+
 
 class MakeTeacherForm(FlaskForm):
     userNumber = StringField('Staff Number', validators=[DataRequired()])
     submit = SubmitField('Make User a Teacher')
 
-    def validate_username(self, user_number):
-        user = User.query.filter_by(user_number=userNumber.data).first()
+    def validate_username(self, userNumber):
+        user = User.query.filter_by(userNumber=self.userNumber.data).first()
         if user is None:
             raise ValidationError('This user does not exist.')
-

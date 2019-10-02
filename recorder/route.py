@@ -1,7 +1,6 @@
 from flask import render_template, redirect, url_for, flash, request, jsonify
 from flask_uploads import UploadSet, ALL
 from flask_login import login_user, current_user, logout_user, login_required
-import sys
 
 from recorder.forms import LoginForm, RegisterForm, SubscribeUnitForm, MakeTeacherForm
 from recorder.models.user import User
@@ -113,4 +112,3 @@ def upload():
         filename = files.save(request.files['upfile'])
         url = files.url(filename)
     return render_template('recorder.html')
-

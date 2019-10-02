@@ -9,6 +9,7 @@ using different database
 """
 class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    UPLOADS_DEFAULT_DEST = 'uploads'
 
 
 class TestingConfig(Config):
