@@ -87,4 +87,4 @@ class TestUser(unittest.TestCase):
 
     def test_get_task_question(self):
         user = db.session.query(User).filter(User.id == '1').one()
-        print(user.get_task_questions(2))
+        print(user.get_task_questions(1))

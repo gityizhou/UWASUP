@@ -71,7 +71,7 @@ class User(db.Model, UserMixin):
             # print(question.question_id)
             this_question = db.session.query(Question).filter(Question.id == question.question_id).first()
             # print(this_question)
-            if this_question.id == task_id:
+            if this_question.task_id == task_id:
                 task_questions.append(this_question)
         return task_questions
 
