@@ -1,6 +1,7 @@
 from recorder import db, loginManager
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
+from recorder.models.question import Question
 
 user_unit = db.Table('user_unit',
                      db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
@@ -25,7 +26,9 @@ class User(db.Model, UserMixin):
     questions = db.relationship("User_question", back_populates="user")
 
     def __repr__(self):
-        return f'id={self.id}, user_number={self.user_number}, first_name={self.first_name}, last_name={self.last_name}, email={self.email},password_hash={self.password_hash}, is_teacher={self.is_teacher} '
+        return 'id={}, user_number={}, first_name={}, last_name={}, email={},password_hash={}, is_teacher={}'.format(
+            self.id, self.user_number, self.first_name, self.last_name, self.email, self.password_hash, self.is_teacher
+        )
 
     def as_dict(self):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}
@@ -60,6 +63,23 @@ class User(db.Model, UserMixin):
     def delete_unit(self, unit):
         self.units.remove(unit)
         db.session.commit()
+
+    # you can use this method to get all questions in this task of a student
+    def get_task_questions(self, task_id):
+        task_questions = []
+        for question in self.questions:
+            # print(question.question_id)
+            this_question = db.session.query(Question).filter(Question.id == question.question_id).first()
+            # print(this_question)
+            if this_question.task_id == task_id:
+                task_questions.append(this_question)
+        return task_questions
+
+    # you can use this method to get the mark of the task of a student of a specific task
+    def get_task_mark(self, task_id):
+        for task in self.tasks:
+            if task.task_id == task_id:
+                return task.mark
 
     @staticmethod
     def get_user_list():

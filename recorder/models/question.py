@@ -30,3 +30,5 @@ class Question(db.Model):
     def add_question2task(self, task):
         self.task_id = task.id
         db.session.commit()
+
+
