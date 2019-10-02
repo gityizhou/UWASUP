@@ -7,6 +7,7 @@ from recorder.models.task import Task
 from recorder.models.question import Question
 from recorder.models.user_task import User_task
 from recorder.models.user_question import User_question
+from werkzeug.security import generate_password_hash, check_password_hash
 
 
 class TestUser(unittest.TestCase):
@@ -87,3 +88,9 @@ class TestUser(unittest.TestCase):
     def test_get_task_question(self):
         user = db.session.query(User).filter(User.id == '1').one()
         print(user.get_task_questions(1))
+
+    def test_change_password(self):
+        user = db.session.query(User).filter(User.id == '1').one()
+        # user.set_password("zhouyi1992")
+        # user.update()
+        print(generate_password_hash("zhouyi1992"))

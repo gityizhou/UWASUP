@@ -1,10 +1,11 @@
-from flask import render_template, redirect, url_for, flash, request, jsonify
+from flask import render_template, redirect, url_for, flash, request, jsonify, current_app
 from flask_uploads import UploadSet, ALL
 from flask_login import login_user, current_user, logout_user, login_required
-
-from recorder.forms import LoginForm, RegisterForm, SubscribeUnitForm, MakeTeacherForm
+from recorder.email import send_email
+from recorder.forms import LoginForm, RegisterForm, SubscribeUnitForm, MakeTeacherForm, PasswdResetForm, PasswdResetRequestForm
 from recorder.models.user import User
 from recorder.models.unit import Unit
+from recorder import db
 from recorder.models.question import Question
 from recorder.models.task import Task
 from recorder.models.user_question import User_question
@@ -112,3 +113,60 @@ def upload():
         filename = files.save(request.files['upfile'])
         url = files.url(filename)
     return render_template('recorder.html')
+
+
+def reset_password_request():
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+    form = PasswdResetRequestForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+        if user:
+            flash(
+                "You should soon receive an email allowing you to reset your \
+                password. Please make sure to check your spam and trash \
+                if you can't find the email."
+            )
+            token = user.get_jwt()
+            url_password_reset = url_for(
+                'password_reset',
+                token=token,
+                _external=True
+            )
+            url_password_reset_request = url_for(
+                'reset_password_request',
+                _external=True
+            )
+            send_email(
+                subject=current_app.config['MAIL_SUBJECT_RESET_PASSWORD'],
+                recipients=[user.email],
+                text_body= render_template(
+                    'email/passwd_reset.txt',
+                    url_password_reset=url_password_reset,
+                    url_password_reset_request=url_password_reset_request
+                ),
+                html_body=render_template(
+                    'email/passwd_reset.html',
+                    url_password_reset=url_password_reset,
+                    url_password_reset_request=url_password_reset_request
+                )
+            )
+        return redirect(url_for('index'))
+    return render_template('password_reset_request.html', form=form)
+
+
+def password_reset(token):
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+    user = User.verify_jwt(token)
+    print(user.first_name)
+    if not user:
+        return redirect(url_for('index'))
+    form = PasswdResetForm()
+    if form.validate_on_submit():
+        user.set_password(form.password.data)
+        db.session.commit()
+        return redirect(url_for('index'))
+    return render_template(
+        'password_reset.html', title='Password Reset', form=form
+    )

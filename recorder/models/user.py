@@ -2,6 +2,9 @@ from recorder import db, loginManager
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from recorder.models.question import Question
+from flask import current_app
+import jwt
+import time
 
 user_unit = db.Table('user_unit',
                      db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
@@ -96,6 +99,29 @@ class User(db.Model, UserMixin):
         return db.session.query(User).filter(
             User.id == user_id
         ).first()
+
+    def get_jwt(self, expire=7200):
+        return jwt.encode(
+            {
+                'email': self.email,
+                'exp': time.time() + expire
+            },
+            current_app.config['SECRET_KEY'],
+            algorithm='HS256'
+        ).decode('utf-8')
+
+    @staticmethod
+    def verify_jwt(token):
+        try:
+            email = jwt.decode(
+                token,
+                current_app.config['SECRET_KEY'],
+                algorithms=['HS256']
+            )
+            email = email['email']
+        except:
+            return
+        return User.query.filter_by(email=email).first()
 
 
 # get the id from session
