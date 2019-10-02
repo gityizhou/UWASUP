@@ -102,7 +102,7 @@ class User(db.Model, UserMixin):
             User.id == user_id
         ).first()
 
-    def get_jwt(self, expire=7200):
+    def get_jwt(self, expire=3600):
         return jwt.encode(
             {
                 'email': self.email,
