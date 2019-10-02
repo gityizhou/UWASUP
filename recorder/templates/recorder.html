@@ -3,20 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <title>CITS5206 Recording test demo</title>
+    <link rel="stylesheet" href="../static/css/style.css" type="text/css">
 </head>
 <body>
 <script src="https://xiangyuecn.github.io/Recorder/recorder.mp3.min.js"></script>
 <!-- add extension library waveview.js -->
 <script src="src/extensions/waveview.js"></script> 
-<input type="button" onclick="startRec();resetTime();startTime()" value="Start recording">
-<input type="button" onclick="stopRec();stopTime()" value="Finish recording">
-<input type="button" onclick="pauseRec();;resetTime();stopTime()" value="pause recording">
-<input type="button" onclick="resumeRec();startTime()" value="resume recording">
+<input class="bt" type="button" onclick="startRec();resetTime();startTime()" value="Start recording">
+<input class="bt" type="button" onclick="stopRec();stopTime()" value="Finish recording">
+<!-- <input type="button" onclick="pauseRec();;resetTime();stopTime()" value="pause recording">
+<input type="button" onclick="resumeRec();startTime()" value="resume recording"> -->
 <hr>
-<input type="button" onclick="playRec();stopTime()" value="play the record">
-<input type="button" onclick="uploadRec();stopTime()" value="upload the record">
+<input class="bt" type="button" onclick="playRec();stopTime()" value="play the record">
+<input class="bt" type="button" onclick="uploadRec();stopTime()" value="upload the record">
 <!-- Add Timer -->
 <p id="showTime">00 : 00</p>
+<!-- Add wavebox -->
+<div class="pd waveBox">
+    <div style="height:100px;width:300px;border:1px solid #ccc;box-sizing: border-box;display:inline-block" class="recwave"></div>
+    <input type="checkbox" class="recwaveSet" checked>
+</div>
+<!-- Setting for wave -->
+<div style="display: none;" class="pd">
+    Bit rate: <input type="radio" class="bit" value="64"  checked> 64 kbps
+</div>
+<div style="display: none;" class="pd">
+    Sampling rate: <input type="radio" class="sample" value="16000" checked> 16000 hz
+</div>
 
 
 <script>
@@ -24,10 +37,19 @@
     let recFile;
 
     function startRec() {
-        rec = Recorder();//Use the default configuration, mp3 format
+        var wave;
+        rec = Recorder(
+            {
+                onProcess:function(buffers,powerLevel,bufferDuration,bufferSampleRate){
+                    wave.input(rec.buffers[rec.buffers.length-1],powerLevel,bufferSampleRate);//输入音频数据，更新显示波形
+                }
+            }
+        );//Use the default configuration, mp3 format
 
         //Turn on the microphone and authorize resources
         rec.open(function () {
+            //add wave
+            wave = Recorder.WaveView({elem:".elem"}); //创建wave对象，写这里面浏览器妥妥的
             //start recording
             rec.start();
         }, function (msg, isUserNotAllow) {
