@@ -4,7 +4,8 @@
 }
 
 body{
-    height:100vh;
+    height: 100vh;
+
     display: flex;
     justify-content: center;
     align-items: center;
@@ -14,6 +15,7 @@ body{
     position: relative;
     border: none;
     outline: none;
+
     width: 12rem;
     height: 5rem;
     border-radius: 5rem;
@@ -24,60 +26,61 @@ body{
     box-shadow: 0 8px 28px black;
     cursor: pointer;
 
-    transition: 0.5s;
+    transition: .5s;
 }
 
 .active.bt{
     width: 5rem;
-    color: transparent;
+    color:transparent;
 }
+
 /* button style end */
 
 /* loading style start */
 .loading{
     opacity: 0;
-    transition: 0.5s;
+    transition: .5s;
 }
 
-.active.loading{
+.active .loading{
     position: absolute;
     left: 50%;
     top: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%,-50%);
 
     width: 70%;
     height: 40%;
-    
+
     display: flex;
-    justify-content: space-around;
+    justify-content: space-around;  
     align-items: flex-end;
     opacity: 1;
 }
 
-.active.loading div{
-    width: 0.3rem;
-    height: 0.3rem;
+.active .loading div{
+    width: .3rem;
+    height: .3rem;
     border-radius: 50%;
     background-color: #fff;
 
-    animation: 0.9s loading easy-in-out infinite alternate;
+    animation: .9s loading ease-in-out infinite alternate;
 }
 
 @keyframes loading{
     to{
-        transform: translate(0,-1rem);
-    }
+        transform: translate(0, -1rem);
+    }    
 }
 
-.active.loading div:nth-child(2){
-    animation-delay: 0.2s;
+.active .loading div:nth-child(2){
+    animation-delay: .2s;
 }
 
-.active.loading div:nth-child(3){
-    animation-delay: 0.4s;
+.active .loading div:nth-child(3){
+    animation-delay: .4s;
 }
 
-.verity.loading{
+.verity .loading{
     opacity: 0;
 }
 /* loading style end */
@@ -87,15 +90,16 @@ body{
     position: absolute;
     left: 50%;
     top: 56%;
-    transform: translate(-50%, -50%);
-
+    transform: translate(-50%,-50%);
+    stroke-width: 2px;
+    /* 利用stroke的虚线和偏移值达到加载的动画效果 */
     stroke-dasharray: 36px;
     stroke-dashoffset: 36px;
 }
 
-.verity.checkmark{
-    animation: 0.6s show forwards;
-    animation-delay: 0.4s;
+.verity .checkmark{
+    animation: .6s show forwards;
+    animation-delay: .4s;
 }
 
 @keyframes show{
@@ -103,5 +107,5 @@ body{
         stroke-dashoffset: 0;
     }
 }
-
 /* checkmark style end */
+

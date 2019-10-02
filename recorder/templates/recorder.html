@@ -11,8 +11,18 @@
 <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
 <!-- add extension library waveview.js -->
 <script src="src/extensions/waveview.js"></script> 
-<button class="bt" onclick="startRec();resetTime();startTime()">
-    <p>Record</p>
+
+
+
+<input class="bt" type="button" onclick="startRec();resetTime();startTime()" value="Record">
+<input class="bt" type="button" onclick="stopRec();stopTime()" value="Finish">
+<!-- <input type="button" onclick="pauseRec();resetTime();stopTime()" value="pause recording">
+<input type="button" onclick="resumeRec();startTime()" value="resume recording"> -->
+<input class="bt" type="button" onclick="playRec();stopTime()" value="Play">
+<hr>
+<!-- <input class="bt" type="button" onclick="uploadRec();stopTime()" value="Submit"> -->
+<button class="bt" onclick="uploadRec()">
+    <p>Submit</p>
     <div class="loading">
         <div></div>
         <div></div>
@@ -24,18 +34,6 @@
     </svg>
 </button>
 
-
-
-
-
-
-<!-- <input class="bt" type="button" onclick="startRec();resetTime();startTime()" value="Record"> -->
-<input class="bt" type="button" onclick="stopRec();stopTime()" value="Finish">
-<!-- <input type="button" onclick="pauseRec();resetTime();stopTime()" value="pause recording">
-<input type="button" onclick="resumeRec();startTime()" value="resume recording"> -->
-<input class="bt" type="button" onclick="playRec();stopTime()" value="Play">
-<hr>
-<input class="bt" type="button" onclick="uploadRec();stopTime()" value="Submit">
 <!-- Add Timer -->
 <p id="showTime">00 : 00</p>                 
 <!-- Add wavebox -->
@@ -82,8 +80,8 @@
 
         //Turn on the microphone and authorize resources
         rec.open(function () {
-            //add wave
-            wave = Recorder.WaveView({elem:".elem"}); //创建wave对象，写这里面浏览器妥妥的
+            // add wave 一加上就没有录音了
+            // wave = Recorder.WaveView({elem:".elem"}); //创建wave对象，写这里面浏览器妥妥的
             //start recording
             rec.start();
         }, function (msg, isUserNotAllow) {
