@@ -22,6 +22,8 @@ class User(db.Model, UserMixin):
     password_hash = db.Column(db.String(128))
     is_teacher = db.Column(db.Integer, default=0)
 
+
+
     units = db.relationship('Unit', secondary=user_unit,
                             backref=db.backref('users', lazy='dynamic'),
                             lazy='dynamic')

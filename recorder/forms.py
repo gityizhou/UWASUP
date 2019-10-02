@@ -39,9 +39,8 @@ class RegisterForm(FlaskForm):
     firstname = StringField("First Name", validators=[DataRequired()])
     lastname = StringField("Last Name", validators=[DataRequired()])
     email = StringField("Email Address", validators=[DataRequired(), Email()])
-    reg = "^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$"
-    password = PasswordField("Password", validators=[DataRequired(), Regexp(reg,
-                                                                            message="Length of password should longer than 8 with numbers and alphabets.")])
+    password = PasswordField("Password", validators=[DataRequired(), Length(min=8, max=18,
+                                                                            message="Length of password should longer than 7")])
     password2 = PasswordField(
         "Password Repeat", validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Register')
@@ -104,7 +103,8 @@ class PasswdResetRequestForm(FlaskForm):
 
 
 class PasswdResetForm(FlaskForm):
-    password = PasswordField("Password", validators=[DataRequired()])
+    password = PasswordField("Password", validators=[DataRequired(), Length(min=8, max=18,
+                                                                            message="Length of password should longer than 7")])
     password2 = PasswordField(
         "Password Repeat", validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Submit')

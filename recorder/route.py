@@ -6,6 +6,7 @@ from recorder.forms import LoginForm, RegisterForm, SubscribeUnitForm, MakeTeach
 from recorder.models.user import User
 from recorder.models.unit import Unit
 from recorder import db
+import random
 from recorder.models.question import Question
 from recorder.models.task import Task
 from recorder.models.user_question import User_question
@@ -87,11 +88,26 @@ def logout():
     logout_user()
     return redirect(url_for('index'))
 
+def generate_verification_code():
+    ''' generate random 6 digit code '''
+    code_list = []
+    for i in range(10): # 0-9
+        code_list.append(str(i))
+    for i in range(65, 91): # A-Z
+        code_list.append(chr(i))
+    for i in range(97, 123): # a-z
+        code_list.append(chr(i))
+
+    myslice = random.sample(code_list, 6)
+    verification_code = ''.join(myslice) # list to string
+    return verification_code
+
 
 # register function
 def register():
     # get the register form object
     form = RegisterForm()
+    # verification_code = generate_verification_code()
     if form.validate_on_submit():
         # read user data from form
         user = User(user_number=form.username.data,
@@ -102,6 +118,7 @@ def register():
         user.set_password(form.password.data)
         # add the new user to database
         user.add()
+        flash('Congratulations. You have registered successfully!')
         return redirect(url_for('index'))
     return render_template('register.html', title='Registration', form=form)
 
@@ -166,6 +183,7 @@ def password_reset(token):
     if form.validate_on_submit():
         user.set_password(form.password.data)
         db.session.commit()
+        flash("Congratulations. You have already reset your password !")
         return redirect(url_for('index'))
     return render_template(
         'password_reset.html', title='Password Reset', form=form
