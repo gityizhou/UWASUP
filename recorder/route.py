@@ -147,7 +147,7 @@ def upload():
         upload_file.SetContentFile("./uploads/files/" + filename)  # set our file into this instance
         upload_file['title'] = filename    # set the file name of this file
         upload_file.Upload()        # upload this file
-        print(upload_file['id'])    # get this file's google drive-id
+        print(upload_file['id'])    # can get this file's google drive-id and use it to save the id into database
         os.remove("./uploads/files/" + filename)  # delete this file after uploading it to google drive
     return render_template('recorder.html')
 
