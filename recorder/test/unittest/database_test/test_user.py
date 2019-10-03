@@ -94,3 +94,7 @@ class TestUser(unittest.TestCase):
         # user.set_password("zhouyi1992")
         # user.update()
         print(generate_password_hash("admin"))
+
+    def test_get_question_url(self):
+        user = db.session.query(User).filter(User.id == '1').one()
+        print(user.get_question_record_url(1))

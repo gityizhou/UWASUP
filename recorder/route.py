@@ -137,10 +137,12 @@ drive = GoogleDrive(gauth)
 # and will be uploaded to google drive
 def upload():
     files = UploadSet('files', ALL)
+    student = current_user
     if request.method == 'POST' and 'upfile' in request.files:
         filename = files.save(
             request.files['upfile'])  # get the file from front end request, return the file name(String)
         url = files.url(filename)  # get the url of this file
+        print(student.first_name, student.last_name)
         print(filename)
         print(url)
         upload_file = drive.CreateFile()  # create the google drive file instance

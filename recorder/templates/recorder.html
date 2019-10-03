@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    
     <title>demo{{current_user.id}}</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="../static/css/stylesheet.css" type="text/css">
@@ -24,6 +25,11 @@
 <hr>
 
 
+    <script>console.log({{current_user.id}}+"_"+ {{current_user.user_number}})</script>
+
+<hr>
+<audio src="/uploads/files/recorder.mp3" controls="controls" >
+  </audio>  
 
 
 
@@ -135,7 +141,7 @@ var audio
             ，from normal application/x-www-form-urlencoded form upload
             */
             var form = new FormData();
-            form.append("upfile", recFile, "recorder.mp3"); //Similar to ordinary form forms, files with upfile parameters, named recorder. Mp3, are received by the back-end
+            form.append("upfile", recFile, {{current_user.id}}+"_"+{{current_user.user_number}}+".mp3"); //Similar to ordinary form forms, files with upfile parameters, named recorder. Mp3, are received by the back-end
 
             //Upload directly with ajax
             var xhr = new XMLHttpRequest();
@@ -167,15 +173,12 @@ var audio
             isCounting = true;
             timeoutId = setInterval(countTime, 1);        //指定时间执行任务
         }
-
-        document.getElementById("start").value = "计时中";
     }
 
     function stopTime() {
         if (isCounting) {
             isCounting = false;
             clearTimeout(timeoutId); //清除指定id计时器
-            document.getElementById("start").value = "继续";
         }
     }
 
