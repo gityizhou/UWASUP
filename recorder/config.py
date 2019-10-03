@@ -9,6 +9,16 @@ using different database
 """
 class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    UPLOADS_DEFAULT_DEST = 'uploads'
+    MAIL_DEFAULT_SENDER = os.environ.get('MAIL_DEFAULT_SENDER', 'noreply@recorder.com')
+    MAIL_SERVER = os.environ.get('MAIL_SERVER', 'smtp.googlemail.com')
+    MAIL_PORT = os.environ.get('MAIL_PORT', 587)
+    MAIL_USE_TLS = os.environ.get('MAIL_USE_TLS', 1)
+    MAIL_USERNAME = os.environ.get('MAIL_USERNAME', 'joeyrecorder@gmail.com')
+    MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD', 'zxc47POI!')
+    MAIL_SUBJECT_RESET_PASSWORD = '[Recorder] Please Reset Your Password'
+    MAIN_SUBJECT_USER_ACTIVATE = '[Recorder] Please Activate Your Accout'
+
 
 
 class TestingConfig(Config):

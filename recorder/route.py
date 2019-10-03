@@ -1,11 +1,15 @@
-from flask import render_template, redirect, url_for, flash, request, jsonify
+from flask import render_template, redirect, url_for, flash, request, jsonify, current_app
 from flask_uploads import UploadSet, ALL
 from flask_login import login_user, current_user, logout_user, login_required
-import sys
-
-from recorder.forms import LoginForm, RegisterForm, SubscribeUnitForm, MakeTeacherForm
+from recorder.email import send_email
+from recorder.forms import LoginForm, RegisterForm, SubscribeUnitForm, MakeTeacherForm, PasswdResetForm, \
+    PasswdResetRequestForm
 from recorder.models.user import User
 from recorder.models.unit import Unit
+from recorder import db
+import random, os
+from pydrive.auth import GoogleAuth
+from pydrive.drive import GoogleDrive
 from recorder.models.question import Question
 from recorder.models.task import Task
 from recorder.models.user_question import User_question
@@ -88,10 +92,26 @@ def logout():
     return redirect(url_for('index'))
 
 
+def generate_verification_code():
+    ''' generate random 6 digit code '''
+    code_list = []
+    for i in range(10):  # 0-9
+        code_list.append(str(i))
+    for i in range(65, 91):  # A-Z
+        code_list.append(chr(i))
+    for i in range(97, 123):  # a-z
+        code_list.append(chr(i))
+
+    myslice = random.sample(code_list, 6)
+    verification_code = ''.join(myslice)  # list to string
+    return verification_code
+
+
 # register function
 def register():
     # get the register form object
     form = RegisterForm()
+    # verification_code = generate_verification_code()
     if form.validate_on_submit():
         # read user data from form
         user = User(user_number=form.username.data,
@@ -102,15 +122,91 @@ def register():
         user.set_password(form.password.data)
         # add the new user to database
         user.add()
+        flash('Congratulations. You have registered successfully!')
         return redirect(url_for('index'))
     return render_template('register.html', title='Registration', form=form)
 
 
 # recorder upload function, the folder now is default /uploads/files/
+gauth = GoogleAuth()
+gauth.LocalWebserverAuth()
+drive = GoogleDrive(gauth)
+
+
+# recorder upload function, the folder now is default /uploads/files/
+# and will be uploaded to google drive
 def upload():
     files = UploadSet('files', ALL)
+    student = current_user
     if request.method == 'POST' and 'upfile' in request.files:
-        filename = files.save(request.files['upfile'])
-        url = files.url(filename)
+        filename = files.save(
+            request.files['upfile'])  # get the file from front end request, return the file name(String)
+        url = files.url(filename)  # get the url of this file
+        print(student.first_name, student.last_name)
+        print(filename)
+        print(url)
+        upload_file = drive.CreateFile()  # create the google drive file instance
+        upload_file.SetContentFile("./uploads/files/" + filename)  # set our file into this instance
+        upload_file['title'] = filename    # set the file name of this file
+        upload_file.Upload()        # upload this file
+        print(upload_file['id'])    # can get this file's google drive-id and use it to save the id into database
+        os.remove("./uploads/files/" + filename)  # delete this file after uploading it to google drive
     return render_template('recorder.html')
 
+
+def reset_password_request():
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+    form = PasswdResetRequestForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+        if user:
+            flash(
+                "You should soon receive an email allowing you to reset your \
+                password. Please make sure to check your spam and trash \
+                if you can't find the email."
+            )
+            token = user.get_jwt()
+            url_password_reset = url_for(
+                'password_reset',
+                token=token,
+                _external=True
+            )
+            url_password_reset_request = url_for(
+                'reset_password_request',
+                _external=True
+            )
+            send_email(
+                subject=current_app.config['MAIL_SUBJECT_RESET_PASSWORD'],
+                recipients=[user.email],
+                text_body=render_template(
+                    'email/passwd_reset.txt',
+                    url_password_reset=url_password_reset,
+                    url_password_reset_request=url_password_reset_request
+                ),
+                html_body=render_template(
+                    'email/passwd_reset.html',
+                    url_password_reset=url_password_reset,
+                    url_password_reset_request=url_password_reset_request
+                )
+            )
+        return redirect(url_for('index'))
+    return render_template('password_reset_request.html', form=form)
+
+
+def password_reset(token):
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+    user = User.verify_jwt(token)
+    print(user.first_name)
+    if not user:
+        return redirect(url_for('index'))
+    form = PasswdResetForm()
+    if form.validate_on_submit():
+        user.set_password(form.password.data)
+        db.session.commit()
+        flash("Congratulations. You have already reset your password !", "success")
+        return redirect(url_for('index'))
+    return render_template(
+        'password_reset.html', title='Password Reset', form=form
+    )
