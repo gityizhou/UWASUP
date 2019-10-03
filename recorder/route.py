@@ -134,16 +134,21 @@ drive = GoogleDrive(gauth)
 
 
 # recorder upload function, the folder now is default /uploads/files/
+# and will be uploaded to google drive
 def upload():
     files = UploadSet('files', ALL)
     if request.method == 'POST' and 'upfile' in request.files:
-        filename = files.save(request.files['upfile'])
-        upload_file = drive.CreateFile()
-        upload_file.SetContentFile("./uploads/files/" + filename)
-        upload_file['title'] = filename
-        upload_file.Upload()
-
-        os.remove("./uploads/files/" + filename)
+        filename = files.save(
+            request.files['upfile'])  # get the file from front end request, return the file name(String)
+        url = files.url(filename)  # get the url of this file
+        print(filename)
+        print(url)
+        upload_file = drive.CreateFile()  # create the google drive file instance
+        upload_file.SetContentFile("./uploads/files/" + filename)  # set our file into this instance
+        upload_file['title'] = filename    # set the file name of this file
+        upload_file.Upload()        # upload this file
+        print(upload_file['id'])    # get this file's google drive-id
+        os.remove("./uploads/files/" + filename)  # delete this file after uploading it to google drive
     return render_template('recorder.html')
 
 
