@@ -86,6 +86,12 @@ class User(db.Model, UserMixin):
             if task.task_id == task_id:
                 return task.mark
 
+    # get the record url of this question of this student
+    def get_question_record_url(self, question_id):
+        for question in self.questions:
+            if question.question_id == question_id:
+                return question.recorder_url
+
     @staticmethod
     def get_user_list():
         return db.session.query(User).all()
