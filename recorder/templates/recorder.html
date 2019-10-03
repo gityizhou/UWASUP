@@ -79,7 +79,7 @@
         //Turn on the microphone and authorize resources
         rec.open(function () {
             // add wave 一加上就没有录音了
-            // wave = Recorder.WaveView({elem:".elem"}); //创建wave对象，写这里面浏览器妥妥的
+            wave = Recorder.WaveView({elem:".recwave"}); //创建wave对象，写这里面浏览器妥妥的
             //start recording
             rec.start();
         }, function (msg, isUserNotAllow) {
@@ -182,9 +182,9 @@ var audio
         if (secs >= 60) {
             mins += 1;
             secs = 0;
-            if (mins == 5 && secs==0) {
-                doOnClick();
         }
+        if (mins == 5 && secs==0) {
+                doOnClick();
         }
         document.getElementById("showTime").innerHTML = checkTime(mins) + " : " + checkTime(secs);
     }
