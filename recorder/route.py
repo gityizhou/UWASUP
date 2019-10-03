@@ -2,11 +2,14 @@ from flask import render_template, redirect, url_for, flash, request, jsonify, c
 from flask_uploads import UploadSet, ALL
 from flask_login import login_user, current_user, logout_user, login_required
 from recorder.email import send_email
-from recorder.forms import LoginForm, RegisterForm, SubscribeUnitForm, MakeTeacherForm, PasswdResetForm, PasswdResetRequestForm
+from recorder.forms import LoginForm, RegisterForm, SubscribeUnitForm, MakeTeacherForm, PasswdResetForm, \
+    PasswdResetRequestForm
 from recorder.models.user import User
 from recorder.models.unit import Unit
 from recorder import db
-import random
+import random, os
+from pydrive.auth import GoogleAuth
+from pydrive.drive import GoogleDrive
 from recorder.models.question import Question
 from recorder.models.task import Task
 from recorder.models.user_question import User_question
@@ -88,18 +91,19 @@ def logout():
     logout_user()
     return redirect(url_for('index'))
 
+
 def generate_verification_code():
     ''' generate random 6 digit code '''
     code_list = []
-    for i in range(10): # 0-9
+    for i in range(10):  # 0-9
         code_list.append(str(i))
-    for i in range(65, 91): # A-Z
+    for i in range(65, 91):  # A-Z
         code_list.append(chr(i))
-    for i in range(97, 123): # a-z
+    for i in range(97, 123):  # a-z
         code_list.append(chr(i))
 
     myslice = random.sample(code_list, 6)
-    verification_code = ''.join(myslice) # list to string
+    verification_code = ''.join(myslice)  # list to string
     return verification_code
 
 
@@ -124,11 +128,25 @@ def register():
 
 
 # recorder upload function, the folder now is default /uploads/files/
+gauth = GoogleAuth()
+gauth.LocalWebserverAuth()
+drive = GoogleDrive(gauth)
+
+
+# recorder upload function, the folder now is default /uploads/files/
 def upload():
     files = UploadSet('files', ALL)
     if request.method == 'POST' and 'upfile' in request.files:
         filename = files.save(request.files['upfile'])
         url = files.url(filename)
+        print(filename)
+        print(url)
+        upload_file = drive.CreateFile()
+        upload_file.SetContentFile("./uploads/files/" + filename)
+        upload_file['title'] = filename
+        upload_file.Upload()
+        print(upload_file['id'])
+        os.remove("./uploads/files/" + filename)
     return render_template('recorder.html')
 
 
@@ -157,7 +175,7 @@ def reset_password_request():
             send_email(
                 subject=current_app.config['MAIL_SUBJECT_RESET_PASSWORD'],
                 recipients=[user.email],
-                text_body= render_template(
+                text_body=render_template(
                     'email/passwd_reset.txt',
                     url_password_reset=url_password_reset,
                     url_password_reset_request=url_password_reset_request
