@@ -89,8 +89,8 @@
     <hr>
 
     <!-- list of units, tasks, students and questions as nested Bootstrap4 accordions -->
-    <div id="accordion_units">
         <!-- list of all units -->
+        <div id="accordion_units">
         {% for unit in all_units %}
             <div class="card">
                 <div class="card-header" id="heading_unit_{{ unit.id }}">
@@ -127,11 +127,12 @@
                                         </div>
                                         <!-- modal footer -->
                                         <div class="modal-footer">
+                                            <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <!-- end DELETE A USER modal -->
+                            <!-- end DELETE UNIT modal -->
                         <!-- list of tasks for each unit -->
                         <div id="accordion_tasks">
                             {% for task in unit.tasks %}
@@ -145,6 +146,37 @@
                                     </div>
                                     <div id="collapse_task_{{ task.id }}" class="collapse" aria-labelledby="heading_task_{{ task.id }}" data-parent="#accordion_tasks">
                                         <div class="card-body" style="background-color: #aecee4;">
+                                            <!-- DELETE TASK modal -->
+                                            <!-- button to open the modal -->
+                                            <button id="btn-delete-task-{{ task.id }}" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-delete-task-{{ task.id }}">
+                                                Delete Task
+                                            </button>
+                                            <!-- code for modal window -->
+                                            <div class="modal" id="modal-delete-task-{{ task.id }}">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <!-- modal header -->
+                                                        <div class="modal-header">
+                                                        <button  id="btn-top-close-delete-task-{{ task.id }}" type="button" class="close" data-dismiss="modal">&times;</button>
+                                                        </div>
+                                                        <!-- modal body -->
+                                                        <div class="modal-body">
+                                                            <h5>Are you sure?</h5>
+                                                            <p>Deleting a task will permanently delete all questions and students submissions associated with this task.</p>
+                                                            <form class="form" action="" method="post" novalidate>
+                                                                {{ form_delete_task.hidden_tag() }}
+                                                                {{ form_delete_task.taskID(value=task.id, style="display: none;") }}
+                                                                <a>{{ form_delete_task.submit }}</a>
+                                                            </form>
+                                                        </div>
+                                                        <!-- modal footer -->
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- end DELETE TASK modal -->
                                             <!-- list of students for each task -->
                                             <div id="accordion_students">
                                                 {% for student in task.get_task_users() %}

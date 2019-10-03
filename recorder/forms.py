@@ -98,3 +98,7 @@ class DeleteUserForm(FlaskForm):
 class DeleteUnitForm(FlaskForm):
     unitID = StringField()
     submit = SubmitField('Delete Unit')
+
+class DeleteTaskForm(FlaskForm):
+    taskID = StringField()
+    submit = SubmitField('Delete Task')
