@@ -4,6 +4,7 @@ from flask_login import login_user, current_user, logout_user, login_required
 import sys
 
 from recorder.forms import LoginForm, RegisterForm, SubscribeUnitForm, MakeTeacherForm, DeleteUserForm
+from recorder.forms import DeleteUnitForm
 from recorder.models.user import User
 from recorder.models.unit import Unit
 from recorder.models.question import Question
@@ -72,6 +73,7 @@ def teacher_view(staff_number):
     teacher = current_user
     form_make_teacher = MakeTeacherForm()
     form_delete_user = DeleteUserForm()
+    form_delete_unit = DeleteUnitForm()
     if form_make_teacher.validate_on_submit():
         user = User.query.filter_by(user_number=form_make_teacher.userNumber.data).first()
         user.student2teacher()
@@ -80,11 +82,16 @@ def teacher_view(staff_number):
         user = User.query.filter_by(user_number=form_delete_user.userNumber.data).first()
         user.delete()
         flash('The user has been deleted.')
+    if form_delete_unit.validate_on_submit():
+        unit = Unit.query.filter_by(id=form_delete_unit.unitID.data).first()
+        unit.delete()
+        flash('The unit has been deleted.')
     teacher_units = teacher.units.all()
     all_units = Unit.query.all()
     all_users = User.query.all()
     return render_template('teacher_view.html', teacher=teacher, teacher_units=teacher_units, all_units=all_units,
-                           all_users=all_users, form_make_teacher=form_make_teacher, form_delete_user=form_delete_user)
+                           all_users=all_users, form_make_teacher=form_make_teacher, form_delete_user=form_delete_user,
+                           form_delete_unit=form_delete_unit)
 
 
 # logout function

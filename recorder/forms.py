@@ -94,3 +94,7 @@ class DeleteUserForm(FlaskForm):
         user = User.query.filter_by(user_number=self.userNumber.data).first()
         if user is None:
             raise ValidationError('This user does not exist.')
+
+class DeleteUnitForm(FlaskForm):
+    unitID = StringField()
+    submit = SubmitField('Delete Unit')
