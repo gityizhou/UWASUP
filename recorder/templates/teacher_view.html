@@ -24,67 +24,69 @@
                     <!-- modal body -->
                     <div class="modal-body">
                         <form class="form" action="" method="post" novalidate>
-                            {{ form_teacher.hidden_tag() }}
+                            {{ form_make_teacher.hidden_tag() }}
                             <p>
-                                {{ form_teacher.userNumber.label }}<br>
-                                {{ form_teacher.userNumber(size=32, class="form-field") }}<br>
-                                {% for error in form_teacher.userNumber.errors %}
+                                {{ form_make_teacher.userNumber.label }}<br>
+                                {{ form_make_teacher.userNumber(size=32, class="form-field") }}<br>
+                                {% for error in form_make_teacher.userNumber.errors %}
                                     <span style="color: red;">[{{ error }}]</span>
                                 {% endfor %}
                             </p>
-                            <a>{{ form_teacher.submit }}</a>
+                            <a>{{ form_make_teacher.submit }}</a>
                         </form>
                     </div>
                     <!-- modal footer -->
                     <div class="modal-footer">
-                    <button id="btn-btm-close-subscribe-to-unit-modal" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    <button id="btn-btm-close-make-teacher-modal" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                     </div>
                 </div>
             </div>
         </div>
         <!-- end MAKE A USER A TEACHER modal -->
-    </div>
-    <!-- end teacher details and actions -->
-    <hr>
-
         <!-- DELETE A USER modal -->
         <!-- button to open the modal -->
-        <button id="btn-make-teacher" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-make-teacher">
-                Make a User a Teacher
-            </button>
-            <!-- code for modal window -->
-            <div class="modal" id="modal-make-teacher">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <!-- modal header -->
-                        <div class="modal-header">
-                        <h4 class="modal-title">Make a User a Teacher</h4>
-                        <button  id="btn-top-close-make-teacher-modal" type="button" class="close" data-dismiss="modal">&times;</button>
-                        </div>
-                        <!-- modal body -->
-                        <div class="modal-body">
-                            <form class="form" action="" method="post" novalidate>
-                                {{ form_teacher.hidden_tag() }}
-                                <p>
-                                    {{ form_teacher.userNumber.label }}<br>
-                                    {{ form_teacher.userNumber(size=32, class="form-field") }}<br>
-                                    {% for error in form_teacher.userNumber.errors %}
-                                        <span style="color: red;">[{{ error }}]</span>
-                                    {% endfor %}
-                                </p>
-                                <a>{{ form_teacher.submit }}</a>
-                            </form>
-                        </div>
-                        <!-- modal footer -->
-                        <div class="modal-footer">
-                        <button id="btn-btm-close-subscribe-to-unit-modal" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                        </div>
+        <button id="btn-make-teacher" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-delete-user">
+            Delete a User
+        </button>
+        <!-- code for modal window -->
+        <div class="modal" id="modal-delete-user">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <!-- modal header -->
+                    <div class="modal-header">
+                    <h4 class="modal-title">Delete a User</h4>
+                    <button  id="btn-top-close-delete-user-modal" type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <!-- modal body -->
+                    <div class="modal-body">
+                        <form class="form" action="" method="post" novalidate>
+                            {{ form_delete_user.hidden_tag() }}
+                            <p>
+                                {{ form_delete_user.userNumber.label }}<br>
+                                {{ form_delete_user.userNumber(size=32, class="form-field") }}<br>
+                                {% for error in form_delete_user.userNumber.errors %}
+                                    <span style="color: red;">[{{ error }}]</span>
+                                {% endfor %}
+                            </p>
+                            <a>{{ form_delete_user.submit }}</a>
+                        </form>
+                    </div>
+                    <!-- modal footer -->
+                    <div class="modal-footer">
+                    <button id="btn-btm-close-delete-user-modal" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                     </div>
                 </div>
             </div>
-            <!-- end DELETE A USER modal -->
         </div>
-        <hr>
+        <!-- end DELETE A USER modal -->
+        <!-- CREATE A UNIT modal -->
+        <!-- end CREATE A UNIT modal -->
+        <!-- CREATE A TASK modal -->
+            <!-- TODO: CREATE QUESTIONS FOR TASK -->
+        <!-- end CREATE A TASK modal -->
+    </div>
+    <!-- end teacher details and actions -->
+    <hr>
 
     <!-- list of units, tasks, students and questions as nested Bootstrap4 accordions -->
     <div id="accordion_units">
@@ -100,8 +102,8 @@
                 </div>
                 <div id="collapse_unit_{{ unit.id }}" class="collapse" aria-labelledby="heading_unit_{{ unit.id }}" data-parent="#accordion_units">
                     <div class="card-body" style="background-color: #ecd29d;">
+                        <!-- list of tasks for each unit -->
                         <div id="accordion_tasks">
-                            <!-- list of tasks for each unit -->
                             {% for task in unit.tasks %}
                                 <div class="card">
                                     <div class="card-header" id="heading_task_{{ task.id }}">
@@ -113,65 +115,63 @@
                                     </div>
                                     <div id="collapse_task_{{ task.id }}" class="collapse" aria-labelledby="heading_task_{{ task.id }}" data-parent="#accordion_tasks">
                                         <div class="card-body" style="background-color: #aecee4;">
+                                            <!-- list of students for each task -->
                                             <div id="accordion_students">
-                                                <!-- list of students for each task -->
                                                 {% for student in task.get_task_users() %}
                                                     <div class="card">
                                                         <div class="card-header" id="heading_student_{{ student.id }}">
                                                             <h5 class="mb-0">
                                                                 <button class="btn btn-link" data-toggle="collapse" data-target="#collapse_student_{{ student.id }}" aria-expanded="true" aria-controls="collapse_student_{{ student.id }}">
-                                                                    <p>{{ student.first_name}} {{ student.last_name}}</p>
-                                                                    <p>Student Number: {{ student.user_number }}</p>
-                                                                    <p>Task Mark: {{ student.get_task_mark({{ task.id }}) }}</p>
+                                                                    <p>{{ student.user_number }}: {{ student.first_name}} {{ student.last_name}}</p>
                                                                 </button>
                                                             </h5>
                                                         </div>
                                                         <div id="collapse_student_{{ student.id }}" class="collapse" aria-labelledby="heading_student_{{ student.id }}" data-parent="#accordion_students">
                                                             <div class="card-body" style="background-color: #efd9f5;">
-                                                                <div id="accordion_questions">
                                                                 <!-- list of questions for each student for this task -->
-                                                                {% for question in student.get_task_question({{ task.id }}) %}
-                                                                    <div class="card">
-                                                                        <div class="card-header" id="heading_question_1">
-                                                                            <h5 class="mb-0">
-                                                                                <button class="btn btn-link" data-toggle="collapse" data-target="#collapse_question_1" aria-expanded="true" aria-controls="collapse_question_1">
-                                                                                    <p>{{ question.question_name }}</p>
-                                                                                </button>
-                                                                            </h5>
-                                                                        </div>
-                                                                        <div id="collapse_question_1" class="collapse" aria-labelledby="heading_question_1" data-parent="#accordion_questions">
-                                                                            <div class="card-body" style="background-color: #d7f8d7;">
-                                                                                <p>{{ question.description }}</p>
-                                                                                <!-- TODO: get recording from question.users.recorder_url -->
-                                                                                <p>Play recording: </p>
-                                                                                <!-- recording module -->
-                                                                                <!-- end recording module -->
+                                                                <div id="accordion_questions">
+                                                                    <p>Task Mark: {{ student.get_task_mark(task.id) }}</p>
+                                                                    {% for question in student.get_task_questions(task.id) %}
+                                                                        <div class="card">
+                                                                            <div class="card-header" id="heading_question_1">
+                                                                                <h5 class="mb-0">
+                                                                                    <button class="btn btn-link" data-toggle="collapse" data-target="#collapse_question_1" aria-expanded="true" aria-controls="collapse_question_1">
+                                                                                        <p>{{ question.question_name }}</p>
+                                                                                    </button>
+                                                                                </h5>
+                                                                            </div>
+                                                                            <div id="collapse_question_1" class="collapse" aria-labelledby="heading_question_1" data-parent="#accordion_questions">
+                                                                                <div class="card-body" style="background-color: #d7f8d7;">
+                                                                                    <p>Question Description: {{ question.description }}</p>
+                                                                                    <!-- TODO: get recording from question.users.recorder_url -->
+                                                                                    <p>Play recording: </p>
+                                                                                    <!-- recording module -->
+                                                                                    <!-- end recording module -->
+                                                                                </div>
                                                                             </div>
                                                                         </div>
-                                                                    </div>
-                                                                    <hr>
-                                                                {% endfor %}
+                                                                        <hr>
+                                                                    {% endfor %}
+                                                                </div>
                                                                 <!-- end list of questions for each student for the task -->
-                                                                </div> 
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <hr>
                                                 {% endfor %}
-                                                <!-- end list of students for the task -->
                                             </div>
+                                            <!-- end list of students for the task -->
                                         </div>
                                     </div>
                                 </div>
                             {% endfor %}
-                            <!-- end list of tasks for the unit -->
                         </div>
+                        <!-- end list of tasks for the unit -->
                     </div>
                 </div>
             </div>
         {% endfor %}
-        <!-- end list of units for the teacher -->
-    </div>    
-    <!-- end list of units, tasks, students and questions -->
+    </div>   
+    <!-- end list of units for the teacher --> 
 
 {% endblock %}
