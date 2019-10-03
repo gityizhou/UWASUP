@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>CITS5206 Recording test demo</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="../static/css/stylesheet.css" type="text/css">
 </head>
 <body>
@@ -14,25 +15,37 @@
 
 
 
-<input class="bt" type="button" onclick="startRec();resetTime();startTime()" value="Record">
-<input class="bt" type="button" onclick="stopRec();stopTime()" value="Finish">
+
+
+<input class="btn btn-primary" type="button" id="Record" onclick="doOnClick()" value="Start" >
 <!-- <input type="button" onclick="pauseRec();resetTime();stopTime()" value="pause recording">
 <input type="button" onclick="resumeRec();startTime()" value="resume recording"> -->
-<input class="bt" type="button" onclick="playRec();stopTime()" value="Play">
+<input class="btn btn-primary" type="button" onclick="playRec();stopTime()" value="Play">
 <hr>
+
+
+<script>
+    function doOnClick(){
+        if(document.getElementById('Record').value=="Finish"){
+            document.getElementById('Record').value="Start";
+            document.getElementById('Record').style.color='white';
+            stopRec();
+            stopTime();
+        }
+        else if (document.getElementById('Record').value=="Start"){
+            document.getElementById('Record').value="Finish";
+            document.getElementById('Record').style.color='red';
+            startRec();
+            resetTime();
+            startTime();
+        }
+    }
+</script>
+
+
 <!-- <input class="bt" type="button" onclick="uploadRec();stopTime()" value="Submit"> -->
-<button class="bt" onclick="uploadRec()">
-    <p>Submit</p>
-    <div class="loading">
-        <div></div>
-        <div></div>
-        <div></div>
-    </div>
-    <!-- use svg -->
-    <svg class='checkmark' width='30px' height='30px' stroke='white' fill='none'>
-        <polyline points='2,10 12,18 28,2'></polyline>
-    </svg>
-</button>
+<input class="btn btn-primary" type="button" onclick="uploadRec()" value="upload the record">
+
 
 <!-- Add Timer -->
 <p id="showTime">00 : 00</p>                 
@@ -48,21 +61,6 @@
 <div style="display: none;" class="pd">
     Sampling rate: <input type="radio" class="sample" value="16000" checked> 16000 hz
 </div>
-
-<!-- Add button action -->
-<script>
-    $($('.bt').click(
-        function(){
-            $(this).toggleClass('active');
-            setTimeout(
-                () => {
-                    $(this).toggleClass('verity');
-                },2000
-            )
-        }
-
-    ))
-</script>
 
 <script>
     let rec;
@@ -105,18 +103,23 @@
         })
     }
 
+var audio
+
     function playRec() {
         //Stop recording and get the blob binary object of the recording file
-            var audio = document.createElement("audio");
+        if(audio==null){
+            audio = document.createElement("audio");
             audio.controls = true;
             document.body.appendChild(audio);
-            //get the blob audio url
-            if(audio.src==false){
             audio.src = URL.createObjectURL(recFile);
             audio.play();
-            }else{
-                audio.play();
-            }
+        }
+        else{
+            document.body.appendChild(audio);
+            audio.src = URL.createObjectURL(recFile);
+            audio.play();
+        }
+            
         };
 
     function uploadRec() {
@@ -179,11 +182,9 @@
         if (secs >= 60) {
             mins += 1;
             secs = 0;
+            if (mins == 5 && secs==0) {
+                doOnClick();
         }
-        if (mins >= 60) {
-            hours += 1;
-            mins = 0;
-
         }
         document.getElementById("showTime").innerHTML = checkTime(mins) + " : " + checkTime(secs);
     }
