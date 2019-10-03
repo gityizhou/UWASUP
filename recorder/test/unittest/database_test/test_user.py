@@ -93,4 +93,4 @@ class TestUser(unittest.TestCase):
         user = db.session.query(User).filter(User.id == '1').one()
         # user.set_password("zhouyi1992")
         # user.update()
-        print(generate_password_hash("zhouyi1992"))
+        print(generate_password_hash("admin"))
