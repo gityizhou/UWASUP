@@ -138,14 +138,11 @@ def upload():
     files = UploadSet('files', ALL)
     if request.method == 'POST' and 'upfile' in request.files:
         filename = files.save(request.files['upfile'])
-        url = files.url(filename)
-        print(filename)
-        print(url)
         upload_file = drive.CreateFile()
         upload_file.SetContentFile("./uploads/files/" + filename)
         upload_file['title'] = filename
         upload_file.Upload()
-        print(upload_file['id'])
+
         os.remove("./uploads/files/" + filename)
     return render_template('recorder.html')
 
