@@ -1,5 +1,6 @@
 # ignore virtual environment
 venv
+env
 
 # ignore IDE workspace settings
 .idea/
