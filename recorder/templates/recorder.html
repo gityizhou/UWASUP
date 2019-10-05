@@ -5,7 +5,6 @@
     
     <title>Hello, {{current_user.first_name}} {{current_user.user_number}}</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../static/css/stylesheet.css" type="text/css">
 </head>
 <body>
 <script src="https://xiangyuecn.github.io/Recorder/recorder.mp3.min.js"></script>
@@ -17,19 +16,24 @@
 
 
 
-
 <input class="btn btn-primary" type="button" id="Record" onclick="doOnClick()" value="Start" >
 <!-- <input type="button" onclick="pauseRec();resetTime();stopTime()" value="pause recording">
 <input type="button" onclick="resumeRec();startTime()" value="resume recording"> -->
 <input class="btn btn-primary" type="button" onclick="playRec();stopTime()" value="Play">
-<hr>
 
 
-    <!-- <script>console.log({{current_user.id}}+"_"+ {{current_user.user_number}})</script> -->
 
-<!-- <hr>
-<audio src="/uploads/files/recorder.mp3" controls="controls" >
-  </audio>   -->
+
+<audio src="https://dl.freemp3downloads.online/file/youtubeVs9A65M3v-k128.mp3?fn=%E6%9E%97%E5%AE%A5%E5%98%89Yoga%20Lin%20-%20%E5%B0%91%E5%A5%B3%20Otomen%20%5BOfficial%20Music%20Video%5D.mp3" controls></audio>
+
+
+<input class="btn btn-primary" type="button" onclick="playrecord()" value="Playrecord">
+
+
+
+    <script>console.log({{current_user.id}}+"_"+ {{current_user.user_number}})</script>
+
+
 
 
 
@@ -115,6 +119,29 @@
 
 var audio
 
+//播放网站上的MP3 file
+var fileurl
+    function playrecord(){
+
+        fileurl="https://dl.freemp3downloads.online/file/youtubeVs9A65M3v-k128.mp3?fn=%E6%9E%97%E5%AE%A5%E5%98%89Yoga%20Lin%20-%20%E5%B0%91%E5%A5%B3%20Otomen%20%5BOfficial%20Music%20Video%5D.mp3"
+
+        if (audio==null){
+            audio = document.createElement("audio");
+            audio.controls = true;
+            document.body.appendChild(audio);
+            audio.src=fileurl;
+            audio.play();
+        }
+        else {
+            document.body.appendChild(audio);
+            audio.src=fileurl;
+            audio.play();
+        }
+    }
+
+
+
+
     function playRec() {
         //Stop recording and get the blob binary object of the recording file
         if(audio==null){
@@ -129,8 +156,10 @@ var audio
             audio.src = URL.createObjectURL(recFile);
             audio.play();
         }
-            
+        
         };
+
+
 
     function uploadRec() {
         //Stop recording and get the blob binary object of the recording file
@@ -140,8 +169,9 @@ var audio
             ，Or use FormData upload, which in this case uploads the binary directly
             ，from normal application/x-www-form-urlencoded form upload
             */
+            var filename={{current_user.id}}+"_"+{{current_user.user_number}}+".mp3";
             var form = new FormData();
-            form.append("upfile", recFile, {{current_user.last_name}}+"_"+{{current_user.user_number}}+".mp3"); //Similar to ordinary form forms, files with upfile parameters, named recorder. Mp3, are received by the back-end
+            form.append("upfile", recFile, filename); //Similar to ordinary form forms, files with upfile parameters, named recorder. Mp3, are received by the back-end
 
             //Upload directly with ajax
             var xhr = new XMLHttpRequest();
