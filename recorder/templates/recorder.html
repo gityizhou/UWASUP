@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     
-    <title>demo{{current_user.id}}</title>
+    <title>Hello, {{current_user.first_name}} {{current_user.user_number}}</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="../static/css/stylesheet.css" type="text/css">
 </head>
@@ -25,11 +25,11 @@
 <hr>
 
 
-    <script>console.log({{current_user.id}}+"_"+ {{current_user.user_number}})</script>
+    <!-- <script>console.log({{current_user.id}}+"_"+ {{current_user.user_number}})</script> -->
 
-<hr>
+<!-- <hr>
 <audio src="/uploads/files/recorder.mp3" controls="controls" >
-  </audio>  
+  </audio>   -->
 
 
 
@@ -141,7 +141,7 @@ var audio
             ，from normal application/x-www-form-urlencoded form upload
             */
             var form = new FormData();
-            form.append("upfile", recFile, {{current_user.id}}+"_"+{{current_user.user_number}}+".mp3"); //Similar to ordinary form forms, files with upfile parameters, named recorder. Mp3, are received by the back-end
+            form.append("upfile", recFile, {{current_user.last_name}}+"_"+{{current_user.user_number}}+".mp3"); //Similar to ordinary form forms, files with upfile parameters, named recorder. Mp3, are received by the back-end
 
             //Upload directly with ajax
             var xhr = new XMLHttpRequest();
