@@ -14,6 +14,8 @@ from recorder.models.question import Question
 from recorder.models.task import Task
 from recorder.models.user_question import User_question
 from recorder.models.user_task import User_task
+import jwt
+import time
 
 """
 Index page but also our login page!
@@ -126,7 +128,43 @@ def register():
         return redirect(url_for('index'))
     return render_template('register.html', title='Registration', form=form)
 
+@login_required
+def request_email_verification():
+    token = current_user.get_jwt()
+    url = str(url_for("verify_email_by_token",token=token,_external=True))
+    body = "link to verify password: "+url
+    htmlbody = 'to verify your email click <a href="'+url+'">here</a>'
+    send_email(subject="",recipients=[current_user.email],text_body=body,html_body=htmlbody)
+    return "Verification link sent to " + current_user.email
+    
+    
+#@login_required
+def verify_email_by_token(token):
+    try:
+        obj = jwt.decode(token,current_app.config['SECRET_KEY'],algorithms=['HS256'])
+    except:
+        return "invalid token"
+    email = obj["email"]
+    exp = obj["exp"]
 
+    if exp<time.time():
+        return "token is expired"
+    #enable this check if you want to @login_required this route
+    #if current_user.email!=email:
+        #return "invalid token"
+
+    user = User.query.filter_by(email=email).first()
+    user.email_is_verified()
+    
+
+
+    return "Email successfully verified"
+    
+
+
+    
+    
+    
 # recorder upload function, the folder now is default /uploads/files/
 gauth = GoogleAuth()
 gauth.LocalWebserverAuth()
@@ -153,6 +191,24 @@ def upload():
         os.remove("./uploads/files/" + filename)  # delete this file after uploading it to google drive
     return render_template('recorder.html')
 
+def getFilesList():
+    upload_file = drive.CreateFile()  # create the google drive file instance
+    file_list = drive.ListFile({'q': "'root' in parents and trashed=false"}).GetList()
+    res = []
+    for file1 in file_list:
+        res.append({"title":file1['title'],"id":file1['id']})
+    return jsonify(res)
+    #return res;
+
+
+def donwload(id,title):
+    file = drive.CreateFile({'id': id})
+    file.GetContentFile('./downloads/'+title) # Download file as 'studentnumber.mp3'.
+    return redirect(url_for('send_download',filename=title));
+    
+
+def download_access(filename):
+    return send_file('../downloads/'+filename,as_attachment=True)
 
 def reset_password_request():
     if current_user.is_authenticated:
