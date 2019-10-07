@@ -82,22 +82,22 @@ def teacher_view(staff_number):
     form_delete_unit = DeleteUnitForm()
     form_delete_task = DeleteTaskForm()
     # make teacher form
-    if form_make_teacher.validate_on_submit():
+    if form_make_teacher.make_teacher_submit.data and form_make_teacher.validate_on_submit():
         user = User.query.filter_by(user_number=form_make_teacher.staffNumber.data).first()
         user.student2teacher()
         flash('The user now has teacher privileges.')
     # delete user form
-    if form_delete_user.validate_on_submit():
+    if form_delete_user.delete_user_submit.data and delete_user.validate_on_submit():
         user = User.query.filter_by(user_number=form_delete_user.userNumber.data).first()
         user.delete()
         flash('The user has been deleted.')
     # delete unit form
-    if form_delete_unit.validate_on_submit():
+    if form_delete_unit.delete_unit_submit.data and form_delete_unit.validate_on_submit():
         unit = Unit.query.filter_by(id=form_delete_unit.unitID.data).first()
         unit.delete()
         flash('The unit has been deleted.')
     # delete task form
-    if form_delete_task.validate_on_submit():
+    if form_delete_task.delete_task_submit.data and form_delete_task.validate_on_submit():
         print(form_delete_task.taskID.data)
         #task = Task.query.filter_by(id=form_delete_task.taskID.data).first()
         #task.delete()

@@ -81,7 +81,7 @@ class SubscribeUnitForm(FlaskForm):
 
 class MakeTeacherForm(FlaskForm):
     staffNumber = StringField('Staff Number', validators=[DataRequired()])
-    submit = SubmitField('Make User a Teacher')
+    make_teacher_submit = SubmitField('Make User a Teacher')
 
     def validate_staffNumber(self, staffNumber):
         user = User.query.filter_by(user_number=staffNumber.data).first()
@@ -90,7 +90,7 @@ class MakeTeacherForm(FlaskForm):
 
 class DeleteUserForm(FlaskForm):
     userNumber = StringField('User Number', validators=[DataRequired()])
-    submit = SubmitField('Delete User')
+    delete_user_submit = SubmitField('Delete User')
 
     def validate_userNumber(self, userNumber):
         user = User.query.filter_by(user_number=userNumber.data).first()
@@ -100,12 +100,12 @@ class DeleteUserForm(FlaskForm):
 # validators not needed in this form as form will only be generated for existing units
 class DeleteUnitForm(FlaskForm):
     unitID = StringField()
-    submit = SubmitField('Delete Unit')
+    delete_unit_submit = SubmitField('Delete Unit')
 
 # validators not needed in this form as form will only be generated for existing tasks
 class DeleteTaskForm(FlaskForm):
     taskID = StringField()
-    submit = SubmitField('Delete Task')
+    delete_task_submit = SubmitField('Delete Task')
 
 class PasswdResetRequestForm(FlaskForm):
     email = StringField("Email Address", validators=[DataRequired(), Email()])

@@ -3,6 +3,9 @@
 {% block content %}
     <!-- teacher details and actions -->
     <div>
+        <p id="test">testing</p>
+    </div>
+    <div>
         <p>Hello, {{ teacher.first_name }}!</p>
         <p>Staff Number: {{ teacher.user_number }}</p>
         <a href="{{ url_for('logout') }}">Logout</a>
@@ -22,8 +25,17 @@
                     <button  id="btn-top-close-make-teacher-modal" type="button" class="close" data-dismiss="modal">&times;</button>
                     </div>
                     <!-- modal body -->
-                    <div class="modal-body">
-                        <form class="form" action="" method="post" novalidate>
+                    <div class="modal-body show">
+                        <!-- any flash messages will be shown here -->
+                        {% with messages = get_flashed_messages() %}
+                        {% if messages %}
+                            {% for message in messages %}
+                            <div class="alert alert-info" role="alert">{{ message }}</div>
+                            {% endfor %}
+                        {% endif %}
+                        {% endwith %}
+                        <!-- end flash messages -->
+                        <form id="form_make_teacher" class="form" action="" method="post" novalidate>
                             {{ form_make_teacher.hidden_tag() }}
                             <p>
                                 {{ form_make_teacher.staffNumber.label }}<br>
@@ -32,7 +44,7 @@
                                     <span style="color: red;">[{{ error }}]</span>
                                 {% endfor %}
                             </p>
-                            <a>{{ form_make_teacher.submit }}</a>
+                            <a>{{ form_make_teacher.make_teacher_submit(onclick="keepModalOpen()") }}</a>
                         </form>
                     </div>
                     <!-- modal footer -->
@@ -68,7 +80,7 @@
                                     <span style="color: red;">[{{ error }}]</span>
                                 {% endfor %}
                             </p>
-                            <a>{{ form_delete_user.submit }}</a>
+                            <a>{{ form_delete_user.delete_user_submit }}</a>
                         </form>
                     </div>
                     <!-- modal footer -->
@@ -122,7 +134,7 @@
                                             <form class="form" action="" method="post" novalidate>
                                                 {{ form_delete_unit.hidden_tag() }}
                                                 {{ form_delete_unit.unitID(value=unit.id, style="display: none;") }}
-                                                <a>{{ form_delete_unit.submit }}</a>
+                                                <a>{{ form_delete_unit.delete_unit_submit }}</a>
                                             </form>
                                         </div>
                                         <!-- modal footer -->
@@ -166,7 +178,7 @@
                                                             <form class="form" action="" method="post" novalidate>
                                                                 {{ form_delete_task.hidden_tag() }}
                                                                 {{ form_delete_task.taskID(value=task.id, style="display: none;") }}
-                                                                <a>{{ form_delete_task.submit }}</a>
+                                                                <a>{{ form_delete_task.delete_task_submit }}</a>
                                                             </form>
                                                         </div>
                                                         <!-- modal footer -->
@@ -236,4 +248,12 @@
     </div>   
     <!-- end list of units for the teacher --> 
 
+{% endblock %}
+{% block scripts %}
+    <script>
+        function keepModalOpen() {
+            document.getElementById("test").style.color = "red";
+            //$(modal_id).modal('show'); 
+        }
+    </script>
 {% endblock %}
