@@ -128,11 +128,4 @@
     </div>    
     <!-- end list of units, tasks, students and questions -->
 
-    <a href="{{ url_for('logout') }}">Logout</a> <br>
-    staff number: {{ teacher.user_number }} <br>
-    first name: {{ teacher.first_name }}<br>
-    last name: {{ teacher.last_name }}<br>
-    Your unit: {{ teacher.units.all() }}<br>
-    Your unit tasks: {{ teacher.units[0].tasks}}<br>
-    Your task questions: {{ teacher.units[0].tasks[0].questions }}
 {% endblock %}
