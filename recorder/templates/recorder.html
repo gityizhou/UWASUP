@@ -84,15 +84,15 @@
         rec = Recorder(
             {
                 onProcess:function(buffers,powerLevel,bufferDuration,bufferSampleRate){
-                    wave.input(rec.buffers[rec.buffers.length-1],powerLevel,bufferSampleRate);//输入音频数据，更新显示波形
+                    wave.input(rec.buffers[rec.buffers.length-1],powerLevel,bufferSampleRate);//input the record and show the wave
                 }
             }
         );//Use the default configuration, mp3 format
 
         //Turn on the microphone and authorize resources
         rec.open(function () {
-            // add wave 一加上就没有录音了
-            wave = Recorder.WaveView({elem:".recwave"}); //创建wave对象，写这里面浏览器妥妥的
+            // add wave 
+            wave = Recorder.WaveView({elem:".recwave"}); //build wave
             //start recording
             rec.start();
         }, function (msg, isUserNotAllow) {
@@ -118,7 +118,7 @@
 
 var audio
 
-//播放网站上的MP3 file
+//play audio from web
 var fileurl
     function playrecord(){
 
@@ -171,7 +171,6 @@ var fileurl
             var filename={{current_user.id}}+"_"+{{current_user.user_number}}+".mp3";
             var form = new FormData();
             form.append("upfile", recFile, filename); //Similar to ordinary form forms, files with upfile parameters, named recorder. Mp3, are received by the back-end
-
             //Upload directly with ajax
             var xhr = new XMLHttpRequest();
             xhr.open("POST", "/recorder");//This fake address can see the request data and format in the console network, and the result of the request is irrelevant
@@ -200,14 +199,14 @@ var fileurl
     function startTime() {
         if (!isCounting) {
             isCounting = true;
-            timeoutId = setInterval(countTime, 1);        //指定时间执行任务
+            timeoutId = setInterval(countTime, 1);        
         }
     }
 
     function stopTime() {
         if (isCounting) {
             isCounting = false;
-            clearTimeout(timeoutId); //清除指定id计时器
+            clearTimeout(timeoutId); 
         }
     }
 
