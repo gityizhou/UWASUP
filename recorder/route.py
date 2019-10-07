@@ -1,6 +1,7 @@
-from flask import render_template, redirect, url_for, flash, request, jsonify, current_app
+from flask import render_template, redirect, url_for, flash, request, jsonify, current_app, Response
 from flask_uploads import UploadSet, ALL
 from flask_login import login_user, current_user, logout_user, login_required
+
 from recorder.email import send_email
 from recorder.forms import LoginForm, RegisterForm, SubscribeUnitForm, MakeTeacherForm, PasswdResetForm, \
     PasswdResetRequestForm
@@ -147,11 +148,21 @@ def upload():
         print(url)
         upload_file = drive.CreateFile()  # create the google drive file instance
         upload_file.SetContentFile("./uploads/files/" + filename)  # set our file into this instance
-        upload_file['title'] = filename    # set the file name of this file
-        upload_file.Upload()        # upload this file
-        print(upload_file['id'])    # can get this file's google drive-id and use it to save the id into database
+        upload_file['title'] = filename  # set the file name of this file
+        upload_file.Upload()  # upload this file
+        permission = upload_file.InsertPermission({
+            'type': 'anyone',
+            'value': 'anyone',
+            'role': 'reader'})
+        print(upload_file['alternateLink'])  # Display the sharable link.
+        print(upload_file['id'])  # can get this file's google drive-id and use it to save the id into database
+        file_id = upload_file['id']
+        recorder_url = "https://drive.google.com/uc?authuser=0&id=" + file_id + "&export=download"
+        quesion = db.session.query(Question).filter(Question.id == '1').one()    # test only
+        User_question.add_user_question(student, quesion, recorder_url)
         os.remove("./uploads/files/" + filename)  # delete this file after uploading it to google drive
     return render_template('recorder.html')
+
 
 
 def reset_password_request():
