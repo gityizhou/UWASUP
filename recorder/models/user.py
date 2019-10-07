@@ -118,18 +118,10 @@ class User(db.Model, UserMixin):
             algorithm='HS256'
         ).decode('utf-8')
 
-    @staticmethod
-    def verify_jwt(token):
-        try:
-            email = jwt.decode(
-                token,
-                current_app.config['SECRET_KEY'],
-                algorithms=['HS256']
-            )
-            email = email['email']
-        except:
-            return
-        return User.query.filter_by(email=email).first()
+    def email_is_verified(self):
+        print("===============user email verified===========")
+        return
+
 
 
 # get the id from session
