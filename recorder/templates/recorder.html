@@ -25,15 +25,7 @@
 
 
 
-
-<input class="btn btn-primary" type="button" onclick="playrecord()" value="Playrecord">
-
-
-
-    <script>console.log({{current_user.id}}+"_"+ {{current_user.user_number}})</script>
-
-<hr>
-
+<!-- <input class="btn btn-primary" type="button" onclick="playrecord()" value="Playrecord"> -->
 
 
 
@@ -75,6 +67,11 @@
 <div style="display: none;" class="pd">
     Sampling rate: <input type="radio" class="sample" value="16000" checked> 16000 hz
 </div>
+
+
+<p>previous record</p>
+<audio src="{{current_user.get_question_record_url(1)}}" controls></audio>
+
 
 <script>
     let rec;
@@ -118,26 +115,46 @@
     }
 
 var audio
+var audio2
+
+var fileurlone
+var fileuretwo
 
 //play audio from web
-var fileurl
-    function playrecord(){
 
-        fileurl="https://dl.freemp3downloads.online/file/youtubeVs9A65M3v-k128.mp3?fn=%E6%9E%97%E5%AE%A5%E5%98%89Yoga%20Lin%20-%20%E5%B0%91%E5%A5%B3%20Otomen%20%5BOfficial%20Music%20Video%5D.mp3"
 
-        if (audio==null){
-            audio = document.createElement("audio");
-            audio.controls = true;
-            document.body.appendChild(audio);
-            audio.src=fileurl;
-            audio.play();
-        }
-        else {
-            document.body.appendChild(audio);
-            audio.src=fileurl;
-            audio.play();
-        }
-    }
+
+
+// string读取时正确 但放进scr以后不能正确输入
+//"https://drive.google.com/uc?authuser=0&id=1n7iLFV9RT0i3FKVAMTHWryojs1bMzTxm&export=download"
+// var fileurl
+//     function playrecord(){
+
+//         fileure="{{current_user.get_question_record_url(1)}}";
+//         //console.log(fileure.substring(0,43))
+//         console.log(fileure.substring(43,fileure.length+1));
+//         fileurlone="https://drive.google.com/uc?authuser=0&amp;";
+//         fileurltwo=fileure.substring(43,fileure.length+1);
+
+//         var fileurlfinal=fileurlone+fileurltwo;
+
+//         console.log(fileurlfinal);
+
+//         if (audio2==null){
+//             audio2 = document.createElement("audio");
+//             audio2.controls = true;
+//             document.body.appendChild(audio2);
+//             console.log(fileurlfinal);
+//             audio2.src=fileurlfinal;
+//             audio2.play();
+//         }
+//         else {
+//             document.body.appendChild(audio2);
+//             console.log(fileurlfinal);
+//             audio2.src=fileurlfinal;
+//             audio2.play();
+//         }
+//     }
 
 
 
@@ -181,7 +198,7 @@ var fileurl
                 }
             }
             xhr.send(form);
-        }
+    }       
     </script>
 
 
