@@ -21,6 +21,7 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(64), unique=True, index=True)
     password_hash = db.Column(db.String(128))
     is_teacher = db.Column(db.Integer, default=0)
+    is_activated = db.Column(db.Integer, default=0)
 
 
 
