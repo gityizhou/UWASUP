@@ -28,7 +28,7 @@ def create_app(config_name='development'):
     mail.init_app(app)
 
     # app route url
-    from recorder.route import index, student_view, teacher_view, logout, register, upload, reset_password_request, password_reset,getFilesList,download_access,donwload,request_email_verification,verify_email_by_token
+    from recorder.route import index, student_view, teacher_view, logout, register, upload, reset_password_request, password_reset,getFilesList,request_email_verification,verify_email_by_token
     app.add_url_rule('/', 'index', index, methods=['GET', 'POST'])
     app.add_url_rule('/index', 'index', index, methods=['GET', 'POST'])
     app.add_url_rule('/logout', 'logout', logout)
@@ -37,10 +37,10 @@ def create_app(config_name='development'):
     app.add_url_rule('/teacher/<staff_number>', 'teacher_view', teacher_view, methods=['GET', 'POST'])
     app.add_url_rule('/recorder', 'recorder', upload, methods=['GET', 'POST'])
     
-    #download
-    app.add_url_rule('/listfiles', 'listfiles',getFilesList)
-    app.add_url_rule('/downloads/<filename>', 'send_download',download_access)
-    app.add_url_rule('/download/<id>/<title>', 'download',donwload)
+    # #download
+    # app.add_url_rule('/listfiles', 'listfiles',getFilesList)
+    # app.add_url_rule('/downloads/<filename>', 'send_download',download_access)
+    # app.add_url_rule('/download/<id>/<title>', 'download',donwload)
     
     #verify email
     app.add_url_rule('/request_email_verify', 'request_email_verify',request_email_verification)
