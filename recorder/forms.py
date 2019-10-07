@@ -80,11 +80,11 @@ class SubscribeUnitForm(FlaskForm):
     submit = SubmitField('Subscribe')
 
 class MakeTeacherForm(FlaskForm):
-    userNumber = StringField('Staff Number', validators=[DataRequired()])
+    staffNumber = StringField('Staff Number', validators=[DataRequired()])
     submit = SubmitField('Make User a Teacher')
 
-    def validate_userNumber(self, userNumber):
-        user = User.query.filter_by(user_number=userNumber.data).first()
+    def validate_staffNumber(self, staffNumber):
+        user = User.query.filter_by(user_number=staffNumber.data).first()
         if user is None:
             raise ValidationError('This user does not exist.')
 
