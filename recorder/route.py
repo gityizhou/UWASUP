@@ -16,6 +16,7 @@ from recorder.models.user_question import User_question
 from recorder.models.user_task import User_task
 import jwt
 import time
+import socket
 
 """
 Index page but also our login page!
@@ -32,8 +33,10 @@ def index():
     if current_user.is_authenticated:
         if current_user.is_teacher == 1:
             return redirect(url_for('teacher_view', staff_number=current_user.user_number))
-        if current_user.is_teacher == 0:
+        if current_user.is_teacher == 0 and current_user.is_activated == 1:
             return redirect(url_for('student_view', student_number=current_user.user_number))
+        else:
+            return ('Please verify you email Check your mail box') 
     # get the loginForm object
     form = LoginForm()
     if form.validate_on_submit():
@@ -126,41 +129,56 @@ def register():
         user.add()
         flash('Congratulations. You have registered successfully! Please verify you email\
             Check your mail box')
+        request_email_verification2(form.email.data)
         return redirect(url_for('index'))
     return render_template('register.html', title='Registration', form=form)
 
+def request_email_verification2(email):
+    user = User.query.filter_by(email=email).first();
+    token = user.get_jwt()
+    url = str(url_for("verify_email_by_token",token=token,_external=True))
+    body = "link to verify password: "+url
+    htmlbody = 'to verify your email click <a href="'+url+'">here</a>'
+    send_email(subject="",recipients=[user.email],text_body=body,html_body=htmlbody)
+    return "Verification link sent to " + user.email
 
 @login_required
 def request_email_verification():
     token = current_user.get_jwt()
-    url = str(url_for("verify_email_by_token", token=token, _external=True))
-    body = "link to verify password: " + url
-    htmlbody = 'to verify your email click <a href="' + url + '">here</a>'
-    send_email(subject="", recipients=[current_user.email], text_body=body, html_body=htmlbody)
+    url = str(url_for("verify_email_by_token",token=token,_external=True))
+    body = "link to verify password: "+url
+    htmlbody = 'to verify your email click <a href="'+url+'">here</a>'
+    send_email(subject="",recipients=[current_user.email],text_body=body,html_body=htmlbody)
     return "Verification link sent to " + current_user.email
-
-
-# @login_required
+    
+    
+@login_required
 def verify_email_by_token(token):
     try:
-        obj = jwt.decode(token, current_app.config['SECRET_KEY'], algorithms=['HS256'])
+        obj = jwt.decode(token,current_app.config['SECRET_KEY'],algorithms=['HS256'])
     except:
         return "invalid token"
     email = obj["email"]
     exp = obj["exp"]
 
-    if exp < time.time():
+    if exp<time.time():
         return "token is expired"
-    # enable this check if you want to @login_required this route
-    # if current_user.email!=email:
-    # return "invalid token"
+    #enable this check if you want to @login_required this route
+    if current_user.email!=email:
+          return "invalid token"
 
     user = User.query.filter_by(email=email).first()
     user.email_is_verified()
+    db.session.commit()
+
 
     return "Email successfully verified"
+    
 
 
+    
+    
+    
 # recorder upload function, the folder now is default /uploads/files/
 gauth = GoogleAuth()
 gauth.LocalWebserverAuth()
@@ -172,9 +190,6 @@ drive = GoogleDrive(gauth)
 def upload():
     files = UploadSet('files', ALL)
     student = current_user
-    question_id = int(request.form.get('question_id'))
-    print(question_id)
-    question = db.session.query(Question).filter(Question.id == question_id).one()
     if request.method == 'POST' and 'upfile' in request.files:
         filename = files.save(
             request.files['upfile'])  # get the file from front end request, return the file name(String)
@@ -184,36 +199,30 @@ def upload():
         print(url)
         upload_file = drive.CreateFile()  # create the google drive file instance
         upload_file.SetContentFile("./uploads/files/" + filename)  # set our file into this instance
-        upload_file['title'] = filename  # set the file name of this file
-        record_title = upload_file['title']
-        upload_file.Upload()  # upload this file
-        record_id = upload_file['id']
-        record_url = "https://drive.google.com/uc?authuser=0&id=" + record_id + "&export=download"
-        print(upload_file['id'])  # can get this file's google drive-id and use it to save the id into database
-        User_question.add_user_question(user=student, question=question, record_url=record_url, record_id=record_id,
-                                       record_title=record_title)
+        upload_file['title'] = filename    # set the file name of this file
+        upload_file.Upload()        # upload this file
+        print(upload_file['id'])    # can get this file's google drive-id and use it to save the id into database
         os.remove("./uploads/files/" + filename)  # delete this file after uploading it to google drive
     return render_template('recorder.html')
-
 
 def getFilesList():
     upload_file = drive.CreateFile()  # create the google drive file instance
     file_list = drive.ListFile({'q': "'root' in parents and trashed=false"}).GetList()
     res = []
     for file1 in file_list:
-        res.append({"title": file1['title'], "id": file1['id']})
+        res.append({"title":file1['title'],"id":file1['id']})
     return jsonify(res)
-    # return res;
+    #return res;
 
 
-# def donwload(id,title):
-#     file = drive.CreateFile({'id': id})
-#     file.GetContentFile('./downloads/'+title) # Download file as 'studentnumber.mp3'.
-#     return redirect(url_for('send_download',filename=title));
-#
-#
-# def download_access(filename):
-#     return send_file('../downloads/'+filename,as_attachment=True)
+def donwload(id,title):
+    file = drive.CreateFile({'id': id})
+    file.GetContentFile('./downloads/'+title) # Download file as 'studentnumber.mp3'.
+    return redirect(url_for('send_download',filename=title));
+    
+
+def download_access(filename):
+    return send_file('../downloads/'+filename,as_attachment=True)
 
 def reset_password_request():
     if current_user.is_authenticated:
