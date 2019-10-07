@@ -11,10 +11,11 @@ class User_task(db.Model):
     task = db.relationship("Task", back_populates="users")
     user = db.relationship("User", back_populates="tasks")
 
-    # def add_user_task(self, user, task, comment, recorder_url):
-    #     user_has_task = User_task(user=user, task=task, comment=comment,recorder_url=recorder_url)
-    #     db.session.add(user_has_task)
-    #     db.session.commit()
+    @staticmethod
+    def add_user_task(user, task, comment, mark, recorder_url):
+        user_has_task = User_task(user=user, task=task, comment=comment, mark=mark, recorder_url=recorder_url)
+        db.session.add(user_has_task)
+        db.session.commit()
 
 
 

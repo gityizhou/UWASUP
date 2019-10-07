@@ -2,6 +2,9 @@ from recorder import db, loginManager
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from recorder.models.question import Question
+from flask import current_app
+import jwt
+import time
 
 user_unit = db.Table('user_unit',
                      db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
@@ -18,6 +21,8 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(64), unique=True, index=True)
     password_hash = db.Column(db.String(128))
     is_teacher = db.Column(db.Integer, default=0)
+
+
 
     units = db.relationship('Unit', secondary=user_unit,
                             backref=db.backref('users', lazy='dynamic'),
@@ -81,6 +86,12 @@ class User(db.Model, UserMixin):
             if task.task_id == task_id:
                 return task.mark
 
+    # get the record url of this question of this student
+    def get_question_record_url(self, question_id):
+        for question in self.questions:
+            if question.question_id == question_id:
+                return question.recorder_url
+
     @staticmethod
     def get_user_list():
         return db.session.query(User).all()
@@ -97,23 +108,28 @@ class User(db.Model, UserMixin):
             User.id == user_id
         ).first()
 
-    @staticmethod
-    def get_user_list():
-        return db.session.query(User).all()
+    def get_jwt(self, expire=3600):
+        return jwt.encode(
+            {
+                'email': self.email,
+                'exp': time.time() + expire
+            },
+            current_app.config['SECRET_KEY'],
+            algorithm='HS256'
+        ).decode('utf-8')
 
     @staticmethod
-    def authenticate(username, password):
-        user = User.get_by_username(username)
-        if user:
-            # check password
-            if user.check_password(password):
-                return user
-
-    @staticmethod
-    def identity(payload):
-        user_id = payload['identity']
-        user = User.get_by_id(user_id)
-        return user
+    def verify_jwt(token):
+        try:
+            email = jwt.decode(
+                token,
+                current_app.config['SECRET_KEY'],
+                algorithms=['HS256']
+            )
+            email = email['email']
+        except:
+            return
+        return User.query.filter_by(email=email).first()
 
 
 # get the id from session

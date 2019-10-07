@@ -11,10 +11,13 @@ class User_question(db.Model):
     question = db.relationship("Question", back_populates="users")
     user = db.relationship("User", back_populates="questions")
 
-    def add_user_question(self, user, question, recorder_url):
+    @staticmethod
+    def add_user_question(user, question, recorder_url):
         user_has_question = User_question(user=user, question=question, recorder_url=recorder_url)
         db.session.add(user_has_question)
         db.session.commit()
+
+
 """
 example association:
 user_has_question = User_question(user=<someuser>, question=<somequestion>, recorder_url=<url>)
