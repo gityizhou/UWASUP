@@ -83,7 +83,7 @@ def teacher_view(staff_number):
     form_delete_task = DeleteTaskForm()
     # make teacher form
     if form_make_teacher.validate_on_submit():
-        user = User.query.filter_by(user_number=form_make_teacher.userNumber.data).first()
+        user = User.query.filter_by(user_number=form_make_teacher.staffNumber.data).first()
         user.student2teacher()
         flash('The user now has teacher privileges.')
     # delete user form
