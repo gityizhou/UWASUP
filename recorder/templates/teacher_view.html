@@ -3,18 +3,25 @@
 {% block content %}
     <!-- teacher details and actions -->
     <div>
-        <p id="test">testing</p>
-    </div>
-    <div>
         <p>Hello, {{ teacher.first_name }}!</p>
         <p>Staff Number: {{ teacher.user_number }}</p>
         <a href="{{ url_for('logout') }}">Logout</a>
+
+
 
         <!-- MAKE A USER A TEACHER modal -->
         <!-- button to open the modal -->
         <button id="btn-make-teacher" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-make-teacher">
             Make a User a Teacher
         </button>
+        <!-- keeps modal open if validation fails so user can see errors -->
+        {% if form_make_teacher.staffNumber.errors|length != 0 %}
+            <script>
+                $(document).ready(function(){
+                    $("#modal-make-teacher").modal("show");
+                });
+            </script>
+        {% endif %}
         <!-- code for modal window -->
         <div class="modal" id="modal-make-teacher">
             <div class="modal-dialog">
@@ -26,15 +33,6 @@
                     </div>
                     <!-- modal body -->
                     <div class="modal-body show">
-                        <!-- any flash messages will be shown here -->
-                        {% with messages = get_flashed_messages() %}
-                        {% if messages %}
-                            {% for message in messages %}
-                            <div class="alert alert-info" role="alert">{{ message }}</div>
-                            {% endfor %}
-                        {% endif %}
-                        {% endwith %}
-                        <!-- end flash messages -->
                         <form id="form_make_teacher" class="form" action="" method="post" novalidate>
                             {{ form_make_teacher.hidden_tag() }}
                             <p>
@@ -44,7 +42,7 @@
                                     <span style="color: red;">[{{ error }}]</span>
                                 {% endfor %}
                             </p>
-                            <a>{{ form_make_teacher.make_teacher_submit(onclick="keepModalOpen()") }}</a>
+                            <a>{{ form_make_teacher.make_teacher_submit(id="btn_make_teacher_submit") }}</a>
                         </form>
                     </div>
                     <!-- modal footer -->
@@ -55,42 +53,54 @@
             </div>
         </div>
         <!-- end MAKE A USER A TEACHER modal -->
+
+
         <!-- DELETE A USER modal -->
         <!-- button to open the modal -->
-        <button id="btn-make-teacher" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-delete-user">
-            Delete a User
+        <button id="btn-make-teacher" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-make-teacher">
+            Make a User a Teacher
         </button>
+        <!-- keeps modal open if validation fails so user can see errors -->
+        {% if form_make_teacher.staffNumber.errors|length != 0 %}
+            <script>
+                $(document).ready(function(){
+                    $("#modal-make-teacher").modal("show");
+                });
+            </script>
+        {% endif %}
         <!-- code for modal window -->
-        <div class="modal" id="modal-delete-user">
+        <div class="modal" id="modal-make-teacher">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <!-- modal header -->
                     <div class="modal-header">
-                    <h4 class="modal-title">Delete a User</h4>
-                    <button  id="btn-top-close-delete-user-modal" type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Make a User a Teacher</h4>
+                    <button  id="btn-top-close-make-teacher-modal" type="button" class="close" data-dismiss="modal">&times;</button>
                     </div>
                     <!-- modal body -->
-                    <div class="modal-body">
-                        <form class="form" action="" method="post" novalidate>
-                            {{ form_delete_user.hidden_tag() }}
+                    <div class="modal-body show">
+                        <form id="form_make_teacher" class="form" action="" method="post" novalidate>
+                            {{ form_make_teacher.hidden_tag() }}
                             <p>
-                                {{ form_delete_user.userNumber.label }}<br>
-                                {{ form_delete_user.userNumber(size=32, class="form-field") }}<br>
-                                {% for error in form_delete_user.userNumber.errors %}
+                                {{ form_make_teacher.staffNumber.label }}<br>
+                                {{ form_make_teacher.staffNumber(size=32, class="form-field") }}<br>
+                                {% for error in form_make_teacher.staffNumber.errors %}
                                     <span style="color: red;">[{{ error }}]</span>
                                 {% endfor %}
                             </p>
-                            <a>{{ form_delete_user.delete_user_submit }}</a>
+                            <a>{{ form_make_teacher.make_teacher_submit(id="btn_make_teacher_submit") }}</a>
                         </form>
                     </div>
                     <!-- modal footer -->
                     <div class="modal-footer">
-                    <button id="btn-btm-close-delete-user-modal" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    <button id="btn-btm-close-make-teacher-modal" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                     </div>
                 </div>
             </div>
         </div>
         <!-- end DELETE A USER modal -->
+
+
         <!-- CREATE A UNIT modal -->
         <!-- end CREATE A UNIT modal -->
         <!-- CREATE A TASK modal -->
@@ -246,14 +256,6 @@
             </div>
         {% endfor %}
     </div>   
-    <!-- end list of units for the teacher --> 
+    <!-- end list of units for the teacher -->
 
-{% endblock %}
-{% block scripts %}
-    <script>
-        function keepModalOpen() {
-            document.getElementById("test").style.color = "red";
-            //$(modal_id).modal('show'); 
-        }
-    </script>
 {% endblock %}
