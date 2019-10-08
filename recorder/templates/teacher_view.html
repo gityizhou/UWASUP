@@ -32,7 +32,7 @@
                     </div>
                     <!-- modal body -->
                     <div class="modal-body show">
-                        <form id="form_make_teacher" class="form" action="" method="post" novalidate>
+                        <form id="form-make-teacher" class="form" action="" method="post" novalidate>
                             {{ form_make_teacher.hidden_tag() }}
                             <p>
                                 {{ form_make_teacher.staffNumber.label }}<br>
@@ -41,7 +41,7 @@
                                     <span style="color: red;">[{{ error }}]</span>
                                 {% endfor %}
                             </p>
-                            <a>{{ form_make_teacher.make_teacher_submit(id="btn_make_teacher_submit") }}</a>
+                            <a>{{ form_make_teacher.make_teacher_submit(id="btn-make-teacher-submit") }}</a>
                         </form>
                     </div>
                     <!-- modal footer -->
@@ -78,7 +78,7 @@
                     </div>
                     <!-- modal body -->
                     <div class="modal-body show">
-                        <form id="form_delete-user" class="form" action="" method="post" novalidate>
+                        <form id="form-delete-user" class="form" action="" method="post" novalidate>
                             {{ form_delete_user.hidden_tag() }}
                             <p>
                                 {{ form_delete_user.userNumber.label }}<br>
@@ -87,7 +87,7 @@
                                     <span style="color: red;">[{{ error }}]</span>
                                 {% endfor %}
                             </p>
-                            <a>{{ form_delete_user.delete_user_submit(id="btn_delete-user_submit") }}</a>
+                            <a>{{ form_delete_user.delete_user_submit(id="btn-delete-user-submit") }}</a>
                         </form>
                     </div>
                     <!-- modal footer -->
@@ -99,8 +99,55 @@
         </div>
         <!-- end DELETE A USER modal -->
 
+
         <!-- CREATE A UNIT modal -->
+        <!-- button to open the modal -->
+        <button id="btn-create-unit" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-create-unit">
+            Create a Unit
+        </button>
+        <!-- keeps modal open if validation fails so user can see errors -->
+        {% if form_create_unit.unitID.errors|length != 0 %}
+            <script>
+                $(document).ready(function(){
+                    $("#modal-create-unit").modal("show");
+                });
+            </script>
+        {% endif %}
+        <!-- code for modal window -->
+        <div class="modal" id="modal-create-unit">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <!-- modal header -->
+                    <div class="modal-header">
+                    <h4 class="modal-title">Create a Unit</h4>
+                        <button  id="btn-top-close-create-unit-modal" type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <!-- modal body -->
+                    <div class="modal-body show">
+                        <form id="form-create-unit" class="form" action="" method="post" novalidate>
+                            {{ form_create_unit.hidden_tag() }}
+                            <p>
+                                {{ form_create_unit.unitID.label }}<br>
+                                {{ form_create_unit.unitID(size=32, class="form-field") }}<br>
+                                {{ form_create_unit.unitName.label }}<br>
+                                {{ form_create_unit.unitName(size=32, class="form-field") }}<br>
+                                {% for error in form_create_unit.unitID.errors %}
+                                    <span style="color: red;">[{{ error }}]</span>
+                                {% endfor %}
+                            </p>
+                            <a>{{ form_create_unit.create_unit_submit(id="btn-create-unit-submit") }}</a>
+                        </form>
+                    </div>
+                    <!-- modal footer -->
+                    <div class="modal-footer">
+                        <button id="btn-btm-close-make-unit-modal" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <!-- end CREATE A UNIT modal -->
+
+
         <!-- CREATE A TASK modal -->
             <!-- TODO: CREATE QUESTIONS FOR TASK -->
         <!-- end CREATE A TASK modal -->
@@ -145,7 +192,7 @@
                                             <p>Deleting a unit will permanently delete all tasks, questions and student submissions associated with this unit.</p>
                                             <form class="form" action="" method="post" novalidate>
                                                 {{ form_delete_unit.hidden_tag() }}
-                                                {{ form_delete_unit.unitID(value=unit.id, style="display: none;") }}
+                                                {{ form_delete_unit.del_unitID(value=unit.id, style="display: none;") }}
                                                 <a>{{ form_delete_unit.delete_unit_submit }}</a>
                                             </form>
                                         </div>
@@ -191,7 +238,7 @@
                                                             <p>Deleting a task will permanently delete all questions and student submissions associated with this task.</p>
                                                             <form class="form" action="" method="post" novalidate>
                                                                 {{ form_delete_task.hidden_tag() }}
-                                                                {{ form_delete_task.taskID(value=task.id, style="display: none;") }}
+                                                                {{ form_delete_task.del_taskID(value=task.id, style="display: none;") }}
                                                                 <a>{{ form_delete_task.delete_task_submit }}</a>
                                                             </form>
                                                         </div>
@@ -251,7 +298,7 @@
                                                                                                     <p>Deleting a question will permanently delete all student submissions associated with it.</p>
                                                                                                     <form class="form" action="" method="post" novalidate>
                                                                                                         {{ form_delete_question.hidden_tag() }}
-                                                                                                        {{ form_delete_question.questionID(value=question.id, style="display: none;") }}
+                                                                                                        {{ form_delete_question.del_questionID(value=question.id, style="display: none;") }}
                                                                                                         <a>{{ form_delete_question.delete_question_submit }}</a>
                                                                                                     </form>
                                                                                                 </div>

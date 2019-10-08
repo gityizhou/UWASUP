@@ -4,6 +4,9 @@ from wtforms.validators import DataRequired, EqualTo, Email, ValidationError, Le
 from wtforms.widgets import ListWidget, CheckboxInput
 
 from recorder.models.user import User
+from recorder.models.unit import Unit
+from recorder.models.task import Task
+from recorder.models.question import Question
 
 import sys
 
@@ -129,19 +132,48 @@ class DeleteUserForm(FlaskForm):
         if user is None:
             raise ValidationError('This user does not exist.')
 
+class CreateUnitForm(FlaskForm):
+    unitID = StringField('Unit code', validators=[DataRequired()])
+    unitName = StringField('Unit name', validators=[DataRequired()])
+    create_unit_submit = SubmitField('Create Unit')
+
+    def validate_unitID(self, unitID):
+        # checks for only alphanumeric characters
+        if not unitID.data.isalnum():
+            raise ValidationError('Unit code must contain only uppercase letters and numbers.')
+        # ensures letters are uppercase and code contains both letters and numbers
+        else:
+            hasLetters = False
+            hasNumbers = False
+            for char in unitID.data:
+                if not char.isdigit():
+                    hasLetters = True
+                    if not char.isalpha():
+                        raise ValidationError('Unit code must contain only uppercase letters and numbers.')
+                else:
+                    hasNumbers = True
+        if not hasNumbers:
+            raise ValidationError('Unit code must contain numbers.')
+        elif not hasLetters:
+            raise ValidationError('Unit code must contain uppercase letters.')
+        else:
+            unit = Unit.query.filter_by(unit_id=unitID.data).first()
+            if unit is not None:
+                raise ValidationError('This unit already exists.')
+
 # validators not needed as this form will only be generated for existing units
 class DeleteUnitForm(FlaskForm):
-    unitID = StringField()
+    del_unitID = StringField()
     delete_unit_submit = SubmitField('Delete Unit')
 
 # validators not needed as this form will only be generated for existing tasks
 class DeleteTaskForm(FlaskForm):
-    taskID = StringField()
+    del_taskID = StringField()
     delete_task_submit = SubmitField('Delete Task')
 
 # validators not needed as this form will only be generated for existing questions
 class DeleteQuestionForm(FlaskForm):
-    questionID = StringField()
+    del_questionID = StringField()
     delete_question_submit = SubmitField('Delete Question')
 
 
