@@ -57,43 +57,43 @@
 
         <!-- DELETE A USER modal -->
         <!-- button to open the modal -->
-        <button id="btn-make-teacher" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-make-teacher">
-            Make a User a Teacher
+        <button id="btn-delete-user" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-delete-user">
+            Delete a User
         </button>
         <!-- keeps modal open if validation fails so user can see errors -->
-        {% if form_make_teacher.staffNumber.errors|length != 0 %}
+        {% if form_delete_user.userNumber.errors|length != 0 %}
             <script>
                 $(document).ready(function(){
-                    $("#modal-make-teacher").modal("show");
+                    $("#modal-delete-user").modal("show");
                 });
             </script>
         {% endif %}
         <!-- code for modal window -->
-        <div class="modal" id="modal-make-teacher">
+        <div class="modal" id="modal-delete-user">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <!-- modal header -->
                     <div class="modal-header">
-                    <h4 class="modal-title">Make a User a Teacher</h4>
-                    <button  id="btn-top-close-make-teacher-modal" type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Delete a User</h4>
+                    <button  id="btn-top-close-delete-user-modal" type="button" class="close" data-dismiss="modal">&times;</button>
                     </div>
                     <!-- modal body -->
                     <div class="modal-body show">
-                        <form id="form_make_teacher" class="form" action="" method="post" novalidate>
-                            {{ form_make_teacher.hidden_tag() }}
+                        <form id="form_delete-user" class="form" action="" method="post" novalidate>
+                            {{ form_delete_user.hidden_tag() }}
                             <p>
-                                {{ form_make_teacher.staffNumber.label }}<br>
-                                {{ form_make_teacher.staffNumber(size=32, class="form-field") }}<br>
-                                {% for error in form_make_teacher.staffNumber.errors %}
+                                {{ form_delete_user.userNumber.label }}<br>
+                                {{ form_delete_user.userNumber(size=32, class="form-field") }}<br>
+                                {% for error in form_delete_user.userNumber.errors %}
                                     <span style="color: red;">[{{ error }}]</span>
                                 {% endfor %}
                             </p>
-                            <a>{{ form_make_teacher.make_teacher_submit(id="btn_make_teacher_submit") }}</a>
+                            <a>{{ form_delete_user.delete_user_submit(id="btn_delete-user_submit") }}</a>
                         </form>
                     </div>
                     <!-- modal footer -->
                     <div class="modal-footer">
-                    <button id="btn-btm-close-make-teacher-modal" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    <button id="btn-btm-close-delete-user-modal" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                     </div>
                 </div>
             </div>

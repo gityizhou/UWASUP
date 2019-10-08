@@ -84,8 +84,8 @@ class MakeTeacherForm(FlaskForm):
     make_teacher_submit = SubmitField('Make User a Teacher')
 
     def validate_staffNumber(self, staffNumber):
-        user = User.query.filter_by(user_number=staffNumber.data).first()
-        if user is None:
+        staff = User.query.filter_by(user_number=staffNumber.data).first()
+        if staff is None:
             raise ValidationError('This user does not exist.')
 
 class DeleteUserForm(FlaskForm):
