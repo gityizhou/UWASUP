@@ -1,5 +1,5 @@
 from recorder import db
-
+from recorder.models.user_question import User_question
 
 class Question(db.Model):
     __tablename__ = 'question'
@@ -20,6 +20,10 @@ class Question(db.Model):
         db.session.commit()
 
     def delete(self):
+        user_quesions = db.session.query(User_question).filter(User_question.question_id == self.id)
+        for user_quesion in user_quesions:
+            print(user_quesion.question_id)
+            user_quesion.delete()
         db.session.delete(self)
         db.session.commit()
 

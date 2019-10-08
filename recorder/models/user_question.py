@@ -21,6 +21,17 @@ class User_question(db.Model):
         db.session.add(user_has_question)
         db.session.commit()
 
+    def add(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+
+    def update(self):
+        db.session.commit()
+
 
 """
 example association:

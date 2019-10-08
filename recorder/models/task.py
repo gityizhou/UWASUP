@@ -1,6 +1,7 @@
 from datetime import datetime
 from recorder import db
 from recorder.models.user import User
+from recorder.models.user_task import User_task
 
 
 class Task(db.Model):
@@ -28,6 +29,13 @@ class Task(db.Model):
         db.session.commit()
 
     def delete(self):
+        for question in self.questions:
+            print(question)
+            question.delete()
+        user_tasks = db.session.query(User_task).filter(User_task.task_id == self.id )
+        for user_task in user_tasks:
+            print(user_task.task_id)
+            user_task.delete()
         db.session.delete(self)
         db.session.commit()
 

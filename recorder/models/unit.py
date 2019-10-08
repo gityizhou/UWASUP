@@ -1,6 +1,5 @@
 from recorder import db
 
-
 class Unit(db.Model):
     __tablename__ = 'unit'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -18,6 +17,9 @@ class Unit(db.Model):
         db.session.commit()
 
     def delete(self):
+        for task in self.tasks:
+            print(task)
+            task.delete()
         db.session.delete(self)
         db.session.commit()
 
