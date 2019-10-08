@@ -8,7 +8,6 @@
         <a href="{{ url_for('logout') }}">Logout</a>
 
 
-
         <!-- MAKE A USER A TEACHER modal -->
         <!-- button to open the modal -->
         <button id="btn-make-teacher" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-make-teacher">
@@ -100,17 +99,19 @@
         </div>
         <!-- end DELETE A USER modal -->
 
-
         <!-- CREATE A UNIT modal -->
         <!-- end CREATE A UNIT modal -->
         <!-- CREATE A TASK modal -->
             <!-- TODO: CREATE QUESTIONS FOR TASK -->
         <!-- end CREATE A TASK modal -->
+
+         
     </div>
     <!-- end teacher details and actions -->
     <hr>
 
     <!-- list of units, tasks, students and questions as nested Bootstrap4 accordions -->
+
         <!-- list of all units -->
         <div id="accordion_units">
         {% for unit in all_units %}
@@ -118,12 +119,13 @@
                 <div class="card-header" id="heading_unit_{{ unit.id }}">
                     <h5 class="mb-0">
                         <button class="btn btn-link" data-toggle="collapse" data-target="#collapse_unit_{{ unit.id }}" aria-expanded="true" aria-controls="collapse_unit_{{ unit.id }}">
-                            Unit: {{ unit.unit_name }}
+                            {{ unit.unit_id }} {{ unit.unit_name }}
                         </button>
                     </h5>
                 </div>
                 <div id="collapse_unit_{{ unit.id }}" class="collapse" aria-labelledby="heading_unit_{{ unit.id }}" data-parent="#accordion_units">
                     <div class="card-body" style="background-color: #ecd29d;">
+
                         <!-- DELETE UNIT modal -->
                         <!-- button to open the modal -->
                         <button id="btn-delete-unit-{{ unit.id }}" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-delete-unit-{{ unit.id }}">
@@ -135,7 +137,7 @@
                                     <div class="modal-content">
                                         <!-- modal header -->
                                         <div class="modal-header">
-                                        <button  id="btn-top-close-delete-unit-{{ unit.id }}" type="button" class="close" data-dismiss="modal">&times;</button>
+                                            <button  id="btn-top-close-delete-unit-{{ unit.id }}" type="button" class="close" data-dismiss="modal">&times;</button>
                                         </div>
                                         <!-- modal body -->
                                         <div class="modal-body">
@@ -155,6 +157,7 @@
                                 </div>
                             </div>
                             <!-- end DELETE UNIT modal -->
+
                         <!-- list of tasks for each unit -->
                         <div id="accordion_tasks">
                             {% for task in unit.tasks %}
@@ -168,6 +171,7 @@
                                     </div>
                                     <div id="collapse_task_{{ task.id }}" class="collapse" aria-labelledby="heading_task_{{ task.id }}" data-parent="#accordion_tasks">
                                         <div class="card-body" style="background-color: #aecee4;">
+
                                             <!-- DELETE TASK modal -->
                                             <!-- button to open the modal -->
                                             <button id="btn-delete-task-{{ task.id }}" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-delete-task-{{ task.id }}">
@@ -199,6 +203,7 @@
                                                 </div>
                                             </div>
                                             <!-- end DELETE TASK modal -->
+
                                             <!-- list of students for each task -->
                                             <div id="accordion_students">
                                                 {% for student in task.get_task_users() %}
@@ -238,6 +243,7 @@
                                                                     {% endfor %}
                                                                 </div>
                                                                 <!-- end list of questions for each student for the task -->
+
                                                             </div>
                                                         </div>
                                                     </div>
@@ -245,12 +251,14 @@
                                                 {% endfor %}
                                             </div>
                                             <!-- end list of students for the task -->
+
                                         </div>
                                     </div>
                                 </div>
                             {% endfor %}
                         </div>
                         <!-- end list of tasks for the unit -->
+                        
                     </div>
                 </div>
             </div>

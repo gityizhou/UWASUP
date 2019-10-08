@@ -98,10 +98,9 @@ def teacher_view(staff_number):
         flash('The unit has been deleted.')
     # delete task form
     if form_delete_task.delete_task_submit.data and form_delete_task.validate_on_submit():
-        print(form_delete_task.taskID.data)
-        #task = Task.query.filter_by(id=form_delete_task.taskID.data).first()
-        #task.delete()
-        #flash('The task has been deleted.')
+        task = Task.query.filter_by(id=form_delete_task.taskID.data).first()
+        task.delete()
+        flash('The task has been deleted.')
     teacher_units = teacher.units.all()
     all_units = Unit.query.all()
     all_users = User.query.all()
