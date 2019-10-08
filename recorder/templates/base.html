@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+    
     <head>
         <meta charset="UTF-8">
         <meta http-equiv="Content-Type" content="text/html" />
@@ -16,16 +17,39 @@
         <!-- our css stylesheet -->
         <link rel="stylesheet" href="../static/css/stylesheet.css" type="text/css">
     </head>
+
     <body>
-        <!-- any flash messages will be shown here -->
+        <!-- FLASH MESSAGES modal -->
+        <!-- open modal if flash messages are present -->
         {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            {% for message in messages %}
-            <div class="alert alert-info" role="alert">{{ message }}</div>
-            {% endfor %}
-        {% endif %}
+            {% if messages %}
+                <script>
+                    $(document).ready(function(){
+                        $("#modal-flash-messages").modal("show");
+                    });
+                </script>
+                <!-- code for modal window -->
+                <div class="modal fade" id="modal-flash-messages">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <!-- modal body -->
+                            <div class="modal-body show">
+                                {% for message in messages %}
+                                    <div class="alert alert-info" role="alert">{{ message }}</div>
+                                {% endfor %}
+                            </div>
+                            <!-- modal footer -->
+                            <div class="modal-footer">
+                                <button id="btn-btm-close-flash-messages-modal" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
         {% endwith %}
-        <!-- end flash messages -->
-        {% block content %}{% endblock %}
+        <!-- end FLASH MESSAGES modal -->
+    
+        {% block content %}{% endblock %} 
     </body>
+
 </html>
