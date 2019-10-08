@@ -44,9 +44,9 @@ class RegisterForm(FlaskForm):
                                                                         Length(min=8, max=8,
                                                                                message="UWA student/staff numbers should be 8 digits.")])
 
-    firstname = StringField("First Name", validators=[DataRequired()])
-    lastname = StringField("Last Name", validators=[DataRequired()])
-    email = StringField("Email Address", validators=[DataRequired(), Email()])
+    firstname = StringField("First Name (as per LMS)", validators=[DataRequired()])
+    lastname = StringField("Last Name (as per LMS)", validators=[DataRequired()])
+    email = StringField("UWA Email Address", validators=[DataRequired(), Email()])
     password = PasswordField("Password", validators=[DataRequired(), Length(min=8, max=18,
                                                                             message="Please use more than 7 characters.")])
     password2 = PasswordField(
