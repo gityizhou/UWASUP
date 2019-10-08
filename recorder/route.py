@@ -6,7 +6,8 @@ import sys
 
 from recorder.email import send_email
 from recorder.forms import LoginForm, RegisterForm, SubscribeUnitForm, MakeTeacherForm, PasswdResetForm, \
-    PasswdResetRequestForm, DeleteUserForm, DeleteUnitForm, DeleteTaskForm, DeleteQuestionForm, CreateUnitForm
+    PasswdResetRequestForm, DeleteUserForm, DeleteUnitForm, DeleteTaskForm, DeleteQuestionForm, CreateUnitForm, \
+    EditUnitForm
 from recorder.models.user import User
 from recorder.models.unit import Unit
 from recorder import db
@@ -85,6 +86,7 @@ def teacher_view(staff_number):
     form_make_teacher = MakeTeacherForm()
     form_delete_user = DeleteUserForm()
     form_create_unit = CreateUnitForm()
+    form_edit_unit = EditUnitForm()
     form_delete_unit = DeleteUnitForm()
     form_delete_task = DeleteTaskForm()
     form_delete_question = DeleteQuestionForm()
@@ -110,6 +112,15 @@ def teacher_view(staff_number):
         unit = Unit.query.filter_by(unit_name=form_create_unit.unitName.data).first()
         user.add_unit(unit)
         flash('The unit has been created.')
+        # need to return redirect on successful submission to clear form fields
+        return redirect(url_for('teacher_view', staff_number=staff_number))
+    # edit unit form
+    if form_edit_unit.edit_unit_submit.data and form_edit_unit.validate_on_submit():
+        unit = Unit.query.filter_by(unit_id=form_edit_unit.current_unitID.data).first()
+        unit.unit_id = form_edit_unit.edit_unitID.data
+        unit.unit_name = form_edit_unit.edit_unitName.data
+        unit.update()
+        flash('The unit has been updated.')
         # need to return redirect on successful submission to clear form fields
         return redirect(url_for('teacher_view', staff_number=staff_number))
     # delete unit form (validation not strictly necessary here for this form, see forms.py)
@@ -139,7 +150,7 @@ def teacher_view(staff_number):
     return render_template('teacher_view.html', teacher=teacher, teacher_units=teacher_units, all_units=all_units,
                            all_users=all_users, form_make_teacher=form_make_teacher, form_delete_user=form_delete_user,
                            form_delete_unit=form_delete_unit, form_delete_task=form_delete_task, form_delete_question=form_delete_question,
-                           form_create_unit=form_create_unit)
+                           form_create_unit=form_create_unit, form_edit_unit=form_edit_unit)
 
 
 # logout function

@@ -161,6 +161,61 @@ class CreateUnitForm(FlaskForm):
             if unit is not None:
                 raise ValidationError('This unit already exists.')
 
+class EditUnitForm(FlaskForm):
+    current_unitID = StringField('Current Unit code')
+    edit_unitID = StringField('Edit Unit code')
+    edit_unitName = StringField('Edit Unit name')
+    edit_unit_submit = SubmitField('Update Unit')
+
+    def validate_edit_unitID(self, edit_unitID):
+        # checks for only alphanumeric characters
+        if not edit_unitID.data.isalnum():
+            raise ValidationError('Unit code must contain only uppercase letters and numbers.')
+        # ensures letters are uppercase and code contains both letters and numbers
+        else:
+            hasLetters = False
+            hasNumbers = False
+            for char in edit_unitID.data:
+                if not char.isdigit():
+                    hasLetters = True
+                    if not char.isalpha():
+                        raise ValidationError('Unit code must contain only uppercase letters and numbers.')
+                else:
+                    hasNumbers = True
+        if not hasNumbers:
+            raise ValidationError('Unit code must contain numbers.')
+        elif not hasLetters:
+            raise ValidationError('Unit code must contain uppercase letters.')
+
+class CreateUnitForm(FlaskForm):
+    unitID = StringField('Unit code', validators=[DataRequired()])
+    unitName = StringField('Unit name', validators=[DataRequired()])
+    create_unit_submit = SubmitField('Create Unit')
+
+    def validate_unitID(self, unitID):
+        # checks for only alphanumeric characters
+        if not unitID.data.isalnum():
+            raise ValidationError('Unit code must contain only uppercase letters and numbers.')
+        # ensures letters are uppercase and code contains both letters and numbers
+        else:
+            hasLetters = False
+            hasNumbers = False
+            for char in unitID.data:
+                if not char.isdigit():
+                    hasLetters = True
+                    if not char.isalpha():
+                        raise ValidationError('Unit code must contain only uppercase letters and numbers.')
+                else:
+                    hasNumbers = True
+        if not hasNumbers:
+            raise ValidationError('Unit code must contain numbers.')
+        elif not hasLetters:
+            raise ValidationError('Unit code must contain uppercase letters.')
+        else:
+            unit = Unit.query.filter_by(unit_id=unitID.data).first()
+            if unit is not None:
+                raise ValidationError('This unit already exists.')
+
 # validators not needed as this form will only be generated for existing units
 class DeleteUnitForm(FlaskForm):
     del_unitID = StringField()

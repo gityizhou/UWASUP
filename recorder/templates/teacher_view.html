@@ -140,7 +140,7 @@
                     </div>
                     <!-- modal footer -->
                     <div class="modal-footer">
-                        <button id="btn-btm-close-make-unit-modal" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        <button id="btn-btm-close-create-unit-modal" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                     </div>
                 </div>
             </div>
@@ -166,6 +166,54 @@
                 </div>
                 <div id="collapse_unit_{{ unit.id }}" class="collapse" aria-labelledby="heading_unit_{{ unit.id }}" data-parent="#accordion_units">
                     <div class="card-body" style="background-color: #ecd29d;">
+
+                        <!-- Edit UNIT modal -->
+                        <!-- button to open the modal -->
+                        <button id="btn-edit-unit" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-edit-unit">
+                            Edit Unit
+                        </button>
+                        <!-- keeps modal open if validation fails so user can see errors -->
+                        {% if form_edit_unit.edit_unitID.errors|length != 0 %}
+                            <script>
+                                $(document).ready(function(){
+                                    $("#modal-edit-unit").modal("show");
+                                });
+                            </script>
+                        {% endif %}
+                        <!-- code for modal window -->
+                        <div class="modal" id="modal-edit-unit">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <!-- modal header -->
+                                    <div class="modal-header">
+                                    <h4 class="modal-title">Edit Unit</h4>
+                                        <button  id="btn-top-close-edit-unit-modal" type="button" class="close" data-dismiss="modal">&times;</button>
+                                    </div>
+                                    <!-- modal body -->
+                                    <div class="modal-body show">
+                                        <form id="form-edit-unit" class="form" action="" method="post" novalidate>
+                                            {{ form_edit_unit.hidden_tag() }}
+                                            <p>
+                                                {{ form_edit_unit.edit_unitID.label }}<br>
+                                                {{ form_edit_unit.edit_unitID(value=unit.unit_id, size=32, class="form-field") }}<br>
+                                                {{ form_edit_unit.edit_unitName.label }}<br>
+                                                {{ form_edit_unit.edit_unitName(value=unit.unit_name, size=32, class="form-field") }}<br>
+                                                {{ form_edit_unit.current_unitID(value=unit.unit_id, style="display: none;") }}
+                                                {% for error in form_edit_unit.edit_unitID.errors %}
+                                                    <span style="color: red;">[{{ error }}]</span>
+                                                {% endfor %}
+                                            </p>
+                                            <a>{{ form_edit_unit.edit_unit_submit(id="btn-edit-unit-submit") }}</a>
+                                        </form>
+                                    </div>
+                                    <!-- modal footer -->
+                                    <div class="modal-footer">
+                                        <button id="btn-btm-close-edit-unit-modal" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end EDIT UNIT modal -->
 
                         <!-- DELETE UNIT modal -->
                         <!-- button to open the modal -->
