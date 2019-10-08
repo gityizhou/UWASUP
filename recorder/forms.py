@@ -8,6 +8,11 @@ from recorder.models.user import User
 import sys
 
 
+############################
+# forms needed for registration, login and password reset
+############################
+
+
 # user login form
 class LoginForm(FlaskForm):
     class Meta:
@@ -68,8 +73,30 @@ class RegisterForm(FlaskForm):
         if user is not None:
             raise ValidationError('This email address is already in use.')
 
+class PasswdResetRequestForm(FlaskForm):
+    email = StringField("Email Address", validators=[DataRequired(), Email()])
+    submit = SubmitField('Reset Password')
 
-# field needed for SubscribeUnitForm
+    def validate_email(self, email):
+        user = User.query.filter_by(email=email.data).first()
+        if not user:
+            raise ValidationError(
+                'You do not have an account for this email address')
+
+class PasswdResetForm(FlaskForm):
+    password = PasswordField("Password", validators=[DataRequired(), Length(min=8, max=18,
+                                                                            message="Length of password should longer than 7")])
+    password2 = PasswordField(
+        "Password Repeat", validators=[DataRequired(), EqualTo('password')])
+    submit = SubmitField('Submit')
+
+
+############################
+# forms needed in student_view.html
+############################
+
+
+# field needed for SubscribeUnitForm (below) in student_view.html
 class MultiCheckboxField(SelectMultipleField):
     widget = ListWidget(prefix_label=False)
     option_widget = CheckboxInput()
@@ -78,6 +105,11 @@ class SubscribeUnitForm(FlaskForm):
     subscribe_units = MultiCheckboxField('Units', [DataRequired(message='Please select one or more units.')],
                                          coerce=int)
     submit = SubmitField('Subscribe')
+
+
+############################
+# forms needed in teacher_view.html
+############################
 
 class MakeTeacherForm(FlaskForm):
     staffNumber = StringField('Staff Number', validators=[DataRequired()])
@@ -112,20 +144,4 @@ class DeleteQuestionForm(FlaskForm):
     questionID = StringField()
     delete_question_submit = SubmitField('Delete Question')
 
-class PasswdResetRequestForm(FlaskForm):
-    email = StringField("Email Address", validators=[DataRequired(), Email()])
-    submit = SubmitField('Reset Password')
 
-    def validate_email(self, email):
-        user = User.query.filter_by(email=email.data).first()
-        if not user:
-            raise ValidationError(
-                'You do not have an account for this email address')
-
-
-class PasswdResetForm(FlaskForm):
-    password = PasswordField("Password", validators=[DataRequired(), Length(min=8, max=18,
-                                                                            message="Length of password should longer than 7")])
-    password2 = PasswordField(
-        "Password Repeat", validators=[DataRequired(), EqualTo('password')])
-    submit = SubmitField('Submit')
