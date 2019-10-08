@@ -96,22 +96,6 @@ def logout():
     logout_user()
     return redirect(url_for('index'))
 
-
-def generate_verification_code():
-    ''' generate random 6 digit code '''
-    code_list = []
-    for i in range(10):  # 0-9
-        code_list.append(str(i))
-    for i in range(65, 91):  # A-Z
-        code_list.append(chr(i))
-    for i in range(97, 123):  # a-z
-        code_list.append(chr(i))
-
-    myslice = random.sample(code_list, 6)
-    verification_code = ''.join(myslice)  # list to string
-    return verification_code
-
-
 # register function
 def register():
     # get the register form object
@@ -180,9 +164,9 @@ def verify_email_by_token(token):
     
     
 # recorder upload function, the folder now is default /uploads/files/
-gauth = GoogleAuth()
-gauth.LocalWebserverAuth()
-drive = GoogleDrive(gauth)
+# gauth = GoogleAuth()
+# gauth.LocalWebserverAuth()
+# drive = GoogleDrive(gauth)
 
 
 # recorder upload function, the folder now is default /uploads/files/
@@ -268,7 +252,7 @@ def password_reset(token):
     if current_user.is_authenticated:
         return redirect(url_for('index'))
     user = User.verify_jwt(token)
-    print(user.first_name)
+    # print(user.first_name)
     if not user:
         return redirect(url_for('index'))
     form = PasswdResetForm()
