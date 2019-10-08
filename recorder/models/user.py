@@ -7,8 +7,8 @@ import jwt
 import time
 
 user_unit = db.Table('user_unit',
-                     db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
-                     db.Column('unit_id', db.Integer, db.ForeignKey('unit.id'))
+                     db.Column('user_id', db.Integer, db.ForeignKey('user.id', ondelete="cascade")),
+                     db.Column('unit_id', db.Integer, db.ForeignKey('unit.id', ondelete="cascade"))
                      )
 
 

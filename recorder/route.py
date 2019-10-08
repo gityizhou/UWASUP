@@ -1,7 +1,6 @@
 from flask import render_template, redirect, url_for, flash, request, jsonify, current_app
 from flask_uploads import UploadSet, ALL
 from flask_login import login_user, current_user, logout_user, login_required
-import sys
 
 
 from recorder.email import send_email
@@ -11,7 +10,7 @@ from recorder.forms import LoginForm, RegisterForm, SubscribeUnitForm, MakeTeach
 from recorder.models.user import User
 from recorder.models.unit import Unit
 from recorder import db
-import random, os
+import os
 from pydrive.auth import GoogleAuth
 from pydrive.drive import GoogleDrive
 from recorder.models.question import Question
@@ -20,7 +19,7 @@ from recorder.models.user_question import User_question
 from recorder.models.user_task import User_task
 import jwt
 import time
-import socket
+
 
 """
 Index page but also our login page!
@@ -225,10 +224,10 @@ def verify_email_by_token(token):
     
     
     
-# recorder upload function, the folder now is default /uploads/files/
-# gauth = GoogleAuth()
-# gauth.LocalWebserverAuth()
-# drive = GoogleDrive(gauth)
+# # recorder upload function, the folder now is default /uploads/files/
+gauth = GoogleAuth()
+gauth.LocalWebserverAuth()
+drive = GoogleDrive(gauth)
 
 
 # recorder upload function, the folder now is default /uploads/files/
