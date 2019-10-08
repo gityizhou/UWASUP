@@ -57,7 +57,7 @@
         <!-- DELETE A USER modal -->
         <!-- button to open the modal -->
         <button id="btn-delete-user" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-delete-user">
-            Delete a User
+            Delete a Student or Teacher
         </button>
         <!-- keeps modal open if validation fails so user can see errors -->
         {% if form_delete_user.userNumber.errors|length != 0 %}
@@ -142,7 +142,7 @@
                                         <!-- modal body -->
                                         <div class="modal-body">
                                             <h5>Are you sure?</h5>
-                                            <p>Deleting a unit will permanently delete all task, questions and students submissions associated with this unit.</p>
+                                            <p>Deleting a unit will permanently delete all tasks, questions and student submissions associated with this unit.</p>
                                             <form class="form" action="" method="post" novalidate>
                                                 {{ form_delete_unit.hidden_tag() }}
                                                 {{ form_delete_unit.unitID(value=unit.id, style="display: none;") }}
@@ -188,7 +188,7 @@
                                                         <!-- modal body -->
                                                         <div class="modal-body">
                                                             <h5>Are you sure?</h5>
-                                                            <p>Deleting a task will permanently delete all questions and students submissions associated with this task.</p>
+                                                            <p>Deleting a task will permanently delete all questions and student submissions associated with this task.</p>
                                                             <form class="form" action="" method="post" novalidate>
                                                                 {{ form_delete_task.hidden_tag() }}
                                                                 {{ form_delete_task.taskID(value=task.id, style="display: none;") }}
@@ -231,6 +231,39 @@
                                                                             </div>
                                                                             <div id="collapse_question_1" class="collapse" aria-labelledby="heading_question_1" data-parent="#accordion_questions">
                                                                                 <div class="card-body" style="background-color: #d7f8d7;">
+
+                                                                                    <!-- DELETE QUESTION modal -->
+                                                                                    <!-- button to open the modal -->
+                                                                                    <button id="btn-delete-question-{{ question.id }}" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-delete-question-{{ question.id }}">
+                                                                                        Delete Question
+                                                                                    </button>
+                                                                                    <!-- code for modal window -->
+                                                                                    <div class="modal" id="modal-delete-question-{{ question.id }}">
+                                                                                        <div class="modal-dialog">
+                                                                                            <div class="modal-content">
+                                                                                                <!-- modal header -->
+                                                                                                <div class="modal-header">
+                                                                                                <button  id="btn-top-close-delete-question-{{ question.id }}" type="button" class="close" data-dismiss="modal">&times;</button>
+                                                                                                </div>
+                                                                                                <!-- modal body -->
+                                                                                                <div class="modal-body">
+                                                                                                    <h5>Are you sure?</h5>
+                                                                                                    <p>Deleting a question will permanently delete all student submissions associated with it.</p>
+                                                                                                    <form class="form" action="" method="post" novalidate>
+                                                                                                        {{ form_delete_question.hidden_tag() }}
+                                                                                                        {{ form_delete_question.questionID(value=question.id, style="display: none;") }}
+                                                                                                        <a>{{ form_delete_question.delete_question_submit }}</a>
+                                                                                                    </form>
+                                                                                                </div>
+                                                                                                <!-- modal footer -->
+                                                                                                <div class="modal-footer">
+                                                                                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <!-- end DELETE QUESTION modal -->
+
                                                                                     <p>Question Description: {{ question.description }}</p>
                                                                                     <!-- TODO: get recording from question.users.recorder_url -->
                                                                                     <p>Play recording: </p>

@@ -6,7 +6,7 @@ import sys
 
 from recorder.email import send_email
 from recorder.forms import LoginForm, RegisterForm, SubscribeUnitForm, MakeTeacherForm, PasswdResetForm, \
-    PasswdResetRequestForm, DeleteUserForm, DeleteUnitForm, DeleteTaskForm
+    PasswdResetRequestForm, DeleteUserForm, DeleteUnitForm, DeleteTaskForm, DeleteQuestionForm
 from recorder.models.user import User
 from recorder.models.unit import Unit
 from recorder import db
@@ -81,6 +81,7 @@ def teacher_view(staff_number):
     form_delete_user = DeleteUserForm()
     form_delete_unit = DeleteUnitForm()
     form_delete_task = DeleteTaskForm()
+    form_delete_question = DeleteQuestionForm()
     # make teacher form
     if form_make_teacher.make_teacher_submit.data and form_make_teacher.validate_on_submit():
         staff = User.query.filter_by(user_number=form_make_teacher.staffNumber.data).first()
@@ -91,22 +92,27 @@ def teacher_view(staff_number):
         user = User.query.filter_by(user_number=form_delete_user.userNumber.data).first()
         user.delete()
         flash('The user has been deleted.')
-    # delete unit form
+    # delete unit form (validation not strictly necessary here for this form, see forms.py)
     if form_delete_unit.delete_unit_submit.data and form_delete_unit.validate_on_submit():
         unit = Unit.query.filter_by(id=form_delete_unit.unitID.data).first()
         unit.delete()
         flash('The unit has been deleted.')
-    # delete task form
+    # delete task form (validation not strictly necessary here for this form, see forms.py)
     if form_delete_task.delete_task_submit.data and form_delete_task.validate_on_submit():
         task = Task.query.filter_by(id=form_delete_task.taskID.data).first()
         task.delete()
         flash('The task has been deleted.')
+    # delete question form (validation not strictly necessary here for this form, see forms.py)
+    if form_delete_question.delete_question_submit.data and form_delete_question.validate_on_submit():
+        question = Question.query.filter_by(id=form_delete_question.questionID.data).first()
+        question.delete()
+        flash('The question has been deleted.')
     teacher_units = teacher.units.all()
     all_units = Unit.query.all()
     all_users = User.query.all()
     return render_template('teacher_view.html', teacher=teacher, teacher_units=teacher_units, all_units=all_units,
                            all_users=all_users, form_make_teacher=form_make_teacher, form_delete_user=form_delete_user,
-                           form_delete_unit=form_delete_unit, form_delete_task=form_delete_task)
+                           form_delete_unit=form_delete_unit, form_delete_task=form_delete_task, form_delete_question=form_delete_question)
 
 
 # logout function

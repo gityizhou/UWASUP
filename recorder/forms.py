@@ -97,15 +97,20 @@ class DeleteUserForm(FlaskForm):
         if user is None:
             raise ValidationError('This user does not exist.')
 
-# validators not needed in this form as form will only be generated for existing units
+# validators not needed as this form will only be generated for existing units
 class DeleteUnitForm(FlaskForm):
     unitID = StringField()
     delete_unit_submit = SubmitField('Delete Unit')
 
-# validators not needed in this form as form will only be generated for existing tasks
+# validators not needed as this form will only be generated for existing tasks
 class DeleteTaskForm(FlaskForm):
     taskID = StringField()
     delete_task_submit = SubmitField('Delete Task')
+
+# validators not needed as this form will only be generated for existing questions
+class DeleteQuestionForm(FlaskForm):
+    questionID = StringField()
+    delete_question_submit = SubmitField('Delete Question')
 
 class PasswdResetRequestForm(FlaskForm):
     email = StringField("Email Address", validators=[DataRequired(), Email()])
