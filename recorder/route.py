@@ -106,6 +106,9 @@ def teacher_view(staff_number):
     if form_create_unit.create_unit_submit.data and form_create_unit.validate_on_submit():
         unit = Unit(unit_id=form_create_unit.unitID.data, unit_name=form_create_unit.unitName.data)
         unit.add()
+        user = User.query.filter_by(user_number=staff_number).first()
+        unit = Unit.query.filter_by(unit_name=form_create_unit.unitName.data).first()
+        user.add_unit(unit)
         flash('The unit has been created.')
         # need to return redirect on successful submission to clear form fields
         return redirect(url_for('teacher_view', staff_number=staff_number))
