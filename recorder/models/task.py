@@ -1,6 +1,7 @@
 from datetime import datetime
 from recorder import db
 from recorder.models.user import User
+from recorder.models.user_task import User_task
 
 
 class Task(db.Model):
@@ -10,7 +11,9 @@ class Task(db.Model):
     description = db.Column(db.String(300))
     create_time = db.Column(db.DateTime, default=datetime.now)
     due_time = db.Column(db.DateTime)
-    pdf_url = db.String(db.String(64))
+    pdf_url = db.Column(db.String(140))
+    pdf_id = db.Column(db.String(140))
+    pdf_title = db.Column(db.String(140))
     unit_id = db.Column(db.Integer, db.ForeignKey('unit.id'))
     unit = db.relationship("Unit", back_populates="tasks")
     questions = db.relationship("Question", back_populates="task")
@@ -26,6 +29,13 @@ class Task(db.Model):
         db.session.commit()
 
     def delete(self):
+        for question in self.questions:
+            print(question)
+            question.delete()
+        user_tasks = db.session.query(User_task).filter(User_task.task_id == self.id )
+        for user_task in user_tasks:
+            print(user_task.task_id)
+            user_task.delete()
         db.session.delete(self)
         db.session.commit()
 

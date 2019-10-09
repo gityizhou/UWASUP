@@ -55,5 +55,5 @@ class TestQuestion(unittest.TestCase):
 
     # !!!!delete a question
     def test_question_delete(self):
-        question = db.session.query(Question).filter(Question.id == '5').one()
+        question = db.session.query(Question).filter(Question.id == '1').one()
         question.delete()
