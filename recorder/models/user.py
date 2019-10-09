@@ -2,6 +2,7 @@ from recorder import db, loginManager
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from recorder.models.question import Question
+from recorder.models.unit import Unit
 from recorder.models.user_unit import User_unit
 from recorder.models.user_question import User_question
 from recorder.models.user_task import User_task
@@ -95,6 +96,12 @@ class User(db.Model, UserMixin):
             if this_question.task_id == task_id:
                 task_questions.append(this_question)
         return task_questions
+
+    def get_student_units(self):
+        student_units = []
+        for unit in self.units:
+            student_units.append(db.session.query(Unit).filter(Unit.id == unit.unit_id).first())
+        return student_units
 
     # you can use this method to get the mark of the task of a student of a specific task
     def get_task_mark(self, task_id):

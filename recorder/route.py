@@ -71,7 +71,7 @@ def student_view(student_number):
             unit_object = Unit.query.get(unit_id)
             student.add_unit(unit_object)
         flash('You have been subscribed to the selected units.')
-    student_units = student.units.all()
+    student_units = student.get_student_units()
     return render_template('student_view.html', student=student, student_units=student_units, all_units=all_units,
                            form_subscribe_unit=form_subscribe_unit)
 

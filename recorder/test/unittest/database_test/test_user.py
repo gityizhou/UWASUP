@@ -47,8 +47,9 @@ class TestUser(unittest.TestCase):
 
     # query user's units
     def test_user_unit_query(self):
-        user1 = db.session.query(User).filter(User.id == '3').one()
-        print(user1.units.all())
+        user1 = db.session.query(User).filter(User.id == '1').one()
+        units = user1.get_student_units()
+        print(units)
 
     # add a user's task result
     def test_add_user_task(self):
