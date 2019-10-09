@@ -430,6 +430,7 @@
                                                         </div>
                                                         <div id="collapse_student_{{ student.id }}" class="collapse" aria-labelledby="heading_student_{{ student.id }}" data-parent="#accordion_students">
                                                             <div class="card-body" style="background-color: #efd9f5;">
+                                                                <!-- TASK FEEDBACK section -->
                                                                 <div>
                                                                     <form id="form-task-feedback-{{ student.id }}" class="form" action="" method="post" novalidate>
                                                                         {{ form_task_feedback.hidden_tag() }}
@@ -441,10 +442,14 @@
                                                                                 {{ form_task_feedback.mark.label }}<br>
                                                                                 {{ form_task_feedback.mark(size=32, class="form-field") }}<br>
                                                                             {% endif %}
+                                                                            {% if student.get_user_task(task.id).comment is not none %}
+                                                                                {{ form_task_feedback.feedbackComment.label }}<br>
+                                                                                {{ form_task_feedback.feedbackComment(value=student.get_user_task(task.id).comment, size=32, class="form-field", rows="10", cols="55") }}<br>
+                                                                            {% else %}
+                                                                                {{ form_task_feedback.feedbackComment.label }}<br>
+                                                                                {{ form_task_feedback.feedbackComment(size=32, class="form-field", rows="10", cols="55") }}<br>
+                                                                            {% endif %}
                                                                             <!-- add if statement here to test for comment and recorder URL -->
-                                                                            <!-- add recorder URL -->
-                                                                            {{ form_task_feedback.feedbackComment.label }}<br>
-                                                                            {{ form_task_feedback.feedbackComment(size=32, class="form-field", rows="10", cols="55") }}<br>
                                                                             {{ form_task_feedback.feedbackStudentID(value=student.id, style="display: none;") }}<br>
                                                                             {{ form_task_feedback.feedbackTaskID(value=task.id, style="display: none;") }}
                                                                         </p>

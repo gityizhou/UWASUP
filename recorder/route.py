@@ -66,7 +66,7 @@ def student_view(student_number):
     form_subscribe_unit = SubscribeUnitForm()
     form_subscribe_unit.subscribe_units.choices = [(unit.id, ("{} ({})".format(unit.unit_id, unit.unit_name))) for unit in
                                     Unit.query.all()]
-    if form.validate_on_submit():
+    if form_subscribe_unit.validate_on_submit():
         for unit_id in form_subscribe_unit.subscribe_units.data:
             unit_object = Unit.query.get(unit_id)
             student.add_unit(unit_object)
