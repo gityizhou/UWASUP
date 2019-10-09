@@ -240,7 +240,7 @@
 
                             <!-- ADD TASK modal -->
                             <!-- button to open the modal -->
-                            <button id="btn-add-task" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-add-task-{{ unit.id }}">
+                            <button id="btn-add-task-{{ unit.id }}" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-add-task-{{ unit.id }}">
                                 Add Task
                             </button>
                             <!-- code for modal window -->
@@ -296,6 +296,61 @@
                                     <div id="collapse_task_{{ task.id }}" class="collapse" aria-labelledby="heading_task_{{ task.id }}" data-parent="#accordion_tasks">
                                         <div class="card-body" style="background-color: #aecee4;">
 
+                                            <!-- EDIT TASK modal -->
+                                            <!-- button to open the modal -->
+                                            <button id="btn-edit-task-{{ task.id }}" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-edit-task-{{ task.id }}">
+                                                Edit Task
+                                            </button>
+                                            <!-- code for modal window -->
+                                            <div class="modal" id="modal-edit-task-{{ task.id }}">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <!-- modal header -->
+                                                        <div class="modal-header">
+                                                        <h4 class="modal-title">Edit Task</h4>
+                                                            <button  id="btn-top-close-edit-task-{{ task.id }}-modal" type="button" class="close" data-dismiss="modal">&times;</button>
+                                                        </div>
+                                                        <!-- modal body -->
+                                                        <div class="modal-body show">
+                                                            <form id="form-edit-task-{{ task.id }}" class="form" action="" method="post" novalidate>
+                                                                {{ form_edit_task.hidden_tag() }}
+                                                                <p>
+                                                                    {{ form_edit_task.edit_taskName.label }}<br>
+                                                                    {{ form_edit_task.edit_taskName(value=task.task_name, size=32, class="form-field") }}<br>
+                                                                    {{ form_edit_task.edit_taskDescription.label }}<br>
+                                                                    {{ form_edit_task.edit_taskDescription(value=task.description, size=32, class="form-field") }}<br>
+                                                                    {% if task.due_time is not none %}
+                                                                        {% set due_time_string = task.due_time|string() %}
+                                                                        {{ form_edit_task.edit_taskDueDate.label }}<br>
+                                                                        {{ form_edit_task.edit_taskDueDate(value=due_time_string[:10], size=32, class="form-field") }}<br>
+                                                                        {{ form_edit_task.edit_taskDueTime.label }}<br>
+                                                                        {{ form_edit_task.edit_taskDueTime(value=due_time_string[11:16], size=32, class="form-field") }}<br>
+                                                                    {% else %}
+                                                                        {{ form_edit_task.edit_taskDueDate.label }}<br>
+                                                                        {{ form_edit_task.edit_taskDueDate(size=32, class="form-field") }}<br>
+                                                                        {{ form_edit_task.edit_taskDueTime.label }}<br>
+                                                                        {{ form_edit_task.edit_taskDueTime(size=32, class="form-field") }}<br>
+                                                                    {% endif %}
+                                                                    {% if task.pdf_title is not none %}
+                                                                        {{ form_edit_task.edit_pdfTitle.label }}<br>
+                                                                        {{ form_edit_task.edit_pdfTitle(value=task.pdf_title, size=32, class="form-field") }}<br>
+                                                                    {% else %}
+                                                                        {{ form_edit_task.edit_pdfTitle.label }}<br>
+                                                                        {{ form_edit_task.edit_pdfTitle(size=32, class="form-field") }}<br>
+                                                                    {% endif %}
+                                                                    {{ form_edit_task.current_taskID(value=task.id, style="display: none;") }}
+                                                                </p>
+                                                                <a>{{ form_add_task.add_task_submit(id="btn-edit-task-{{ task.id }}-submit", size=32, class="form-field") }}</a>
+                                                            </form>
+                                                        </div>
+                                                        <!-- modal footer -->
+                                                        <div class="modal-footer">
+                                                            <button id="btn-btm-close-edit-task-{{ task.id }}-modal" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- end EDIT TASK modal -->    
                                             
                                             <!-- DELETE TASK modal -->
                                             <!-- button to open the modal -->
@@ -507,6 +562,50 @@
     {% endif %}
     <!-- end ADD TASK FORM ERRORS modal -->
 
+    <!-- EDIT TASK FORM ERRORS modal -->
+    {% set ns = namespace(errors_present=false) %}
+    {% for field in form_edit_task %}
+        {% if field.errors|length != 0 %}
+            {% set ns.errors_present = true %}
+        {% endif %}
+    {% endfor %}
+    {% if ns.errors_present == true %}
+        <script>
+            $(document).ready(function(){
+                $("#modal-edit-task-form-errors").modal("show");
+            });
+        </script>
+        <!-- code for modal window -->
+        <div class="modal fade" id="modal-edit-task-form-errors">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <!-- modal body -->
+                    <div class="modal-body show">
+                        <ul>
+                            {% for error in form_edit_task.edit_taskName.errors %}
+                                <li style="color: red;">Error (Task name): {{ error }}</li>
+                            {% endfor %}
+                            {% for error in form_edit_task.edit_taskDescription.errors %}
+                                <li style="color: red;">Error (Description): {{ error }}</li>
+                            {% endfor %}
+                            {% for error in form_edit_task.edit_taskDueDate.errors %}
+                                <li style="color: red;">Error: {{ error }}</li>
+                            {% endfor %}
+                            {% for error in form_edit_task.edit_taskDueTime.errors %}
+                                <li style="color: red;">Error: {{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        <p>Please resubmit form.</p>
+                    </div>
+                    <!-- modal footer -->
+                    <div class="modal-footer">
+                        <button id="btn-btm-close-edit-task-form-errors-modal" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    <!-- end EDIT TASK FORM ERRORS modal -->
 
 
 {% endblock %}

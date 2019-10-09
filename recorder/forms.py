@@ -8,9 +8,8 @@ from recorder.models.unit import Unit
 from recorder.models.task import Task
 from recorder.models.question import Question
 
-import sys
-import datetime
-import time
+import sys, datetime, time
+
 
 ############################
 # forms needed for registration, login and password reset
@@ -193,7 +192,7 @@ class AddTaskForm(FlaskForm):
     taskDescription = StringField('Description', validators=[DataRequired()])
     taskDueDate = StringField('Due date (YYYY-MM-DD)')
     taskDueTime = StringField('Due time in 24h format (HH:MM)')
-    task_unitID = StringField('Description')
+    task_unitID = StringField('unitID')
     pdfTitle = StringField('PDF Attachment Title')
     add_task_submit = SubmitField('Add Task')
 
@@ -206,6 +205,27 @@ class AddTaskForm(FlaskForm):
     def validate_taskDueTime(self, taskDueTime):
         try:
             time.strptime(taskDueTime.data, '%H:%M')
+        except ValueError:
+            raise ValidationError('Due time must be in format HH:MM.')
+
+class EditTaskForm(FlaskForm):
+    current_taskID = StringField('Current taskID')
+    edit_taskName = StringField('Task name', validators=[DataRequired()])
+    edit_taskDescription = StringField('Description', validators=[DataRequired()])
+    edit_taskDueDate = StringField('Due date (YYYY-MM-DD)')
+    edit_taskDueTime = StringField('Due time in 24h format (HH:MM)')
+    edit_pdfTitle = StringField('PDF Attachment Title')
+    edit_task_submit = SubmitField('Update Task')
+
+    def validate_edit_taskDueDate(self, edit_taskDueDate):
+        try:
+            datetime.datetime.strptime(edit_taskDueDate.data, '%Y-%m-%d')
+        except ValueError:
+            raise ValidationError('Due date must be in format YYYY-MM-DD.')
+
+    def validate_edit_taskDueTime(self, edit_taskDueTime):
+        try:
+            time.strptime(edit_taskDueTime.data, '%H:%M')
         except ValueError:
             raise ValidationError('Due time must be in format HH:MM.')
 
