@@ -256,13 +256,13 @@ def request_email_verification2(email):
     body = "link to verify password: "+url
     htmlbody = 'to verify your email click <a href="'+url+'">here</a>'
     send_email(subject="",recipients=[user.email],text_body=body,html_body=htmlbody)
-    return "Verification link sent to " + user.email
+    return "Verification link sent to " + user.email +"Please check you Spam box as well"
 
 @login_required
 def request_email_verification():
     token = current_user.get_jwt()
     url = str(url_for("verify_email_by_token",token=token,_external=True))
-    body = "link to verify password: "+url
+    body = "link to verify password: "+url # this is also can be a separate template but this msg can be enough
     htmlbody = 'to verify your email click <a href="'+url+'">here</a>'
     send_email(subject="",recipients=[current_user.email],text_body=body,html_body=htmlbody)
     return "Verification link sent to " + current_user.email
@@ -271,7 +271,7 @@ def request_email_verification():
 @login_required
 def verify_email_by_token(token):
     try:
-        obj = jwt.decode(token,current_app.config['SECRET_KEY'],algorithms=['HS256'])
+        obj = jwt.decode(token,current_app.config['SECRET_KEY'],algorithms=['HS256']) #will decode the token which has been send to email
     except:
         return "invalid token"
     email = obj["email"]
@@ -285,10 +285,11 @@ def verify_email_by_token(token):
 
     user = User.query.filter_by(email=email).first()
     user.email_is_verified()
-    db.session.commit()
+    db.session.commit() #this will change user is verified in data base from 0 to 1
 
-
-    return "Email successfully verified"
+    # it will return to login page after verify the account 
+    #return "Email successfully verified"
+    return render_template('index.html', title="Index", form=form)
     
 
 
@@ -305,19 +306,24 @@ drive = GoogleDrive(gauth)
 # and will be uploaded to google drive
 def upload():
     files = UploadSet('files', ALL)
-    student = current_user
+    student_number = current_user.user_number
+    question_id = int(request.form.get("question_id"))  # get the question id from request post
+    this_question = db.session.query(Question).filter(Question.id == question_id).one()
+    task_id = this_question.task_id
+    unit_id = db.session.query(Task).filter(Task.id == task_id).one().unit_id
+    name = student_number + '_' + unit_id + '_' + task_id + '_' + question_id
     if request.method == 'POST' and 'upfile' in request.files:
         filename = files.save(
             request.files['upfile'])  # get the file from front end request, return the file name(String)
-        url = files.url(filename)  # get the url of this file
-        print(student.first_name, student.last_name)
-        print(filename)
-        print(url)
         upload_file = drive.CreateFile()  # create the google drive file instance
         upload_file.SetContentFile("./uploads/files/" + filename)  # set our file into this instance
-        upload_file['title'] = filename    # set the file name of this file
-        upload_file.Upload()        # upload this file
-        print(upload_file['id'])    # can get this file's google drive-id and use it to save the id into database
+        upload_file['title'] = name  # set the file name of this file
+        upload_file.Upload()  # upload this file
+        google_file_id = upload_file[
+            'id']  # can get this file's google drive-id and use it to save the id into database
+        google_url = "https://drive.google.com/uc?authuser=0&id=" + google_file_id + "&export=download"
+        User_question.add_user_question(user=current_user, question=this_question, record_url=google_url,
+                                        record_id=google_url, record_title=name)  # save user_question to db
         os.remove("./uploads/files/" + filename)  # delete this file after uploading it to google drive
     return render_template('recorder.html')
 

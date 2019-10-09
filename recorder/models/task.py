@@ -13,7 +13,6 @@ class Task(db.Model):
     due_time = db.Column(db.DateTime)
     pdf_url = db.Column(db.String(140))
     pdf_id = db.Column(db.String(140))
-    pdf_title = db.Column(db.String(140))
     unit_id = db.Column(db.Integer, db.ForeignKey('unit.id'))
     unit = db.relationship("Unit", back_populates="tasks")
     questions = db.relationship("Question", back_populates="task")
