@@ -6,6 +6,7 @@
     <title>Hello, {{current_user.first_name}} {{current_user.user_number}}</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 </head>
+
 <body>
 <script src="https://xiangyuecn.github.io/Recorder/recorder.mp3.min.js"></script>
 <!-- Add jquery -->
@@ -15,7 +16,7 @@
 
 
 
-<input class="btn btn-primary" type="button" onclick="doOnClick()" value="Start" >
+<input class="btn btn-primary" type="button" id="Record_{{sUnit.id}}_{{task.id}}_{{question.id}}"onclick="doOnClick()" value="Start" >
 
 
 <!-- <input class="btn btn-primary" type="button" onclick="start()" value="Start" >
@@ -210,9 +211,9 @@ var fileuretwo
             ，Or use FormData upload, which in this case uploads the binary directly
             ，from normal application/x-www-form-urlencoded form upload
             */
-            var filename={{current_user.id}}+"_"+{{current_user.user_number}}+ "_" + {{sUnit.id}} + "_" + {{task.id}}+ "_" + {{question.id}}+".mp3";
+            //var filename={{current_user.id}}+"_"+{{current_user.user_number}}+"_"+{{sUnit.id}}+"_"+{{task.id}}+"_"+{{question.id}}+".mp3";
             var form = new FormData();
-            form.append("upfile", recFile, filename); //Similar to ordinary form forms, files with upfile parameters, named recorder. Mp3, are received by the back-end
+            form.append("upfile", recFile, "record.mp3"); //Similar to ordinary form forms, files with upfile parameters, named recorder. Mp3, are received by the back-end
             //Upload directly with ajax
             var xhr = new XMLHttpRequest();
             xhr.open("POST", "/recorder");//This fake address can see the request data and format in the console network, and the result of the request is irrelevant
