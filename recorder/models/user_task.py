@@ -17,6 +17,16 @@ class User_task(db.Model):
         db.session.add(user_has_task)
         db.session.commit()
 
+    def add(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+
+    def update(self):
+        db.session.commit()
 
 
 """
