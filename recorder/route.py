@@ -212,15 +212,14 @@ def teacher_view(staff_number):
         flash('The question has been deleted.')
         # need to return redirect on successful submission to clear form fields
         return redirect(url_for('teacher_view', staff_number=staff_number))
-    teacher_units = teacher.units.all()
     all_units = Unit.query.all()
     all_users = User.query.all()
-    return render_template('teacher_view.html', teacher=teacher, teacher_units=teacher_units, all_units=all_units,
-                           all_users=all_users, form_make_teacher=form_make_teacher, form_delete_user=form_delete_user,
-                           form_delete_unit=form_delete_unit, form_delete_task=form_delete_task, form_delete_question=form_delete_question,
-                           form_create_unit=form_create_unit, form_edit_unit=form_edit_unit, form_add_task=form_add_task, 
-                           form_edit_task=form_edit_task, form_add_question=form_add_question, form_edit_question=form_edit_question,
-                           form_task_feedback=form_task_feedback)
+    return render_template('teacher_view.html', teacher=teacher, all_units=all_units, all_users=all_users,
+                            form_make_teacher=form_make_teacher, form_delete_user=form_delete_user,
+                            form_delete_unit=form_delete_unit, form_delete_task=form_delete_task, form_delete_question=form_delete_question,
+                            form_create_unit=form_create_unit, form_edit_unit=form_edit_unit, form_add_task=form_add_task, 
+                            form_edit_task=form_edit_task, form_add_question=form_add_question, form_edit_question=form_edit_question,
+                            form_task_feedback=form_task_feedback)
 
 
 # logout function
