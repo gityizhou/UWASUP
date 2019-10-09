@@ -66,12 +66,12 @@ def student_view(student_number):
     form_subscribe_unit = SubscribeUnitForm()
     form_subscribe_unit.subscribe_units.choices = [(unit.id, ("{} ({})".format(unit.unit_id, unit.unit_name))) for unit in
                                     Unit.query.all()]
-    if form.validate_on_submit():
+    if form_subscribe_unit.validate_on_submit():
         for unit_id in form_subscribe_unit.subscribe_units.data:
             unit_object = Unit.query.get(unit_id)
             student.add_unit(unit_object)
         flash('You have been subscribed to the selected units.')
-    student_units = student.units.all()
+    student_units = student.get_student_units()
     return render_template('student_view.html', student=student, student_units=student_units, all_units=all_units,
                            form_subscribe_unit=form_subscribe_unit)
 
