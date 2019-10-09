@@ -15,10 +15,18 @@
 
 
 
+<input class="btn btn-primary" type="button" onclick="doOnClick()" value="Start" >
 
-<input class="btn btn-primary" type="button" id="Record" onclick="doOnClick()" value="Start" >
+
+<!-- <input class="btn btn-primary" type="button" onclick="start()" value="Start" >
+
+<input class="btn btn-primary" type="button" onclick="finish()" value="finish" > -->
+
 <!-- <input type="button" onclick="pauseRec();resetTime();stopTime()" value="pause recording">
 <input type="button" onclick="resumeRec();startTime()" value="resume recording"> -->
+
+
+
 <input class="btn btn-primary" type="button" onclick="playRec();stopTime()" value="Play">
 
 
@@ -30,16 +38,33 @@
 
 
 <script>
+
+    // function start(){
+    //     stopRec();
+    //     stopTime();
+    // }
+
+    // function finish(){
+    //     startRec();
+    //     resetTime();
+    //     startTime();
+    // }
+
+
+
+
     function doOnClick(){
-        if(document.getElementById('Record').value=="Finish"){
-            document.getElementById('Record').value="Start";
-            document.getElementById('Record').style.color='white';
+        console.log("Record_{{sUnit.id}}_{{task.id}}_{{question.id}}");
+
+        if(document.getElementById("Record_{{sUnit.id}}_{{task.id}}_{{question.id}}").value=="Finish"){
+            document.getElementById("Record_{{sUnit.id}}_{{task.id}}_{{question.id}}").value="Start";
+            document.getElementById("Record_{{sUnit.id}}_{{task.id}}_{{question.id}}").style.color='white';
             stopRec();
             stopTime();
         }
-        else if (document.getElementById('Record').value=="Start"){
-            document.getElementById('Record').value="Finish";
-            document.getElementById('Record').style.color='red';
+        else if (document.getElementById("Record_{{sUnit.id}}_{{task.id}}_{{question.id}}").value=="Start"){
+            document.getElementById("Record_{{sUnit.id}}_{{task.id}}_{{question.id}}").value="Finish";
+            document.getElementById("Record_{{sUnit.id}}_{{task.id}}_{{question.id}}").style.color='red';
             startRec();
             resetTime();
             startTime();
@@ -185,7 +210,7 @@ var fileuretwo
             ，Or use FormData upload, which in this case uploads the binary directly
             ，from normal application/x-www-form-urlencoded form upload
             */
-            var filename={{current_user.id}}+"_"+{{current_user.user_number}}+".mp3";
+            var filename={{current_user.id}}+"_"+{{current_user.user_number}}+ "_" + {{sUnit.id}} + "_" + {{task.id}}+ "_" + {{question.id}}+".mp3";
             var form = new FormData();
             form.append("upfile", recFile, filename); //Similar to ordinary form forms, files with upfile parameters, named recorder. Mp3, are received by the back-end
             //Upload directly with ajax
