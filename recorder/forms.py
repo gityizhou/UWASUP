@@ -9,7 +9,8 @@ from recorder.models.task import Task
 from recorder.models.question import Question
 
 import sys
-
+import datetime
+import time
 
 ############################
 # forms needed for registration, login and password reset
@@ -190,11 +191,23 @@ class EditUnitForm(FlaskForm):
 class AddTaskForm(FlaskForm):
     taskName = StringField('Task name', validators=[DataRequired()])
     taskDescription = StringField('Description', validators=[DataRequired()])
-    taskDueDate = DateTimeField('Due date (YYYY-MM-DD)')
-    taskDueTime = TimeField('Due time in 24h format (HH:MM)')
+    taskDueDate = StringField('Due date (YYYY-MM-DD)')
+    taskDueTime = StringField('Due time in 24h format (HH:MM)')
     task_unitID = StringField('Description')
     pdfTitle = StringField('PDF Attachment Title')
     add_task_submit = SubmitField('Add Task')
+
+    def validate_taskDueDate(self, taskDueDate):
+        try:
+            datetime.datetime.strptime(taskDueDate.data, '%Y-%m-%d')
+        except ValueError:
+            raise ValidationError('Due date must be in format YYYY-MM-DD.')
+
+    def validate_taskDueTime(self, taskDueTime):
+        try:
+            time.strptime(taskDueTime.data, '%H:%M')
+        except ValueError:
+            raise ValidationError('Due time must be in format HH:MM.')
 
 # validators not needed as this form will only be generated for existing units
 class DeleteUnitForm(FlaskForm):
