@@ -245,13 +245,13 @@ def request_email_verification2(email):
     body = "link to verify password: "+url
     htmlbody = 'to verify your email click <a href="'+url+'">here</a>'
     send_email(subject="",recipients=[user.email],text_body=body,html_body=htmlbody)
-    return "Verification link sent to " + user.email
+    return "Verification link sent to " + user.email +"Please check you Spam box as well"
 
 @login_required
 def request_email_verification():
     token = current_user.get_jwt()
     url = str(url_for("verify_email_by_token",token=token,_external=True))
-    body = "link to verify password: "+url
+    body = "link to verify password: "+url # this is also can be a separate template but this msg can be enough
     htmlbody = 'to verify your email click <a href="'+url+'">here</a>'
     send_email(subject="",recipients=[current_user.email],text_body=body,html_body=htmlbody)
     return "Verification link sent to " + current_user.email
@@ -260,7 +260,7 @@ def request_email_verification():
 @login_required
 def verify_email_by_token(token):
     try:
-        obj = jwt.decode(token,current_app.config['SECRET_KEY'],algorithms=['HS256'])
+        obj = jwt.decode(token,current_app.config['SECRET_KEY'],algorithms=['HS256']) #will decode the token which has been send to email
     except:
         return "invalid token"
     email = obj["email"]
@@ -274,10 +274,11 @@ def verify_email_by_token(token):
 
     user = User.query.filter_by(email=email).first()
     user.email_is_verified()
-    db.session.commit()
+    db.session.commit() #this will change user is verified in data base from 0 to 1
 
-
-    return "Email successfully verified"
+    # it will return to login page after verify the account 
+    #return "Email successfully verified"
+    return render_template('index.html', title="Index", form=form)
     
 
 
