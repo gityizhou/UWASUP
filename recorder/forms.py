@@ -229,6 +229,12 @@ class EditTaskForm(FlaskForm):
         except ValueError:
             raise ValidationError('Due time must be in format HH:MM.')
 
+class AddQuestionForm(FlaskForm):
+    questionName = StringField('Question name', validators=[DataRequired()])
+    questionDescription = StringField('Description', validators=[DataRequired()])
+    question_taskID = StringField('taskID')
+    add_question_submit = SubmitField('Add Question')
+
 # validators not needed as this form will only be generated for existing units
 class DeleteUnitForm(FlaskForm):
     del_unitID = StringField()

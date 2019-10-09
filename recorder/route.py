@@ -6,7 +6,7 @@ from flask_login import login_user, current_user, logout_user, login_required
 from recorder.email import send_email
 from recorder.forms import LoginForm, RegisterForm, SubscribeUnitForm, MakeTeacherForm, PasswdResetForm, \
     PasswdResetRequestForm, DeleteUserForm, DeleteUnitForm, DeleteTaskForm, DeleteQuestionForm, CreateUnitForm, \
-    EditUnitForm, AddTaskForm, EditTaskForm
+    EditUnitForm, AddTaskForm, EditTaskForm, AddQuestionForm
 from recorder.models.user import User
 from recorder.models.unit import Unit
 from recorder import db
@@ -88,6 +88,7 @@ def teacher_view(staff_number):
     form_add_task = AddTaskForm()
     form_edit_task = EditTaskForm()
     form_delete_task = DeleteTaskForm()
+    form_add_question = AddQuestionForm()
     form_delete_question = DeleteQuestionForm()
     # make teacher form
     if form_make_teacher.make_teacher_submit.data and form_make_teacher.validate_on_submit():
@@ -122,6 +123,13 @@ def teacher_view(staff_number):
         flash('The unit has been updated.')
         # need to return redirect on successful submission to clear form fields
         return redirect(url_for('teacher_view', staff_number=staff_number))
+    # delete unit form (validation not strictly necessary here for this form, see forms.py)
+    if form_delete_unit.delete_unit_submit.data and form_delete_unit.validate_on_submit():
+        unit = Unit.query.filter_by(id=form_delete_unit.del_unitID.data).first()
+        unit.delete()
+        flash('The unit has been deleted.')
+        # need to return redirect on successful submission to clear form fields
+        return redirect(url_for('teacher_view', staff_number=staff_number))
     # add task form
     if form_add_task.add_task_submit.data and form_add_task.validate_on_submit():
         # create DateTime format "YYYY-MM-DD HH:MM"
@@ -136,10 +144,10 @@ def teacher_view(staff_number):
             pdf_title=form_add_task.pdfTitle.data,
             unit_id=form_add_task.task_unitID.data)
         task.add()
-        task = Task.query.filter_by(task_name=form_add_task.taskName.data).first()
+        task = Task.query.filter_by(id=task.id).first()
         unit = Unit.query.filter_by(id=form_add_task.task_unitID.data).first()
         task.add_task2unit(unit)
-        flash('The task has been created.')
+        flash('The task has been added.')
         # need to return redirect on successful submission to clear form fields
         return redirect(url_for('teacher_view', staff_number=staff_number))
     # edit task form
@@ -157,18 +165,24 @@ def teacher_view(staff_number):
         flash('The task has been updated.')
         # need to return redirect on successful submission to clear form fields
         return redirect(url_for('teacher_view', staff_number=staff_number))
-    # delete unit form (validation not strictly necessary here for this form, see forms.py)
-    if form_delete_unit.delete_unit_submit.data and form_delete_unit.validate_on_submit():
-        unit = Unit.query.filter_by(id=form_delete_unit.del_unitID.data).first()
-        unit.delete()
-        flash('The unit has been deleted.')
-        # need to return redirect on successful submission to clear form fields
-        return redirect(url_for('teacher_view', staff_number=staff_number))
     # delete task form (validation not strictly necessary here for this form, see forms.py)
     if form_delete_task.delete_task_submit.data and form_delete_task.validate_on_submit():
         task = Task.query.filter_by(id=form_delete_task.del_taskID.data).first()
         task.delete()
         flash('The task has been deleted.')
+        # need to return redirect on successful submission to clear form fields
+        return redirect(url_for('teacher_view', staff_number=staff_number))
+    # add question form
+    if form_add_question.add_question_submit.data and form_add_question.validate_on_submit():
+        question = Question(
+            question_name=form_add_question.questionName.data,
+            description=form_add_question.questionDescription.data,
+            task_id=form_add_question.question_taskID.data)
+        question.add()
+        question = Question.query.filter_by(id=question.id).first()
+        task = Task.query.filter_by(id=form_add_question.question_taskID.data).first()
+        question.add_question2task(task)
+        flash('The question has been addedd.')
         # need to return redirect on successful submission to clear form fields
         return redirect(url_for('teacher_view', staff_number=staff_number))
     # delete question form (validation not strictly necessary here for this form, see forms.py)
@@ -185,7 +199,7 @@ def teacher_view(staff_number):
                            all_users=all_users, form_make_teacher=form_make_teacher, form_delete_user=form_delete_user,
                            form_delete_unit=form_delete_unit, form_delete_task=form_delete_task, form_delete_question=form_delete_question,
                            form_create_unit=form_create_unit, form_edit_unit=form_edit_unit, form_add_task=form_add_task, 
-                           form_edit_task=form_edit_task)
+                           form_edit_task=form_edit_task, form_add_question=form_add_question)
 
 
 # logout function

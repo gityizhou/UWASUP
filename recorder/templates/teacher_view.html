@@ -384,6 +384,43 @@
                                             </div>
                                             <!-- end DELETE TASK modal -->
 
+                                            <!-- ADD QUESTION modal -->
+                                            <!-- button to open the modal -->
+                                            <button id="btn-add-question-{{ task.id }}" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-add-question-{{ task.id }}">
+                                                Add Question
+                                            </button>
+                                            <!-- code for modal window -->
+                                            <div class="modal" id="modal-add-question-{{ task.id }}">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <!-- modal header -->
+                                                        <div class="modal-header">
+                                                        <h4 class="modal-title">Add Question to Task</h4>
+                                                            <button  id="btn-top-close-add-question-{{ task.id }}-modal" type="button" class="close" data-dismiss="modal">&times;</button>
+                                                        </div>
+                                                        <!-- modal body -->
+                                                        <div class="modal-body show">
+                                                            <form id="form-add-question-{{ task.id }}" class="form" action="" method="post" novalidate>
+                                                                {{ form_add_question.hidden_tag() }}
+                                                                <p>
+                                                                    {{ form_add_question.questionName.label }}<br>
+                                                                    {{ form_add_question.questionName(size=32, class="form-field") }}<br>
+                                                                    {{ form_add_question.questionDescription.label }}<br>
+                                                                    {{ form_add_question.questionDescription(size=32, class="form-field") }}<br>
+                                                                    {{ form_add_question.question_taskID(value=task.id, style="display: none;") }}
+                                                                </p>
+                                                                <a>{{ form_add_question.add_question_submit(id="btn-add-question-{{ task.id }}-submit", size=32, class="form-field") }}</a>
+                                                            </form>
+                                                        </div>
+                                                        <!-- modal footer -->
+                                                        <div class="modal-footer">
+                                                            <button id="btn-btm-close-add-question-{{ task.id }}-modal" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- end ADD QUESTION modal -->    
+
                                             <!-- list of students for each task -->
                                             <div id="accordion_students">
                                                 {% for student in task.get_task_users() %}
@@ -607,5 +644,43 @@
     {% endif %}
     <!-- end EDIT TASK FORM ERRORS modal -->
 
+    <!-- ADD QUESTION FORM ERRORS modal -->
+    {% set ns = namespace(errors_present=false) %}
+    {% for field in form_add_question %}
+        {% if field.errors|length != 0 %}
+            {% set ns.errors_present = true %}
+        {% endif %}
+    {% endfor %}
+    {% if ns.errors_present == true %}
+        <script>
+            $(document).ready(function(){
+                $("#modal-add-question-form-errors").modal("show");
+            });
+        </script>
+        <!-- code for modal window -->
+        <div class="modal fade" id="modal-add-question-form-errors">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <!-- modal body -->
+                    <div class="modal-body show">
+                        <ul>
+                            {% for error in form_add_question.questionName.errors %}
+                                <li style="color: red;">Error (Question name): {{ error }}</li>
+                            {% endfor %}
+                            {% for error in form_add_question.questionDescription.errors %}
+                                <li style="color: red;">Error (Description): {{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        <p>Please resubmit form.</p>
+                    </div>
+                    <!-- modal footer -->
+                    <div class="modal-footer">
+                        <button id="btn-btm-close-add-question-form-errors-modal" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    <!-- end ADD QUESTION FORM ERRORS modal -->
 
 {% endblock %}
