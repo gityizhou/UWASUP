@@ -2,14 +2,18 @@ from recorder import db, loginManager
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from recorder.models.question import Question
+from recorder.models.user_unit import User_unit
+from recorder.models.user_question import User_question
+from recorder.models.user_task import User_task
 from flask import current_app
 import jwt
 import time
 
-user_unit = db.Table('user_unit',
-                     db.Column('user_id', db.Integer, db.ForeignKey('user.id', ondelete="cascade")),
-                     db.Column('unit_id', db.Integer, db.ForeignKey('unit.id', ondelete="cascade"))
-                     )
+
+# user_unit = db.Table('user_unit',
+#                      db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
+#                      db.Column('unit_id', db.Integer, db.ForeignKey('unit.id'))
+#                      )
 
 
 class User(db.Model, UserMixin):
@@ -23,11 +27,10 @@ class User(db.Model, UserMixin):
     is_teacher = db.Column(db.Integer, default=0)
     is_activated = db.Column(db.Integer, default=0)
 
-
-
-    units = db.relationship('Unit', secondary=user_unit,
-                            backref=db.backref('users', lazy='dynamic'),
-                            lazy='dynamic')
+    # units = db.relationship('Unit', secondary=user_unit,
+    #                         backref=db.backref('users', lazy='dynamic'),
+    #                         lazy='dynamic')
+    units = db.relationship("User_unit", back_populates="user")
     tasks = db.relationship("User_task", back_populates="user")
     questions = db.relationship("User_question", back_populates="user")
 
@@ -52,6 +55,16 @@ class User(db.Model, UserMixin):
         db.session.commit()
 
     def delete(self):
+        user_units = db.session.query(User_unit).filter(User_unit.user_id == self.id)
+        for user_unit in user_units:
+            user_unit.delete()
+        user_tasks = db.session.query(User_task).filter(User_task.user_id == self.id)
+        for user_task in user_tasks:
+            user_task.delete()
+        user_quesions = db.session.query(User_question).filter(User_question.user_id == self.id)
+        for user_quesion in user_quesions:
+            # print(user_quesion.question_id)
+            user_quesion.delete()
         db.session.delete(self)
         db.session.commit()
 
@@ -63,11 +76,13 @@ class User(db.Model, UserMixin):
         db.session.commit()
 
     def add_unit(self, unit):
-        self.units.append(unit)
+        user_has_unit = User_unit(user=self, unit=unit)
+        db.session.add(user_has_unit)
         db.session.commit()
 
     def delete_unit(self, unit):
-        self.units.remove(unit)
+        user_has_unit = User_unit(user=self, unit=unit)
+        db.session.delete(user_has_unit)
         db.session.commit()
 
     # you can use this method to get all questions in this task of a student
@@ -91,7 +106,13 @@ class User(db.Model, UserMixin):
     def get_question_record_url(self, question_id):
         for question in self.questions:
             if question.question_id == question_id:
-                return question.recorder_url
+                return question.record_url
+
+    def get_user_task(self, task_id):
+        user = db.session.query(User).filter(User.id == self.id).one()
+        for task in user.tasks:
+            if task.task_id == task_id:
+                return task
 
     @staticmethod
     def get_user_list():
@@ -135,7 +156,6 @@ class User(db.Model, UserMixin):
     def email_is_verified(self):
         print("===============user email verified===========")
         return
-
 
 
 # get the id from session

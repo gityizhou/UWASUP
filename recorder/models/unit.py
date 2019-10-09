@@ -1,5 +1,6 @@
 from recorder import db
-from recorder.models.user import user_unit
+from recorder.models.user_unit import User_unit
+
 
 class Unit(db.Model):
     __tablename__ = 'unit'
@@ -7,6 +8,7 @@ class Unit(db.Model):
     unit_id = db.Column(db.String(20))
     unit_name = db.Column(db.String(64))
     tasks = db.relationship("Task", back_populates="unit")
+    users = db.relationship("User_unit", back_populates="unit")
 
     def __repr__(self):
         return 'unit_id={}, unit_name={}'.format(
@@ -19,23 +21,13 @@ class Unit(db.Model):
 
     def delete(self):
         for task in self.tasks:
-            print(task)
+            # print(task)
             task.delete()
-        # user_units = db.session.query(user_unit).filter(user_unit.c.unit_id == self.id).delete()
-        # print(type(user_units))
-        # for item in user_units:
-        #     print(item)
-        #     print(type(item))
-        #     db.session.delete(item)
+        user_units = db.session.query(User_unit).filter(User_unit.unit_id == self.id )
+        for user_unit in user_units:
+            user_unit.delete()
         db.session.delete(self)
         db.session.commit()
 
     def update(self):
         db.session.commit()
-
-
-
-
-
-
-

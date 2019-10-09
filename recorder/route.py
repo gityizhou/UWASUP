@@ -295,19 +295,24 @@ drive = GoogleDrive(gauth)
 # and will be uploaded to google drive
 def upload():
     files = UploadSet('files', ALL)
-    student = current_user
+    student_number = current_user.user_number
+    question_id = int(request.form.get("question_id"))  # get the question id from request post
+    this_question = db.session.query(Question).filter(Question.id == question_id).one()
+    task_id = this_question.task_id
+    unit_id = db.session.query(Task).filter(Task.id == task_id).one().unit_id
+    name = student_number + '_' + unit_id + '_' + task_id + '_' + question_id
     if request.method == 'POST' and 'upfile' in request.files:
         filename = files.save(
             request.files['upfile'])  # get the file from front end request, return the file name(String)
-        url = files.url(filename)  # get the url of this file
-        print(student.first_name, student.last_name)
-        print(filename)
-        print(url)
         upload_file = drive.CreateFile()  # create the google drive file instance
         upload_file.SetContentFile("./uploads/files/" + filename)  # set our file into this instance
-        upload_file['title'] = filename    # set the file name of this file
-        upload_file.Upload()        # upload this file
-        print(upload_file['id'])    # can get this file's google drive-id and use it to save the id into database
+        upload_file['title'] = name  # set the file name of this file
+        upload_file.Upload()  # upload this file
+        google_file_id = upload_file[
+            'id']  # can get this file's google drive-id and use it to save the id into database
+        google_url = "https://drive.google.com/uc?authuser=0&id=" + google_file_id + "&export=download"
+        User_question.add_user_question(user=current_user, question=this_question, record_url=google_url,
+                                        record_id=google_url, record_title=name)  # save user_question to db
         os.remove("./uploads/files/" + filename)  # delete this file after uploading it to google drive
     return render_template('recorder.html')
 

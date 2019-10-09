@@ -42,8 +42,7 @@ class TestUnit(unittest.TestCase):
 
     # !!!!delete the unit
     def test_unit_delete(self):
-        self.unit.add()
-        unit = db.session.query(Unit).filter(Unit.id == '1').one()
+        unit = db.session.query(Unit).filter(Unit.id == '5').one()
         unit.delete()
 
 
