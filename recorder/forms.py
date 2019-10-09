@@ -235,6 +235,12 @@ class AddQuestionForm(FlaskForm):
     question_taskID = StringField('taskID')
     add_question_submit = SubmitField('Add Question')
 
+class EditQuestionForm(FlaskForm):
+    edit_questionName = StringField('Question name', validators=[DataRequired()])
+    edit_questionDescription = StringField('Description', validators=[DataRequired()])
+    current_questionID = StringField('questionID')
+    edit_question_submit = SubmitField('Update Question')
+
 # validators not needed as this form will only be generated for existing units
 class DeleteUnitForm(FlaskForm):
     del_unitID = StringField()

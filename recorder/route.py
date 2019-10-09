@@ -6,7 +6,7 @@ from flask_login import login_user, current_user, logout_user, login_required
 from recorder.email import send_email
 from recorder.forms import LoginForm, RegisterForm, SubscribeUnitForm, MakeTeacherForm, PasswdResetForm, \
     PasswdResetRequestForm, DeleteUserForm, DeleteUnitForm, DeleteTaskForm, DeleteQuestionForm, CreateUnitForm, \
-    EditUnitForm, AddTaskForm, EditTaskForm, AddQuestionForm
+    EditUnitForm, AddTaskForm, EditTaskForm, AddQuestionForm, EditQuestionForm
 from recorder.models.user import User
 from recorder.models.unit import Unit
 from recorder import db
@@ -89,6 +89,7 @@ def teacher_view(staff_number):
     form_edit_task = EditTaskForm()
     form_delete_task = DeleteTaskForm()
     form_add_question = AddQuestionForm()
+    form_edit_question = EditQuestionForm()
     form_delete_question = DeleteQuestionForm()
     # make teacher form
     if form_make_teacher.make_teacher_submit.data and form_make_teacher.validate_on_submit():
@@ -185,6 +186,15 @@ def teacher_view(staff_number):
         flash('The question has been addedd.')
         # need to return redirect on successful submission to clear form fields
         return redirect(url_for('teacher_view', staff_number=staff_number))
+    # edit question form
+    if form_edit_question.edit_question_submit.data and form_edit_question.validate_on_submit():
+        question = Question.query.filter_by(id=form_edit_question.current_questionID.data).first()
+        question.question_name=form_edit_question.edit_questionName.data
+        question.description=form_edit_question.edit_questionDescription.data
+        question.update()
+        flash('The question has been updated.')
+        # need to return redirect on successful submission to clear form fields
+        return redirect(url_for('teacher_view', staff_number=staff_number))
     # delete question form (validation not strictly necessary here for this form, see forms.py)
     if form_delete_question.delete_question_submit.data and form_delete_question.validate_on_submit():
         question = Question.query.filter_by(id=form_delete_question.del_questionID.data).first()
@@ -199,7 +209,7 @@ def teacher_view(staff_number):
                            all_users=all_users, form_make_teacher=form_make_teacher, form_delete_user=form_delete_user,
                            form_delete_unit=form_delete_unit, form_delete_task=form_delete_task, form_delete_question=form_delete_question,
                            form_create_unit=form_create_unit, form_edit_unit=form_edit_unit, form_add_task=form_add_task, 
-                           form_edit_task=form_edit_task, form_add_question=form_add_question)
+                           form_edit_task=form_edit_task, form_add_question=form_add_question, form_edit_question=form_edit_question)
 
 
 # logout function
