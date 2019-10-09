@@ -6,7 +6,7 @@ from flask_login import login_user, current_user, logout_user, login_required
 from recorder.email import send_email
 from recorder.forms import LoginForm, RegisterForm, SubscribeUnitForm, MakeTeacherForm, PasswdResetForm, \
     PasswdResetRequestForm, DeleteUserForm, DeleteUnitForm, DeleteTaskForm, DeleteQuestionForm, CreateUnitForm, \
-    EditUnitForm, AddTaskForm, EditTaskForm, AddQuestionForm, EditQuestionForm
+    EditUnitForm, AddTaskForm, EditTaskForm, AddQuestionForm, EditQuestionForm, TaskFeedbackForm
 from recorder.models.user import User
 from recorder.models.unit import Unit
 from recorder import db
@@ -63,17 +63,17 @@ def index():
 def student_view(student_number):
     student = current_user
     all_units = Unit.query.all()
-    form = SubscribeUnitForm()
-    form.subscribe_units.choices = [(unit.id, ("{} ({})".format(unit.unit_id, unit.unit_name))) for unit in
+    form_subscribe_unit = SubscribeUnitForm()
+    form_subscribe_unit.subscribe_units.choices = [(unit.id, ("{} ({})".format(unit.unit_id, unit.unit_name))) for unit in
                                     Unit.query.all()]
     if form.validate_on_submit():
-        for unit_id in form.subscribe_units.data:
+        for unit_id in form_subscribe_unit.subscribe_units.data:
             unit_object = Unit.query.get(unit_id)
             student.add_unit(unit_object)
         flash('You have been subscribed to the selected units.')
     student_units = student.units.all()
     return render_template('student_view.html', student=student, student_units=student_units, all_units=all_units,
-                           form=form)
+                           form_subscribe_unit=form_subscribe_unit)
 
 
 # After login, teacher will be redirected to this page
@@ -88,6 +88,7 @@ def teacher_view(staff_number):
     form_add_task = AddTaskForm()
     form_edit_task = EditTaskForm()
     form_delete_task = DeleteTaskForm()
+    form_task_feedback = TaskFeedbackForm()
     form_add_question = AddQuestionForm()
     form_edit_question = EditQuestionForm()
     form_delete_question = DeleteQuestionForm()
@@ -142,7 +143,6 @@ def teacher_view(staff_number):
             task_name=form_add_task.taskName.data,
             description=form_add_task.taskDescription.data,
             due_time=datetime_obj,
-            pdf_title=form_add_task.pdfTitle.data,
             unit_id=form_add_task.task_unitID.data)
         task.add()
         task = Task.query.filter_by(id=task.id).first()
@@ -161,7 +161,6 @@ def teacher_view(staff_number):
         task.task_name=form_edit_task.edit_taskName.data
         task.description=form_edit_task.edit_taskDescription.data
         task.due_time=due_date_time
-        task.pdf_title=form_edit_task.pdfTitle.data
         task.update()
         flash('The task has been updated.')
         # need to return redirect on successful submission to clear form fields
@@ -171,6 +170,17 @@ def teacher_view(staff_number):
         task = Task.query.filter_by(id=form_delete_task.del_taskID.data).first()
         task.delete()
         flash('The task has been deleted.')
+        # need to return redirect on successful submission to clear form fields
+        return redirect(url_for('teacher_view', staff_number=staff_number))
+    # task feedback form
+    if form_task_feedback.task_feedback_submit.data and form_task_feedback.validate_on_submit():
+        mark = float(form_task_feedback.mark.data)
+        user_task = User_task.query.filter_by(task_id=form_task_feedback.feedbackTaskID.data, user_id=form_task_feedback.feedbackStudentID.data).first()
+        user_task.comment = form_task_feedback.feedbackComment.data
+        #user_task.recorder_url=,
+        user_task.mark = mark
+        user_task.update()
+        flash('The feedback has been saved.')
         # need to return redirect on successful submission to clear form fields
         return redirect(url_for('teacher_view', staff_number=staff_number))
     # add question form
@@ -209,7 +219,8 @@ def teacher_view(staff_number):
                            all_users=all_users, form_make_teacher=form_make_teacher, form_delete_user=form_delete_user,
                            form_delete_unit=form_delete_unit, form_delete_task=form_delete_task, form_delete_question=form_delete_question,
                            form_create_unit=form_create_unit, form_edit_unit=form_edit_unit, form_add_task=form_add_task, 
-                           form_edit_task=form_edit_task, form_add_question=form_add_question, form_edit_question=form_edit_question)
+                           form_edit_task=form_edit_task, form_add_question=form_add_question, form_edit_question=form_edit_question,
+                           form_task_feedback=form_task_feedback)
 
 
 # logout function

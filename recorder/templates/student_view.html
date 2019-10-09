@@ -27,15 +27,15 @@
                     <!-- modal body -->
                     <div class="modal-body">
                         <form class="form" action="" method="post" novalidate>
-                            {{ form.hidden_tag() }}
+                            {{ form_subscribe_unit.hidden_tag() }}
                             <p>
-                                {{ form.subscribe_units.label }}<br>
-                                {{ form.subscribe_units }}<br>
-                                {% for error in form.subscribe_units.errors %}
+                                {{ form_subscribe_unit.subscribe_units.label }}<br>
+                                {{ form_subscribe_unit.subscribe_units }}<br>
+                                {% for error in form_subscribe_unit.subscribe_units.errors %}
                                     <span style="color: red;">[{{ error }}]</span>
                                 {% endfor %}
                             </p>
-                            <a>{{ form.submit }}</a>
+                            <a>{{ form_subscribe_unit.subscribe_unit_submit }}</a>
                         </form>
                     </div>
                     <!-- modal footer -->

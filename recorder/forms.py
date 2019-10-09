@@ -1,5 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, SelectMultipleField, DateField, TimeField, DateTimeField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, SelectMultipleField, DateField, TimeField, \
+    DateTimeField, TextAreaField
 from wtforms.validators import DataRequired, EqualTo, Email, ValidationError, Length, Regexp, Required
 from wtforms.widgets import ListWidget, CheckboxInput
 
@@ -107,7 +108,7 @@ class MultiCheckboxField(SelectMultipleField):
 class SubscribeUnitForm(FlaskForm):
     subscribe_units = MultiCheckboxField('Units', [DataRequired(message='Please select one or more units.')],
                                          coerce=int)
-    submit = SubmitField('Subscribe')
+    subscribe_unit_submit = SubmitField('Subscribe')
 
 
 ############################
@@ -214,7 +215,6 @@ class EditTaskForm(FlaskForm):
     edit_taskDescription = StringField('Description', validators=[DataRequired()])
     edit_taskDueDate = StringField('Due date (YYYY-MM-DD)')
     edit_taskDueTime = StringField('Due time in 24h format (HH:MM)')
-    edit_pdfTitle = StringField('PDF Attachment Title')
     edit_task_submit = SubmitField('Update Task')
 
     def validate_edit_taskDueDate(self, edit_taskDueDate):
@@ -234,6 +234,27 @@ class AddQuestionForm(FlaskForm):
     questionDescription = StringField('Description', validators=[DataRequired()])
     question_taskID = StringField('taskID')
     add_question_submit = SubmitField('Add Question')
+
+class TaskFeedbackForm(FlaskForm):
+    feedbackStudentID = StringField('studentID')
+    feedbackTaskID = StringField('taskID')
+    mark = StringField('Mark (format 0.0)')
+    #feedbackRecorderUrl = StringField('feedbackURL')
+    feedbackComment = TextAreaField('Comments')
+    task_feedback_submit = SubmitField('Save Feedback')
+
+    def validate_mark(self, mark):
+        hasLetters = False
+        for char in mark.data:
+            if not char.isdigit() and char != '.':
+                hasLetters = True
+        if hasLetters:
+            raise ValidationError('Mark must not include letters.')
+        if len(mark.data) != 3:
+            raise ValidationError('Mark must be three characters.')
+        if mark.data[1] != '.':
+            raise ValidationError('Mark must be in the format 0.0')
+
 
 class EditQuestionForm(FlaskForm):
     edit_questionName = StringField('Question name', validators=[DataRequired()])
