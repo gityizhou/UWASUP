@@ -7,7 +7,7 @@ import sys
 from recorder.email import send_email
 from recorder.forms import LoginForm, RegisterForm, SubscribeUnitForm, MakeTeacherForm, PasswdResetForm, \
     PasswdResetRequestForm, DeleteUserForm, DeleteUnitForm, DeleteTaskForm, DeleteQuestionForm, CreateUnitForm, \
-    EditUnitForm
+    EditUnitForm, AddTaskForm
 from recorder.models.user import User
 from recorder.models.unit import Unit
 from recorder import db
@@ -88,6 +88,7 @@ def teacher_view(staff_number):
     form_create_unit = CreateUnitForm()
     form_edit_unit = EditUnitForm()
     form_delete_unit = DeleteUnitForm()
+    form_add_task = AddTaskForm()
     form_delete_task = DeleteTaskForm()
     form_delete_question = DeleteQuestionForm()
     # make teacher form
@@ -123,6 +124,20 @@ def teacher_view(staff_number):
         flash('The unit has been updated.')
         # need to return redirect on successful submission to clear form fields
         return redirect(url_for('teacher_view', staff_number=staff_number))
+    # add task form
+    if form_add_task.add_task_submit.data and form_add_task.validate_on_submit():
+        # create DateTime format "YYYY-MM-DD HH:MM"
+        due_date = form_add_task.dueDate.data
+        due_time = form_add_task.dueTime.data
+        due_date_time = due_date + " " + due_time
+        task = Task(task_name=form_add_task.taskName.data, description=form_add_task.taskDescription.data, due_time=due_date_time, pdf_title=form_add_task.pdfTitle.data, unit_id=form_add_task.task_unitID.data)
+        task.add()
+        task = Task.query.filter_by(task_name=form_add_task.taskName.data).first()
+        unit = Unit.query.filter_by(id=form_add_task.task_unitID.data).first()
+        task.add_task2unit(unit)
+        flash('The task has been created.')
+        # need to return redirect on successful submission to clear form fields
+        return redirect(url_for('teacher_view', staff_number=staff_number))
     # delete unit form (validation not strictly necessary here for this form, see forms.py)
     if form_delete_unit.delete_unit_submit.data and form_delete_unit.validate_on_submit():
         unit = Unit.query.filter_by(id=form_delete_unit.del_unitID.data).first()
@@ -150,7 +165,7 @@ def teacher_view(staff_number):
     return render_template('teacher_view.html', teacher=teacher, teacher_units=teacher_units, all_units=all_units,
                            all_users=all_users, form_make_teacher=form_make_teacher, form_delete_user=form_delete_user,
                            form_delete_unit=form_delete_unit, form_delete_task=form_delete_task, form_delete_question=form_delete_question,
-                           form_create_unit=form_create_unit, form_edit_unit=form_edit_unit)
+                           form_create_unit=form_create_unit, form_edit_unit=form_edit_unit, form_add_task=form_add_task)
 
 
 # logout function

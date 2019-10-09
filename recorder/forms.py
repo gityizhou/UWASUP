@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, SelectMultipleField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, SelectMultipleField, DateField, TimeField, DateTimeField
 from wtforms.validators import DataRequired, EqualTo, Email, ValidationError, Length, Regexp, Required
 from wtforms.widgets import ListWidget, CheckboxInput
 
@@ -187,34 +187,14 @@ class EditUnitForm(FlaskForm):
         elif not hasLetters:
             raise ValidationError('Unit code must contain uppercase letters.')
 
-class CreateUnitForm(FlaskForm):
-    unitID = StringField('Unit code', validators=[DataRequired()])
-    unitName = StringField('Unit name', validators=[DataRequired()])
-    create_unit_submit = SubmitField('Create Unit')
-
-    def validate_unitID(self, unitID):
-        # checks for only alphanumeric characters
-        if not unitID.data.isalnum():
-            raise ValidationError('Unit code must contain only uppercase letters and numbers.')
-        # ensures letters are uppercase and code contains both letters and numbers
-        else:
-            hasLetters = False
-            hasNumbers = False
-            for char in unitID.data:
-                if not char.isdigit():
-                    hasLetters = True
-                    if not char.isalpha():
-                        raise ValidationError('Unit code must contain only uppercase letters and numbers.')
-                else:
-                    hasNumbers = True
-        if not hasNumbers:
-            raise ValidationError('Unit code must contain numbers.')
-        elif not hasLetters:
-            raise ValidationError('Unit code must contain uppercase letters.')
-        else:
-            unit = Unit.query.filter_by(unit_id=unitID.data).first()
-            if unit is not None:
-                raise ValidationError('This unit already exists.')
+class AddTaskForm(FlaskForm):
+    taskName = StringField('Task name', validators=[DataRequired()])
+    taskDescription = StringField('Description', validators=[DataRequired()])
+    taskDueDate = DateTimeField('Due date (YYYY-MM-DD)')
+    taskDueTime = TimeField('Due time in 24h format (HH:MM)')
+    task_unitID = StringField('Description')
+    pdfTitle = StringField('PDF Attachment Title')
+    add_task_submit = SubmitField('Add Task')
 
 # validators not needed as this form will only be generated for existing units
 class DeleteUnitForm(FlaskForm):

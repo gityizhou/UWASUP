@@ -38,7 +38,7 @@
                                 {{ form_make_teacher.staffNumber.label }}<br>
                                 {{ form_make_teacher.staffNumber(size=32, class="form-field") }}<br>
                                 {% for error in form_make_teacher.staffNumber.errors %}
-                                    <span style="color: red;">[{{ error }}]</span>
+                                    <span style="color: red;">{{ error }}</span>
                                 {% endfor %}
                             </p>
                             <a>{{ form_make_teacher.make_teacher_submit(id="btn-make-teacher-submit") }}</a>
@@ -84,7 +84,7 @@
                                 {{ form_delete_user.userNumber.label }}<br>
                                 {{ form_delete_user.userNumber(size=32, class="form-field") }}<br>
                                 {% for error in form_delete_user.userNumber.errors %}
-                                    <span style="color: red;">[{{ error }}]</span>
+                                    <span style="color: red;">{{ error }}</span>
                                 {% endfor %}
                             </p>
                             <a>{{ form_delete_user.delete_user_submit(id="btn-delete-user-submit") }}</a>
@@ -132,7 +132,7 @@
                                 {{ form_create_unit.unitName.label }}<br>
                                 {{ form_create_unit.unitName(size=32, class="form-field") }}<br>
                                 {% for error in form_create_unit.unitID.errors %}
-                                    <span style="color: red;">[{{ error }}]</span>
+                                    <span style="color: red;">{{ error }}</span>
                                 {% endfor %}
                             </p>
                             <a>{{ form_create_unit.create_unit_submit(id="btn-create-unit-submit") }}</a>
@@ -167,31 +167,23 @@
                 <div id="collapse_unit_{{ unit.id }}" class="collapse" aria-labelledby="heading_unit_{{ unit.id }}" data-parent="#accordion_units">
                     <div class="card-body" style="background-color: #ecd29d;">
 
-                        <!-- Edit UNIT modal -->
+                        <!-- EDIT UNIT modal -->
                         <!-- button to open the modal -->
-                        <button id="btn-edit-unit" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-edit-unit">
+                        <button id="btn-edit-unit-{{ unit.id }}" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-edit-unit-{{ unit.id }}">
                             Edit Unit
                         </button>
-                        <!-- keeps modal open if validation fails so user can see errors -->
-                        {% if form_edit_unit.edit_unitID.errors|length != 0 %}
-                            <script>
-                                $(document).ready(function(){
-                                    $("#modal-edit-unit").modal("show");
-                                });
-                            </script>
-                        {% endif %}
                         <!-- code for modal window -->
-                        <div class="modal" id="modal-edit-unit">
+                        <div class="modal" id="modal-edit-unit-{{ unit.id }}">
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <!-- modal header -->
                                     <div class="modal-header">
                                     <h4 class="modal-title">Edit Unit</h4>
-                                        <button  id="btn-top-close-edit-unit-modal" type="button" class="close" data-dismiss="modal">&times;</button>
+                                        <button  id="btn-top-close-edit-unit-{{ unit.id }}-modal" type="button" class="close" data-dismiss="modal">&times;</button>
                                     </div>
                                     <!-- modal body -->
                                     <div class="modal-body show">
-                                        <form id="form-edit-unit" class="form" action="" method="post" novalidate>
+                                        <form id="form-edit-unit-{{ unit.id }}" class="form" action="" method="post" novalidate>
                                             {{ form_edit_unit.hidden_tag() }}
                                             <p>
                                                 {{ form_edit_unit.edit_unitID.label }}<br>
@@ -199,21 +191,19 @@
                                                 {{ form_edit_unit.edit_unitName.label }}<br>
                                                 {{ form_edit_unit.edit_unitName(value=unit.unit_name, size=32, class="form-field") }}<br>
                                                 {{ form_edit_unit.current_unitID(value=unit.unit_id, style="display: none;") }}
-                                                {% for error in form_edit_unit.edit_unitID.errors %}
-                                                    <span style="color: red;">[{{ error }}]</span>
-                                                {% endfor %}
                                             </p>
-                                            <a>{{ form_edit_unit.edit_unit_submit(id="btn-edit-unit-submit") }}</a>
+                                            <a>{{ form_edit_unit.edit_unit_submit(id="btn-edit-unit-{{ unit.id }}-submit") }}</a>
                                         </form>
                                     </div>
                                     <!-- modal footer -->
                                     <div class="modal-footer">
-                                        <button id="btn-btm-close-edit-unit-modal" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                        <button id="btn-btm-close-edit-unit-{{ unit.id }}-modal" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <!-- end EDIT UNIT modal -->
+
 
                         <!-- DELETE UNIT modal -->
                         <!-- button to open the modal -->
@@ -247,6 +237,51 @@
                             </div>
                             <!-- end DELETE UNIT modal -->
 
+
+                            <!-- ADD TASK modal -->
+                            <!-- button to open the modal -->
+                            <button id="btn-add-task" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-add-task-{{ unit.id }}">
+                                Add Task
+                            </button>
+                            <!-- code for modal window -->
+                            <div class="modal" id="modal-add-task-{{ unit.id }}">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <!-- modal header -->
+                                        <div class="modal-header">
+                                        <h4 class="modal-title">Add Task to Unit</h4>
+                                            <button  id="btn-top-close-add-task-{{ unit.id }}-modal" type="button" class="close" data-dismiss="modal">&times;</button>
+                                        </div>
+                                        <!-- modal body -->
+                                        <div class="modal-body show">
+                                            <form id="form-add-task-{{ unit.id }}" class="form" action="" method="post" novalidate>
+                                                {{ form_add_task.hidden_tag() }}
+                                                <p>
+                                                    {{ form_add_task.taskName.label }}<br>
+                                                    {{ form_add_task.taskName(size=32, class="form-field") }}<br>
+                                                    {{ form_add_task.taskDescription.label }}<br>
+                                                    {{ form_add_task.taskDescription(size=32, class="form-field") }}<br>
+                                                    {{ form_add_task.taskDueDate.label }}<br>
+                                                    {{ form_add_task.taskDueDate(size=32, class="form-field") }}<br>
+                                                    {{ form_add_task.taskDueTime.label }}<br>
+                                                    {{ form_add_task.taskDueTime(size=32, class="form-field") }}<br>
+                                                    {{ form_add_task.pdfTitle.label }}<br>
+                                                    {{ form_add_task.pdfTitle(size=32, class="form-field") }}<br>
+                                                    {{ form_add_task.task_unitID(value=unit.id, style="display: none;") }}
+                                                </p>
+                                                <a>{{ form_add_task.add_task_submit(id="btn-add-task-{{ unit.id }}-submit", size=32, class="form-field") }}</a>
+                                            </form>
+                                        </div>
+                                        <!-- modal footer -->
+                                        <div class="modal-footer">
+                                            <button id="btn-btm-close-add-task-{{ unit.id }}-modal" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- end ADD TASK modal -->    
+
+
                         <!-- list of tasks for each unit -->
                         <div id="accordion_tasks">
                             {% for task in unit.tasks %}
@@ -272,7 +307,7 @@
                                                     <div class="modal-content">
                                                         <!-- modal header -->
                                                         <div class="modal-header">
-                                                        <button  id="btn-top-close-delete-task-{{ task.id }}" type="button" class="close" data-dismiss="modal">&times;</button>
+                                                        <button id="btn-top-close-delete-task-{{ task.id }}" type="button" class="close" data-dismiss="modal">&times;</button>
                                                         </div>
                                                         <!-- modal body -->
                                                         <div class="modal-body">
@@ -387,5 +422,77 @@
         {% endfor %}
     </div>   
     <!-- end list of units for the teacher -->
+
+    <!-- nested forms with validation can't be held open to show errors, need separate modal here -->
+    <!-- NOTE: Jinja variable scope does not cross for loop bounds, workaround found with namespace introduced in Jinja version 2.10 -->
+
+    <!-- EDIT UNIT FORM ERRORS modal -->
+    {% set ns = namespace(errors_present=false) %}
+    {% for field in form_edit_unit %}
+        {% if field.errors|length != 0 %}
+            {% set ns.errors_present = true %}
+        {% endif %}
+    {% endfor %}
+    {% if ns.errors_present == true %}
+        <script>
+            $(document).ready(function(){
+                $("#modal-edit-unit-form-errors").modal("show");
+            });
+        </script>
+        <!-- code for modal window -->
+        <div class="modal fade" id="modal-edit-unit-form-errors">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <!-- modal body -->
+                    <div class="modal-body show">
+                        {% for error in form_edit_unit.edit_unitID.errors %}
+                            <span style="color: red;">{{ error }}</span>
+                        {% endfor %}
+                        <p>Please resubmit form.</p>
+                    </div>
+                    <!-- modal footer -->
+                    <div class="modal-footer">
+                        <button id="btn-btm-close-edit-unit-form-errors-modal" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    <!-- end EDIT UNIT FORM ERRORS modal -->
+
+
+    <!-- ADD TASK FORM ERRORS modal -->
+    {% set ns = namespace(errors_present=false) %}
+    {% for field in form_add_task %}
+        {% if field.errors|length != 0 %}
+            {% set ns.errors_present = true %}
+        {% endif %}
+    {% endfor %}
+    {% if ns.errors_present == true %}
+        <script>
+            $(document).ready(function(){
+                $("#modal-add-task-form-errors").modal("show");
+            });
+        </script>
+        <!-- code for modal window -->
+        <div class="modal fade" id="modal-add-task-form-errors">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <!-- modal body -->
+                    <div class="modal-body show">
+                            <p>A name and description are required to add a task.</p>
+                            <p>Please resubmit form.</p>
+                    </div>
+                    <!-- modal footer -->
+                    <div class="modal-footer">
+                        <button id="btn-btm-close-add-task-form-errors-modal" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    <!-- end ADD TASK FORM ERRORS modal -->
+
+
 
 {% endblock %}
