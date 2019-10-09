@@ -296,6 +296,7 @@
                                     <div id="collapse_task_{{ task.id }}" class="collapse" aria-labelledby="heading_task_{{ task.id }}" data-parent="#accordion_tasks">
                                         <div class="card-body" style="background-color: #aecee4;">
 
+                                            
                                             <!-- DELETE TASK modal -->
                                             <!-- button to open the modal -->
                                             <button id="btn-delete-task-{{ task.id }}" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-delete-task-{{ task.id }}">
@@ -480,8 +481,21 @@
                 <div class="modal-content">
                     <!-- modal body -->
                     <div class="modal-body show">
-                            <p>A name and description are required to add a task.</p>
-                            <p>Please resubmit form.</p>
+                        <ul>
+                            {% for error in form_add_task.taskName.errors %}
+                                <li style="color: red;">Error (Task name): {{ error }}</li>
+                            {% endfor %}
+                            {% for error in form_add_task.taskDescription.errors %}
+                                <li style="color: red;">Error (Description): {{ error }}</li>
+                            {% endfor %}
+                            {% for error in form_add_task.taskDueDate.errors %}
+                                <li style="color: red;">Error: {{ error }}</li>
+                            {% endfor %}
+                            {% for error in form_add_task.taskDueTime.errors %}
+                                <li style="color: red;">Error: {{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        <p>Please resubmit form.</p>
                     </div>
                     <!-- modal footer -->
                     <div class="modal-footer">
