@@ -139,11 +139,9 @@
         })
     }
 
-var audio
-var audio2
 
-var fileurlone
-var fileuretwo
+// var audio2
+
 
 //play audio from web
 
@@ -182,7 +180,7 @@ var fileuretwo
 //     }
 
 
-
+var audio
 
     function playRec() {
         //Stop recording and get the blob binary object of the recording file
@@ -198,7 +196,6 @@ var fileuretwo
             audio.src = URL.createObjectURL(recFile);
             audio.play();
         }
-        
         };
 
 
