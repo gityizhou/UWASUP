@@ -6,19 +6,17 @@ from flask_login import login_user, current_user, logout_user, login_required
 from recorder.email import send_email
 from recorder.forms import LoginForm, RegisterForm, SubscribeUnitForm, MakeTeacherForm, PasswdResetForm, \
     PasswdResetRequestForm, DeleteUserForm, DeleteUnitForm, DeleteTaskForm, DeleteQuestionForm, CreateUnitForm, \
-    EditUnitForm, AddTaskForm
+    EditUnitForm, AddTaskForm, EditTaskForm, AddQuestionForm, EditQuestionForm, TaskFeedbackForm
 from recorder.models.user import User
 from recorder.models.unit import Unit
 from recorder import db
-import os
 from pydrive.auth import GoogleAuth
 from pydrive.drive import GoogleDrive
 from recorder.models.question import Question
 from recorder.models.task import Task
 from recorder.models.user_question import User_question
 from recorder.models.user_task import User_task
-import jwt
-import time
+import os, jwt, time, datetime
 
 
 """
@@ -64,18 +62,16 @@ def index():
 @login_required
 def student_view(student_number):
     student = current_user
-    all_units = Unit.query.all()
-    form = SubscribeUnitForm()
-    form.subscribe_units.choices = [(unit.id, ("{} ({})".format(unit.unit_id, unit.unit_name))) for unit in
+    form_subscribe_unit = SubscribeUnitForm()
+    form_subscribe_unit.subscribe_units.choices = [(unit.id, ("{} ({})".format(unit.unit_id, unit.unit_name))) for unit in
                                     Unit.query.all()]
-    if form.validate_on_submit():
-        for unit_id in form.subscribe_units.data:
+    if form_subscribe_unit.validate_on_submit():
+        for unit_id in form_subscribe_unit.subscribe_units.data:
             unit_object = Unit.query.get(unit_id)
             student.add_unit(unit_object)
         flash('You have been subscribed to the selected units.')
-    student_units = student.units.all()
-    return render_template('student_view.html', student=student, student_units=student_units, all_units=all_units,
-                           form=form)
+    student_units = student.get_student_units()
+    return render_template('student_view.html', student=student, student_units=student_units, form_subscribe_unit=form_subscribe_unit)
 
 
 # After login, teacher will be redirected to this page
@@ -88,7 +84,11 @@ def teacher_view(staff_number):
     form_edit_unit = EditUnitForm()
     form_delete_unit = DeleteUnitForm()
     form_add_task = AddTaskForm()
+    form_edit_task = EditTaskForm()
     form_delete_task = DeleteTaskForm()
+    form_task_feedback = TaskFeedbackForm()
+    form_add_question = AddQuestionForm()
+    form_edit_question = EditQuestionForm()
     form_delete_question = DeleteQuestionForm()
     # make teacher form
     if form_make_teacher.make_teacher_submit.data and form_make_teacher.validate_on_submit():
@@ -123,25 +123,44 @@ def teacher_view(staff_number):
         flash('The unit has been updated.')
         # need to return redirect on successful submission to clear form fields
         return redirect(url_for('teacher_view', staff_number=staff_number))
-    # add task form
-    if form_add_task.add_task_submit.data and form_add_task.validate_on_submit():
-        # create DateTime format "YYYY-MM-DD HH:MM"
-        due_date = form_add_task.dueDate.data
-        due_time = form_add_task.dueTime.data
-        due_date_time = due_date + " " + due_time
-        task = Task(task_name=form_add_task.taskName.data, description=form_add_task.taskDescription.data, due_time=due_date_time, pdf_title=form_add_task.pdfTitle.data, unit_id=form_add_task.task_unitID.data)
-        task.add()
-        task = Task.query.filter_by(task_name=form_add_task.taskName.data).first()
-        unit = Unit.query.filter_by(id=form_add_task.task_unitID.data).first()
-        task.add_task2unit(unit)
-        flash('The task has been created.')
-        # need to return redirect on successful submission to clear form fields
-        return redirect(url_for('teacher_view', staff_number=staff_number))
     # delete unit form (validation not strictly necessary here for this form, see forms.py)
     if form_delete_unit.delete_unit_submit.data and form_delete_unit.validate_on_submit():
         unit = Unit.query.filter_by(id=form_delete_unit.del_unitID.data).first()
         unit.delete()
         flash('The unit has been deleted.')
+        # need to return redirect on successful submission to clear form fields
+        return redirect(url_for('teacher_view', staff_number=staff_number))
+    # add task form
+    if form_add_task.add_task_submit.data and form_add_task.validate_on_submit():
+        # create DateTime format "YYYY-MM-DD HH:MM"
+        due_date = form_add_task.taskDueDate.data
+        due_time = form_add_task.taskDueTime.data
+        due_date_time = due_date + " " + due_time
+        datetime_obj = datetime.datetime.strptime(due_date_time, '%Y-%m-%d %H:%M')
+        task = Task(
+            task_name=form_add_task.taskName.data,
+            description=form_add_task.taskDescription.data,
+            due_time=datetime_obj,
+            unit_id=form_add_task.task_unitID.data)
+        task.add()
+        task = Task.query.filter_by(id=task.id).first()
+        unit = Unit.query.filter_by(id=form_add_task.task_unitID.data).first()
+        task.add_task2unit(unit)
+        flash('The task has been added.')
+        # need to return redirect on successful submission to clear form fields
+        return redirect(url_for('teacher_view', staff_number=staff_number))
+    # edit task form
+    if form_edit_task.edit_task_submit.data and form_edit_task.validate_on_submit():
+        # create DateTime format "YYYY-MM-DD HH:MM"
+        due_date = form_edit_task.dueDate.data
+        due_time = form_edit_task.dueTime.data
+        due_date_time = due_date + " " + due_time
+        task = Task.query.filter_by(id=form_edit_task.current_taskID.data).first()
+        task.task_name=form_edit_task.edit_taskName.data
+        task.description=form_edit_task.edit_taskDescription.data
+        task.due_time=due_date_time
+        task.update()
+        flash('The task has been updated.')
         # need to return redirect on successful submission to clear form fields
         return redirect(url_for('teacher_view', staff_number=staff_number))
     # delete task form (validation not strictly necessary here for this form, see forms.py)
@@ -151,6 +170,39 @@ def teacher_view(staff_number):
         flash('The task has been deleted.')
         # need to return redirect on successful submission to clear form fields
         return redirect(url_for('teacher_view', staff_number=staff_number))
+    # task feedback form
+    if form_task_feedback.task_feedback_submit.data and form_task_feedback.validate_on_submit():
+        mark = float(form_task_feedback.mark.data)
+        user_task = User_task.query.filter_by(task_id=form_task_feedback.feedbackTaskID.data, user_id=form_task_feedback.feedbackStudentID.data).first()
+        user_task.comment = form_task_feedback.feedbackComment.data
+        #user_task.recorder_url=,
+        user_task.mark = mark
+        user_task.update()
+        flash('The feedback has been saved.')
+        # need to return redirect on successful submission to clear form fields
+        return redirect(url_for('teacher_view', staff_number=staff_number))
+    # add question form
+    if form_add_question.add_question_submit.data and form_add_question.validate_on_submit():
+        question = Question(
+            question_name=form_add_question.questionName.data,
+            description=form_add_question.questionDescription.data,
+            task_id=form_add_question.question_taskID.data)
+        question.add()
+        question = Question.query.filter_by(id=question.id).first()
+        task = Task.query.filter_by(id=form_add_question.question_taskID.data).first()
+        question.add_question2task(task)
+        flash('The question has been addedd.')
+        # need to return redirect on successful submission to clear form fields
+        return redirect(url_for('teacher_view', staff_number=staff_number))
+    # edit question form
+    if form_edit_question.edit_question_submit.data and form_edit_question.validate_on_submit():
+        question = Question.query.filter_by(id=form_edit_question.current_questionID.data).first()
+        question.question_name=form_edit_question.edit_questionName.data
+        question.description=form_edit_question.edit_questionDescription.data
+        question.update()
+        flash('The question has been updated.')
+        # need to return redirect on successful submission to clear form fields
+        return redirect(url_for('teacher_view', staff_number=staff_number))
     # delete question form (validation not strictly necessary here for this form, see forms.py)
     if form_delete_question.delete_question_submit.data and form_delete_question.validate_on_submit():
         question = Question.query.filter_by(id=form_delete_question.del_questionID.data).first()
@@ -158,13 +210,14 @@ def teacher_view(staff_number):
         flash('The question has been deleted.')
         # need to return redirect on successful submission to clear form fields
         return redirect(url_for('teacher_view', staff_number=staff_number))
-    teacher_units = teacher.units.all()
     all_units = Unit.query.all()
     all_users = User.query.all()
-    return render_template('teacher_view.html', teacher=teacher, teacher_units=teacher_units, all_units=all_units,
-                           all_users=all_users, form_make_teacher=form_make_teacher, form_delete_user=form_delete_user,
-                           form_delete_unit=form_delete_unit, form_delete_task=form_delete_task, form_delete_question=form_delete_question,
-                           form_create_unit=form_create_unit, form_edit_unit=form_edit_unit, form_add_task=form_add_task)
+    return render_template('teacher_view.html', teacher=teacher, all_units=all_units, all_users=all_users,
+                            form_make_teacher=form_make_teacher, form_delete_user=form_delete_user,
+                            form_delete_unit=form_delete_unit, form_delete_task=form_delete_task, form_delete_question=form_delete_question,
+                            form_create_unit=form_create_unit, form_edit_unit=form_edit_unit, form_add_task=form_add_task, 
+                            form_edit_task=form_edit_task, form_add_question=form_add_question, form_edit_question=form_edit_question,
+                            form_task_feedback=form_task_feedback)
 
 
 # logout function
@@ -200,13 +253,13 @@ def request_email_verification2(email):
     body = "link to verify password: "+url
     htmlbody = 'to verify your email click <a href="'+url+'">here</a>'
     send_email(subject="",recipients=[user.email],text_body=body,html_body=htmlbody)
-    return "Verification link sent to " + user.email
+    return "Verification link sent to " + user.email +"Please check you Spam box as well"
 
 @login_required
 def request_email_verification():
     token = current_user.get_jwt()
     url = str(url_for("verify_email_by_token",token=token,_external=True))
-    body = "link to verify password: "+url
+    body = "link to verify password: "+url # this is also can be a separate template but this msg can be enough
     htmlbody = 'to verify your email click <a href="'+url+'">here</a>'
     send_email(subject="",recipients=[current_user.email],text_body=body,html_body=htmlbody)
     return "Verification link sent to " + current_user.email
@@ -215,7 +268,7 @@ def request_email_verification():
 @login_required
 def verify_email_by_token(token):
     try:
-        obj = jwt.decode(token,current_app.config['SECRET_KEY'],algorithms=['HS256'])
+        obj = jwt.decode(token,current_app.config['SECRET_KEY'],algorithms=['HS256']) #will decode the token which has been send to email
     except:
         return "invalid token"
     email = obj["email"]
@@ -229,10 +282,11 @@ def verify_email_by_token(token):
 
     user = User.query.filter_by(email=email).first()
     user.email_is_verified()
-    db.session.commit()
+    db.session.commit() #this will change user is verified in data base from 0 to 1
 
-
-    return "Email successfully verified"
+    # it will return to login page after verify the account 
+    #return "Email successfully verified"
+    return render_template('index.html', title="Index", form=form)
     
 
 
@@ -249,19 +303,24 @@ drive = GoogleDrive(gauth)
 # and will be uploaded to google drive
 def upload():
     files = UploadSet('files', ALL)
-    student = current_user
+    student_number = current_user.user_number
+    question_id = int(request.form.get("question_id"))  # get the question id from request post
+    this_question = db.session.query(Question).filter(Question.id == question_id).one()
+    task_id = this_question.task_id
+    unit_id = db.session.query(Task).filter(Task.id == task_id).one().unit_id
+    name = student_number + '_' + unit_id + '_' + task_id + '_' + question_id
     if request.method == 'POST' and 'upfile' in request.files:
         filename = files.save(
             request.files['upfile'])  # get the file from front end request, return the file name(String)
-        url = files.url(filename)  # get the url of this file
-        print(student.first_name, student.last_name)
-        print(filename)
-        print(url)
         upload_file = drive.CreateFile()  # create the google drive file instance
         upload_file.SetContentFile("./uploads/files/" + filename)  # set our file into this instance
-        upload_file['title'] = filename    # set the file name of this file
-        upload_file.Upload()        # upload this file
-        print(upload_file['id'])    # can get this file's google drive-id and use it to save the id into database
+        upload_file['title'] = name  # set the file name of this file
+        upload_file.Upload()  # upload this file
+        google_file_id = upload_file[
+            'id']  # can get this file's google drive-id and use it to save the id into database
+        google_url = "https://drive.google.com/uc?authuser=0&id=" + google_file_id + "&export=download"
+        User_question.add_user_question(user=current_user, question=this_question, record_url=google_url,
+                                        record_id=google_url, record_title=name)  # save user_question to db
         os.remove("./uploads/files/" + filename)  # delete this file after uploading it to google drive
     return render_template('recorder.html')
 

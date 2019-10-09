@@ -22,7 +22,7 @@ class Question(db.Model):
     def delete(self):
         user_quesions = db.session.query(User_question).filter(User_question.question_id == self.id)
         for user_quesion in user_quesions:
-            print(user_quesion.question_id)
+            # print(user_quesion.question_id)
             user_quesion.delete()
         db.session.delete(self)
         db.session.commit()

@@ -240,7 +240,7 @@
 
                             <!-- ADD TASK modal -->
                             <!-- button to open the modal -->
-                            <button id="btn-add-task" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-add-task-{{ unit.id }}">
+                            <button id="btn-add-task-{{ unit.id }}" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-add-task-{{ unit.id }}">
                                 Add Task
                             </button>
                             <!-- code for modal window -->
@@ -265,8 +265,6 @@
                                                     {{ form_add_task.taskDueDate(size=32, class="form-field") }}<br>
                                                     {{ form_add_task.taskDueTime.label }}<br>
                                                     {{ form_add_task.taskDueTime(size=32, class="form-field") }}<br>
-                                                    {{ form_add_task.pdfTitle.label }}<br>
-                                                    {{ form_add_task.pdfTitle(size=32, class="form-field") }}<br>
                                                     {{ form_add_task.task_unitID(value=unit.id, style="display: none;") }}
                                                 </p>
                                                 <a>{{ form_add_task.add_task_submit(id="btn-add-task-{{ unit.id }}-submit", size=32, class="form-field") }}</a>
@@ -296,6 +294,54 @@
                                     <div id="collapse_task_{{ task.id }}" class="collapse" aria-labelledby="heading_task_{{ task.id }}" data-parent="#accordion_tasks">
                                         <div class="card-body" style="background-color: #aecee4;">
 
+                                            <!-- EDIT TASK modal -->
+                                            <!-- button to open the modal -->
+                                            <button id="btn-edit-task-{{ task.id }}" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-edit-task-{{ task.id }}">
+                                                Edit Task
+                                            </button>
+                                            <!-- code for modal window -->
+                                            <div class="modal" id="modal-edit-task-{{ task.id }}">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <!-- modal header -->
+                                                        <div class="modal-header">
+                                                        <h4 class="modal-title">Edit Task</h4>
+                                                            <button  id="btn-top-close-edit-task-{{ task.id }}-modal" type="button" class="close" data-dismiss="modal">&times;</button>
+                                                        </div>
+                                                        <!-- modal body -->
+                                                        <div class="modal-body show">
+                                                            <form id="form-edit-task-{{ task.id }}" class="form" action="" method="post" novalidate>
+                                                                {{ form_edit_task.hidden_tag() }}
+                                                                <p>
+                                                                    {{ form_edit_task.edit_taskName.label }}<br>
+                                                                    {{ form_edit_task.edit_taskName(value=task.task_name, size=32, class="form-field") }}<br>
+                                                                    {{ form_edit_task.edit_taskDescription.label }}<br>
+                                                                    {{ form_edit_task.edit_taskDescription(value=task.description, size=32, class="form-field") }}<br>
+                                                                    {% if task.due_time is not none %}
+                                                                        {% set due_time_string = task.due_time|string() %}
+                                                                        {{ form_edit_task.edit_taskDueDate.label }}<br>
+                                                                        {{ form_edit_task.edit_taskDueDate(value=due_time_string[:10], size=32, class="form-field") }}<br>
+                                                                        {{ form_edit_task.edit_taskDueTime.label }}<br>
+                                                                        {{ form_edit_task.edit_taskDueTime(value=due_time_string[11:16], size=32, class="form-field") }}<br>
+                                                                    {% else %}
+                                                                        {{ form_edit_task.edit_taskDueDate.label }}<br>
+                                                                        {{ form_edit_task.edit_taskDueDate(size=32, class="form-field") }}<br>
+                                                                        {{ form_edit_task.edit_taskDueTime.label }}<br>
+                                                                        {{ form_edit_task.edit_taskDueTime(size=32, class="form-field") }}<br>
+                                                                    {% endif %}
+                                                                    {{ form_edit_task.current_taskID(value=task.id, style="display: none;") }}
+                                                                </p>
+                                                                <a>{{ form_add_task.add_task_submit(id="btn-edit-task-{{ task.id }}-submit", size=32, class="form-field") }}</a>
+                                                            </form>
+                                                        </div>
+                                                        <!-- modal footer -->
+                                                        <div class="modal-footer">
+                                                            <button id="btn-btm-close-edit-task-{{ task.id }}-modal" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- end EDIT TASK modal -->    
                                             
                                             <!-- DELETE TASK modal -->
                                             <!-- button to open the modal -->
@@ -329,6 +375,43 @@
                                             </div>
                                             <!-- end DELETE TASK modal -->
 
+                                            <!-- ADD QUESTION modal -->
+                                            <!-- button to open the modal -->
+                                            <button id="btn-add-question-{{ task.id }}" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-add-question-{{ task.id }}">
+                                                Add Question
+                                            </button>
+                                            <!-- code for modal window -->
+                                            <div class="modal" id="modal-add-question-{{ task.id }}">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <!-- modal header -->
+                                                        <div class="modal-header">
+                                                        <h4 class="modal-title">Add Question to Task</h4>
+                                                            <button  id="btn-top-close-add-question-{{ task.id }}-modal" type="button" class="close" data-dismiss="modal">&times;</button>
+                                                        </div>
+                                                        <!-- modal body -->
+                                                        <div class="modal-body show">
+                                                            <form id="form-add-question-{{ task.id }}" class="form" action="" method="post" novalidate>
+                                                                {{ form_add_question.hidden_tag() }}
+                                                                <p>
+                                                                    {{ form_add_question.questionName.label }}<br>
+                                                                    {{ form_add_question.questionName(size=32, class="form-field") }}<br>
+                                                                    {{ form_add_question.questionDescription.label }}<br>
+                                                                    {{ form_add_question.questionDescription(size=32, class="form-field") }}<br>
+                                                                    {{ form_add_question.question_taskID(value=task.id, style="display: none;") }}
+                                                                </p>
+                                                                <a>{{ form_add_question.add_question_submit(id="btn-add-question-{{ task.id }}-submit", size=32, class="form-field") }}</a>
+                                                            </form>
+                                                        </div>
+                                                        <!-- modal footer -->
+                                                        <div class="modal-footer">
+                                                            <button id="btn-btm-close-add-question-{{ task.id }}-modal" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- end ADD QUESTION modal -->    
+
                                             <!-- list of students for each task -->
                                             <div id="accordion_students">
                                                 {% for student in task.get_task_users() %}
@@ -339,65 +422,136 @@
                                                                     <p>{{ student.user_number }}: {{ student.first_name}} {{ student.last_name}}</p>
                                                                 </button>
                                                             </h5>
+                                                            {% if student.get_task_mark(task.id) is none %}
+                                                                <p>Task: unmarked</p>
+                                                            {% else %}
+                                                                <p>Task Mark: {{ student.get_task_mark(task.id) }}/10</p>
+                                                            {% endif %}
                                                         </div>
                                                         <div id="collapse_student_{{ student.id }}" class="collapse" aria-labelledby="heading_student_{{ student.id }}" data-parent="#accordion_students">
                                                             <div class="card-body" style="background-color: #efd9f5;">
+                                                                <!-- TASK FEEDBACK section -->
+                                                                <div>
+                                                                    <form id="form-task-feedback-{{ student.id }}" class="form" action="" method="post" novalidate>
+                                                                        {{ form_task_feedback.hidden_tag() }}
+                                                                        <p>
+                                                                            {% if student.get_task_mark(task.id) is not none %}
+                                                                                {{ form_task_feedback.mark.label }}<br>
+                                                                                {{ form_task_feedback.mark(value=student.get_task_mark(task.id), size=32, class="form-field") }}<br>
+                                                                            {% else %}
+                                                                                {{ form_task_feedback.mark.label }}<br>
+                                                                                {{ form_task_feedback.mark(size=32, class="form-field") }}<br>
+                                                                            {% endif %}
+                                                                            {% if student.get_user_task(task.id).comment is not none %}
+                                                                                {{ form_task_feedback.feedbackComment.label }}<br>
+                                                                                {{ form_task_feedback.feedbackComment(value=student.get_user_task(task.id).comment, size=32, class="form-field", rows="10", cols="55") }}<br>
+                                                                            {% else %}
+                                                                                {{ form_task_feedback.feedbackComment.label }}<br>
+                                                                                {{ form_task_feedback.feedbackComment(size=32, class="form-field", rows="10", cols="55") }}<br>
+                                                                            {% endif %}
+                                                                            <!-- add if statement here to test for comment and recorder URL -->
+                                                                            {{ form_task_feedback.feedbackStudentID(value=student.id, style="display: none;") }}<br>
+                                                                            {{ form_task_feedback.feedbackTaskID(value=task.id, style="display: none;") }}
+                                                                        </p>
+                                                                        <a>{{ form_task_feedback.task_feedback_submit(id="btn-task-feedback-{{ student.id }}-submit", size=32, class="form-field") }}</a>
+                                                                    </form>
+                                                                </div>
+                                                                <!-- end TASK FEEDBACK section -->
+
                                                                 <!-- list of questions for each student for this task -->
                                                                 <div id="accordion_questions">
-                                                                    <p>Task Mark: {{ student.get_task_mark(task.id) }}</p>
                                                                     {% for question in student.get_task_questions(task.id) %}
-                                                                        <div class="card">
-                                                                            <div class="card-header" id="heading_question_1">
-                                                                                <h5 class="mb-0">
-                                                                                    <button class="btn btn-link" data-toggle="collapse" data-target="#collapse_question_1" aria-expanded="true" aria-controls="collapse_question_1">
-                                                                                        <p>{{ question.question_name }}</p>
-                                                                                    </button>
-                                                                                </h5>
-                                                                            </div>
-                                                                            <div id="collapse_question_1" class="collapse" aria-labelledby="heading_question_1" data-parent="#accordion_questions">
-                                                                                <div class="card-body" style="background-color: #d7f8d7;">
+                                                                        {% if question.is_submitted %}
+                                                                            <div class="card">
+                                                                                <div class="card-header" id="heading_question_1">
+                                                                                    <h5 class="mb-0">
+                                                                                        <button class="btn btn-link" data-toggle="collapse" data-target="#collapse_question_1" aria-expanded="true" aria-controls="collapse_question_1">
+                                                                                            <p>{{ question.question_name }}</p>
+                                                                                        </button>
+                                                                                    </h5>
+                                                                                </div>
+                                                                                <div id="collapse_question_1" class="collapse" aria-labelledby="heading_question_1" data-parent="#accordion_questions">
+                                                                                    <div class="card-body" style="background-color: #d7f8d7;">
 
-                                                                                    <!-- DELETE QUESTION modal -->
-                                                                                    <!-- button to open the modal -->
-                                                                                    <button id="btn-delete-question-{{ question.id }}" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-delete-question-{{ question.id }}">
-                                                                                        Delete Question
-                                                                                    </button>
-                                                                                    <!-- code for modal window -->
-                                                                                    <div class="modal" id="modal-delete-question-{{ question.id }}">
-                                                                                        <div class="modal-dialog">
-                                                                                            <div class="modal-content">
-                                                                                                <!-- modal header -->
-                                                                                                <div class="modal-header">
-                                                                                                <button  id="btn-top-close-delete-question-{{ question.id }}" type="button" class="close" data-dismiss="modal">&times;</button>
-                                                                                                </div>
-                                                                                                <!-- modal body -->
-                                                                                                <div class="modal-body">
-                                                                                                    <h5>Are you sure?</h5>
-                                                                                                    <p>Deleting a question will permanently delete all student submissions associated with it.</p>
-                                                                                                    <form class="form" action="" method="post" novalidate>
-                                                                                                        {{ form_delete_question.hidden_tag() }}
-                                                                                                        {{ form_delete_question.del_questionID(value=question.id, style="display: none;") }}
-                                                                                                        <a>{{ form_delete_question.delete_question_submit }}</a>
-                                                                                                    </form>
-                                                                                                </div>
-                                                                                                <!-- modal footer -->
-                                                                                                <div class="modal-footer">
-                                                                                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                                                                                        <!-- EDIT QUESTION modal -->
+                                                                                        <!-- button to open the modal -->
+                                                                                        <button id="btn-edit-question-{{ question.id }}" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-edit-question-{{ question.id }}">
+                                                                                            Edit Question
+                                                                                        </button>
+                                                                                        <!-- code for modal window -->
+                                                                                        <div class="modal" id="modal-edit-question-{{ question.id }}">
+                                                                                            <div class="modal-dialog">
+                                                                                                <div class="modal-content">
+                                                                                                    <!-- modal header -->
+                                                                                                    <div class="modal-header">
+                                                                                                    <h4 class="modal-title">Edit Question</h4>
+                                                                                                        <button  id="btn-top-close-edit-question-{{ question.id }}-modal" type="button" class="close" data-dismiss="modal">&times;</button>
+                                                                                                    </div>
+                                                                                                    <!-- modal body -->
+                                                                                                    <div class="modal-body show">
+                                                                                                        <form id="form-edit-question-{{ question.id }}" class="form" action="" method="post" novalidate>
+                                                                                                            {{ form_edit_question.hidden_tag() }}
+                                                                                                            <p>
+                                                                                                                {{ form_edit_question.edit_questionName.label }}<br>
+                                                                                                                {{ form_edit_question.edit_questionName(value=question.question_name, size=32, class="form-field") }}<br>
+                                                                                                                {{ form_edit_question.edit_questionDescription.label }}<br>
+                                                                                                                {{ form_edit_question.edit_questionDescription(value=question.description, size=32, class="form-field") }}<br>
+                                                                                                                {{ form_edit_question.current_questionID(value=question.id, style="display: none;") }}
+                                                                                                            </p>
+                                                                                                            <a>{{ form_edit_question.edit_question_submit(id="btn-edit-question-{{ question.id }}-submit", size=32, class="form-field") }}</a>
+                                                                                                        </form>
+                                                                                                    </div>
+                                                                                                    <!-- modal footer -->
+                                                                                                    <div class="modal-footer">
+                                                                                                        <button id="btn-btm-close-edit-question-{{ question.id }}-modal" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                                                                                    </div>
                                                                                                 </div>
                                                                                             </div>
                                                                                         </div>
-                                                                                    </div>
-                                                                                    <!-- end DELETE QUESTION modal -->
+                                                                                        <!-- end EDIT QUESTION modal -->
 
-                                                                                    <p>Question Description: {{ question.description }}</p>
-                                                                                    <!-- TODO: get recording from question.users.recorder_url -->
-                                                                                    <p>Play recording: </p>
-                                                                                    <!-- recording module -->
-                                                                                    <!-- end recording module -->
+                                                                                        <!-- DELETE QUESTION modal -->
+                                                                                        <!-- button to open the modal -->
+                                                                                        <button id="btn-delete-question-{{ question.id }}" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-delete-question-{{ question.id }}">
+                                                                                            Delete Question
+                                                                                        </button>
+                                                                                        <!-- code for modal window -->
+                                                                                        <div class="modal" id="modal-delete-question-{{ question.id }}">
+                                                                                            <div class="modal-dialog">
+                                                                                                <div class="modal-content">
+                                                                                                    <!-- modal header -->
+                                                                                                    <div class="modal-header">
+                                                                                                    <button  id="btn-top-close-delete-question-{{ question.id }}" type="button" class="close" data-dismiss="modal">&times;</button>
+                                                                                                    </div>
+                                                                                                    <!-- modal body -->
+                                                                                                    <div class="modal-body">
+                                                                                                        <h5>Are you sure?</h5>
+                                                                                                        <p>Deleting a question will permanently delete all student submissions associated with it.</p>
+                                                                                                        <form class="form" action="" method="post" novalidate>
+                                                                                                            {{ form_delete_question.hidden_tag() }}
+                                                                                                            {{ form_delete_question.del_questionID(value=question.id, style="display: none;") }}
+                                                                                                            <a>{{ form_delete_question.delete_question_submit }}</a>
+                                                                                                        </form>
+                                                                                                    </div>
+                                                                                                    <!-- modal footer -->
+                                                                                                    <div class="modal-footer">
+                                                                                                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <!-- end DELETE QUESTION modal -->
+
+                                                                                        <p>Question Description: {{ question.description }}</p>
+                                                                                        <!-- TODO: get recording from question.users.recorder_url -->
+                                                                                        <p>Play recording: </p>
+                                                                                        <!-- recording module -->
+                                                                                        <!-- end recording module -->
+                                                                                    </div>
                                                                                 </div>
                                                                             </div>
-                                                                        </div>
-                                                                        <hr>
+                                                                            <hr>
+                                                                        {% endif %}
                                                                     {% endfor %}
                                                                 </div>
                                                                 <!-- end list of questions for each student for the task -->
@@ -507,6 +661,166 @@
     {% endif %}
     <!-- end ADD TASK FORM ERRORS modal -->
 
+    <!-- EDIT TASK FORM ERRORS modal -->
+    {% set ns = namespace(errors_present=false) %}
+    {% for field in form_edit_task %}
+        {% if field.errors|length != 0 %}
+            {% set ns.errors_present = true %}
+        {% endif %}
+    {% endfor %}
+    {% if ns.errors_present == true %}
+        <script>
+            $(document).ready(function(){
+                $("#modal-edit-task-form-errors").modal("show");
+            });
+        </script>
+        <!-- code for modal window -->
+        <div class="modal fade" id="modal-edit-task-form-errors">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <!-- modal body -->
+                    <div class="modal-body show">
+                        <ul>
+                            {% for error in form_edit_task.edit_taskName.errors %}
+                                <li style="color: red;">Error (Task name): {{ error }}</li>
+                            {% endfor %}
+                            {% for error in form_edit_task.edit_taskDescription.errors %}
+                                <li style="color: red;">Error (Description): {{ error }}</li>
+                            {% endfor %}
+                            {% for error in form_edit_task.edit_taskDueDate.errors %}
+                                <li style="color: red;">Error: {{ error }}</li>
+                            {% endfor %}
+                            {% for error in form_edit_task.edit_taskDueTime.errors %}
+                                <li style="color: red;">Error: {{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        <p>Please resubmit form.</p>
+                    </div>
+                    <!-- modal footer -->
+                    <div class="modal-footer">
+                        <button id="btn-btm-close-edit-task-form-errors-modal" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    <!-- end EDIT TASK FORM ERRORS modal -->
 
+
+    <!-- ADD QUESTION FORM ERRORS modal -->
+    {% set ns = namespace(errors_present=false) %}
+    {% for field in form_add_question %}
+        {% if field.errors|length != 0 %}
+            {% set ns.errors_present = true %}
+        {% endif %}
+    {% endfor %}
+    {% if ns.errors_present == true %}
+        <script>
+            $(document).ready(function(){
+                $("#modal-add-question-form-errors").modal("show");
+            });
+        </script>
+        <!-- code for modal window -->
+        <div class="modal fade" id="modal-add-question-form-errors">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <!-- modal body -->
+                    <div class="modal-body show">
+                        <ul>
+                            {% for error in form_add_question.questionName.errors %}
+                                <li style="color: red;">Error (Question name): {{ error }}</li>
+                            {% endfor %}
+                            {% for error in form_add_question.questionDescription.errors %}
+                                <li style="color: red;">Error (Description): {{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        <p>Please resubmit form.</p>
+                    </div>
+                    <!-- modal footer -->
+                    <div class="modal-footer">
+                        <button id="btn-btm-close-add-question-form-errors-modal" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    <!-- end ADD QUESTION FORM ERRORS modal -->
+
+
+    <!-- TASK FEEDBACK FORM ERRORS modal -->
+    {% set ns = namespace(errors_present=false) %}
+    {% for field in form_task_feedback %}
+        {% if field.errors|length != 0 %}
+            {% set ns.errors_present = true %}
+        {% endif %}
+    {% endfor %}
+    {% if ns.errors_present == true %}
+        <script>
+            $(document).ready(function(){
+                $("#modal-task-feedback-form-errors").modal("show");
+            });
+        </script>
+        <!-- code for modal window -->
+        <div class="modal fade" id="modal-task-feedback-form-errors">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <!-- modal body -->
+                    <div class="modal-body show">
+                        <ul>
+                            {% for error in form_task_feedback.mark.errors %}
+                                <li style="color: red;">Error: {{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        <p>Please resubmit form.</p>
+                    </div>
+                    <!-- modal footer -->
+                    <div class="modal-footer">
+                        <button id="btn-btm-close-task-feedback-form-errors-modal" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    <!-- end TASK FEEDBACK FORM ERRORS modal -->
+
+
+    <!-- EDIT QUESTION FORM ERRORS modal -->
+    {% set ns = namespace(errors_present=false) %}
+    {% for field in form_edit_question %}
+        {% if field.errors|length != 0 %}
+            {% set ns.errors_present = true %}
+        {% endif %}
+    {% endfor %}
+    {% if ns.errors_present == true %}
+        <script>
+            $(document).ready(function(){
+                $("#modal-edit-question-form-errors").modal("show");
+            });
+        </script>
+        <!-- code for modal window -->
+        <div class="modal fade" id="modal-edit-question-form-errors">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <!-- modal body -->
+                    <div class="modal-body show">
+                        <ul>
+                            {% for error in form_edit_question.edit_questionName.errors %}
+                                <li style="color: red;">Error (Question name): {{ error }}</li>
+                            {% endfor %}
+                            {% for error in form_edit_question.edit_questionDescription.errors %}
+                                <li style="color: red;">Error (Description): {{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        <p>Please resubmit form.</p>
+                    </div>
+                    <!-- modal footer -->
+                    <div class="modal-footer">
+                        <button id="btn-btm-close-edit-question-form-errors-modal" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    <!-- end EDIT QUESTION FORM ERRORS modal -->
 
 {% endblock %}

@@ -47,8 +47,9 @@ class TestUser(unittest.TestCase):
 
     # query user's units
     def test_user_unit_query(self):
-        user1 = db.session.query(User).filter(User.id == '3').one()
-        print(user1.units.all())
+        user1 = db.session.query(User).filter(User.id == '1').one()
+        units = user1.get_student_units()
+        print(units)
 
     # add a user's task result
     def test_add_user_task(self):
@@ -78,7 +79,7 @@ class TestUser(unittest.TestCase):
     # delete a user
     def test_user_delete(self):
         # self.student.add()
-        user = db.session.query(User).filter(User.id == '1').one()
+        user = db.session.query(User).filter(User.id == '2').one()
         user.delete()
 
     def test_task_mark(self):
@@ -98,3 +99,14 @@ class TestUser(unittest.TestCase):
     def test_get_question_url(self):
         user = db.session.query(User).filter(User.id == '1').one()
         print(user.get_question_record_url(1))
+
+    def test_get_user_task(self):
+        user = db.session.query(User).filter(User.id == '1').one()
+        for user_task in user.tasks:
+            if user_task.task_id == 1:
+                print(user_task.mark)
+
+    def test_get_user_task2(self):
+        user = db.session.query(User).filter(User.id == '1').one()
+        user_task = user.get_user_task(1)
+        print(type(user_task))

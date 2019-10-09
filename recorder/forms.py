@@ -1,5 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, SelectMultipleField, DateField, TimeField, DateTimeField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, SelectMultipleField, DateField, TimeField, \
+    DateTimeField, TextAreaField
 from wtforms.validators import DataRequired, EqualTo, Email, ValidationError, Length, Regexp, Required
 from wtforms.widgets import ListWidget, CheckboxInput
 
@@ -8,9 +9,8 @@ from recorder.models.unit import Unit
 from recorder.models.task import Task
 from recorder.models.question import Question
 
-import sys
-import datetime
-import time
+import sys, datetime, time
+
 
 ############################
 # forms needed for registration, login and password reset
@@ -108,7 +108,7 @@ class MultiCheckboxField(SelectMultipleField):
 class SubscribeUnitForm(FlaskForm):
     subscribe_units = MultiCheckboxField('Units', [DataRequired(message='Please select one or more units.')],
                                          coerce=int)
-    submit = SubmitField('Subscribe')
+    subscribe_unit_submit = SubmitField('Subscribe')
 
 
 ############################
@@ -193,7 +193,7 @@ class AddTaskForm(FlaskForm):
     taskDescription = StringField('Description', validators=[DataRequired()])
     taskDueDate = StringField('Due date (YYYY-MM-DD)')
     taskDueTime = StringField('Due time in 24h format (HH:MM)')
-    task_unitID = StringField('Description')
+    task_unitID = StringField('unitID')
     pdfTitle = StringField('PDF Attachment Title')
     add_task_submit = SubmitField('Add Task')
 
@@ -208,6 +208,59 @@ class AddTaskForm(FlaskForm):
             time.strptime(taskDueTime.data, '%H:%M')
         except ValueError:
             raise ValidationError('Due time must be in format HH:MM.')
+
+class EditTaskForm(FlaskForm):
+    current_taskID = StringField('Current taskID')
+    edit_taskName = StringField('Task name', validators=[DataRequired()])
+    edit_taskDescription = StringField('Description', validators=[DataRequired()])
+    edit_taskDueDate = StringField('Due date (YYYY-MM-DD)')
+    edit_taskDueTime = StringField('Due time in 24h format (HH:MM)')
+    edit_task_submit = SubmitField('Update Task')
+
+    def validate_edit_taskDueDate(self, edit_taskDueDate):
+        try:
+            datetime.datetime.strptime(edit_taskDueDate.data, '%Y-%m-%d')
+        except ValueError:
+            raise ValidationError('Due date must be in format YYYY-MM-DD.')
+
+    def validate_edit_taskDueTime(self, edit_taskDueTime):
+        try:
+            time.strptime(edit_taskDueTime.data, '%H:%M')
+        except ValueError:
+            raise ValidationError('Due time must be in format HH:MM.')
+
+class AddQuestionForm(FlaskForm):
+    questionName = StringField('Question name', validators=[DataRequired()])
+    questionDescription = StringField('Description', validators=[DataRequired()])
+    question_taskID = StringField('taskID')
+    add_question_submit = SubmitField('Add Question')
+
+class TaskFeedbackForm(FlaskForm):
+    feedbackStudentID = StringField('studentID')
+    feedbackTaskID = StringField('taskID')
+    mark = StringField('Mark (format 0.0)')
+    #feedbackRecorderUrl = StringField('feedbackURL')
+    feedbackComment = TextAreaField('Comments')
+    task_feedback_submit = SubmitField('Save Feedback')
+
+    def validate_mark(self, mark):
+        hasLetters = False
+        for char in mark.data:
+            if not char.isdigit() and char != '.':
+                hasLetters = True
+        if hasLetters:
+            raise ValidationError('Mark must not include letters.')
+        if len(mark.data) != 3:
+            raise ValidationError('Mark must be three characters.')
+        if mark.data[1] != '.':
+            raise ValidationError('Mark must be in the format 0.0')
+
+
+class EditQuestionForm(FlaskForm):
+    edit_questionName = StringField('Question name', validators=[DataRequired()])
+    edit_questionDescription = StringField('Description', validators=[DataRequired()])
+    current_questionID = StringField('questionID')
+    edit_question_submit = SubmitField('Update Question')
 
 # validators not needed as this form will only be generated for existing units
 class DeleteUnitForm(FlaskForm):

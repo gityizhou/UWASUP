@@ -3,6 +3,7 @@ import unittest
 from recorder import create_app, db
 from recorder.models.unit import Unit
 from recorder.models.task import Task
+from recorder.models.user_task import User_task
 
 
 class TestTask(unittest.TestCase):
@@ -44,7 +45,7 @@ class TestTask(unittest.TestCase):
 
     # !!!!!delete a task
     def test_task_delete(self):
-        task = db.session.query(Task).filter(Task.id == '1').one()
+        task = db.session.query(Task).filter(Task.id == '2').one()
         task.delete()
 
     def test_task_users(self):
@@ -52,3 +53,7 @@ class TestTask(unittest.TestCase):
         users = task.get_task_users()
         for user in users:
             print(user.email)
+
+    def test_get_user_task(self):
+        User_task.get_user_task(1, 1)
+        
