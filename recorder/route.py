@@ -152,13 +152,14 @@ def teacher_view(staff_number):
     # edit task form
     if form_edit_task.edit_task_submit.data and form_edit_task.validate_on_submit():
         # create DateTime format "YYYY-MM-DD HH:MM"
-        due_date = form_edit_task.dueDate.data
-        due_time = form_edit_task.dueTime.data
+        due_date = form_edit_task.edit_taskDueDate.data
+        due_time = form_edit_task.edit_taskDueTime.data
         due_date_time = due_date + " " + due_time
+        datetime_obj = datetime.datetime.strptime(due_date_time, '%Y-%m-%d %H:%M')
         task = Task.query.filter_by(id=form_edit_task.current_taskID.data).first()
         task.task_name=form_edit_task.edit_taskName.data
         task.description=form_edit_task.edit_taskDescription.data
-        task.due_time=due_date_time
+        task.due_time=datetime_obj
         task.update()
         flash('The task has been updated.')
         # need to return redirect on successful submission to clear form fields
