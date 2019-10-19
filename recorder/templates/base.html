@@ -28,7 +28,7 @@
         <link rel='shortcut icon' type='image/x-icon' href='../static/image/favicon.ico' />
     </head>
 
-    <body>
+    <body class="base-background">
         <!-- FLASH MESSAGES modal -->
         <!-- open modal if flash messages are present -->
         {% with messages = get_flashed_messages() %}
@@ -58,9 +58,30 @@
             {% endif %}
         {% endwith %}
         <!-- end FLASH MESSAGES modal -->
-    
-        {% block content %}{% endblock %}
 
+        <!-- main card for all pages -->
+        <div class="row">
+            <div class="col-xl-2 col-lg-2 col-md-6 col-sm-6 col-6 mx-auto logo-card">
+                    <div class="card-deck">
+                        <div class="card-body">
+                            <img src="../static/image/logo.png" alt="SUP logo" class="logo-image">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <!-- end main card for all pages -->
+
+        <!-- main card for all pages -->
+        <div class="row">
+            <div class="col-xl-7 col-lg-10 col-md-10 col-sm-12 col-12 mx-auto main-card">
+                <div class="card-deck">
+                    <div class="card-body">
+                        {% block content %}{% endblock %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end main card for all pages -->
     </body>
 
 </html>

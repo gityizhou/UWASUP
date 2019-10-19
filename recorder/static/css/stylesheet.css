@@ -1,111 +1,20 @@
-*{
-    margin: 0;
-    padding: 0;
+
+
+.base-background {
+    background-color: rgb(205, 248, 188);
 }
 
-/* body{
-    height: 100vh;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-} */
-/* button style start */
-.bt{
-    position: relative;
-    border: none;
-    outline: none;
-
-    width: 12rem;
-    height: 5rem;
-    border-radius: 5rem;
-    background-color: #000;
-    color: #fff;
-    font-weight: bold;
-    font-size: 1.5rem;
-    box-shadow: 0 8px 28px black;
-    cursor: pointer;
-
-    transition: .5s;
+.main-card {
+    margin-top: 15vh;
+    margin-bottom: 15vh;
+    padding: 2rem;
+    border-radius: 3rem;
+    border: 0.0rem solid rgb(235, 236, 233);
+    box-shadow: 0 1rem 3rem rgba(0,0,0,0.5);
+    background-color: rgb(251, 252, 250);
 }
 
-.active.bt{
-    width: 5rem;
-    color:transparent;
+.logo-image {
+    width: 30vw;
+    height: 30vh;
 }
-
-/* button style end */
-
-/* loading style start */
-.loading{
-    opacity: 0;
-    transition: .5s;
-}
-
-.active .loading{
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%,-50%);
-
-    width: 70%;
-    height: 40%;
-
-    display: flex;
-    justify-content: space-around;  
-    align-items: flex-end;
-    opacity: 1;
-}
-
-.active .loading div{
-    width: .3rem;
-    height: .3rem;
-    border-radius: 50%;
-    background-color: #fff;
-
-    animation: .9s loading ease-in-out infinite alternate;
-}
-
-@keyframes loading{
-    to{
-        transform: translate(0, -1rem);
-    }    
-}
-
-.active .loading div:nth-child(2){
-    animation-delay: .2s;
-}
-
-.active .loading div:nth-child(3){
-    animation-delay: .4s;
-}
-
-.verity .loading{
-    opacity: 0;
-}
-/* loading style end */
-
-/* checkmark style start */
-.checkmark{
-    position: absolute;
-    left: 50%;
-    top: 56%;
-    transform: translate(-50%,-50%);
-    stroke-width: 2px;
-    /* 利用stroke的虚线和偏移值达到加载的动画效果 */
-    stroke-dasharray: 36px;
-    stroke-dashoffset: 36px;
-}
-
-.verity .checkmark{
-    animation: .6s show forwards;
-    animation-delay: .4s;
-}
-
-@keyframes show{
-    to{
-        stroke-dashoffset: 0;
-    }
-}
-/* checkmark style end */
-
