@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <title>demo{{current_user.id}}</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/css/stylesheet.css" type="text/css">
+</head>
+<body>
+<script src="https://xiangyuecn.github.io/Recorder/recorder.mp3.min.js"></script>
+<!-- Add jquery -->
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+<!-- add extension library waveview.js -->
+<script src="https://xiangyuecn.github.io/Recorder/src/extensions/waveview.js"></script> 
+
+
+
+<audio src="{{ current_user.get_question_record_url(1) }}" controls></audio>
+
+<input class="btn btn-primary" type="button" id="Record" onclick="doOnClick()" value="Start" >
+<!-- <input type="button" onclick="pauseRec();resetTime();stopTime()" value="pause recording">
+<input type="button" onclick="resumeRec();startTime()" value="resume recording"> -->
+<input class="btn btn-primary" type="button" onclick="playRec();stopTime()" value="Play">
+<hr>
+
+
+    <script>console.log({{current_user.id}}+"_"+ {{current_user.user_number}})</script>
+
+<hr>
+
+
+
+
+<script>
+    function doOnClick(){
+        if(document.getElementById('Record').value=="Finish"){
+            document.getElementById('Record').value="Start";
+            document.getElementById('Record').style.color='white';
+            stopRec();
+            stopTime();
+        }
+        else if (document.getElementById('Record').value=="Start"){
+            document.getElementById('Record').value="Finish";
+            document.getElementById('Record').style.color='red';
+            startRec();
+            resetTime();
+            startTime();
+        }
+    }
+</script>
+
+
+<!-- <input class="bt" type="button" onclick="uploadRec();stopTime()" value="Submit"> -->
+<input class="btn btn-primary" type="button" onclick="uploadRec(1)" value="upload the record">
+
+
+<!-- Add Timer -->
+<p id="showTime">00 : 00</p>
+                 
+<!-- Add wavebox -->
+<div class="pd waveBox">
+    <div style="height:100px;width:300px;border:1px solid #ccc;box-sizing: border-box;display:inline-block" class="recwave"></div>
+    <input type="checkbox" class="recwaveSet" checked>
+</div>
+<!-- Setting for wave -->
+<div style="display: none;" class="pd">
+    Bit rate: <input type="radio" class="bit" value="64"  checked> 64 kbps
+</div>
+<div style="display: none;" class="pd">
+    Sampling rate: <input type="radio" class="sample" value="16000" checked> 16000 hz
+</div>
+
+<script>
+    let rec;
+    let recFile;
+
+    function startRec() {
+        var wave;
+        rec = Recorder(
+            {
+                onProcess:function(buffers,powerLevel,bufferDuration,bufferSampleRate){
+                    wave.input(rec.buffers[rec.buffers.length-1],powerLevel,bufferSampleRate);//输入音频数据，更新显示波形
+                }
+            }
+        );//Use the default configuration, mp3 format
+
+        //Turn on the microphone and authorize resources
+        rec.open(function () {
+            // add wave 一加上就没有录音了
+            wave = Recorder.WaveView({elem:".recwave"}); //创建wave对象，写这里面浏览器妥妥的
+            //start recording
+            rec.start();
+        }, function (msg, isUserNotAllow) {
+            //The user has refused permission or the browser does not support it
+            alert((isUserNotAllow ? "User denied permission，" : "") + "not able to record:" + msg);
+        });
+    };
+
+
+    function pauseRec() {
+        rec.pause();
+    }
+
+    function resumeRec() {
+        rec.resume();
+    }
+
+    function stopRec() {
+        rec.stop(function (blob, duration) {
+            recFile = blob;
+        })
+    }
+
+var audio
+
+    function playRec() {
+        //Stop recording and get the blob binary object of the recording file
+        if(audio==null){
+            audio = document.createElement("audio");
+            audio.controls = true;
+            document.body.appendChild(audio);
+            audio.src = URL.createObjectURL(recFile);
+            audio.play();
+        }
+        else{
+            document.body.appendChild(audio);
+            audio.src = URL.createObjectURL(recFile);
+            audio.play();
+        }
+            
+        };
+
+    function uploadRec(question_id) {
+        //Stop recording and get the blob binary object of the recording file
+
+            /*
+            Blob file object, which can be read and fetched with FileReader
+            ，Or use FormData upload, which in this case uploads the binary directly
+            ，from normal application/x-www-form-urlencoded form upload
+            */
+            question_id = String(question_id)
+            var form = new FormData();
+            form.append("upfile", recFile, "record.mp3"); //Similar to ordinary form forms, files with upfile parameters, named recorder. Mp3, are received by the back-end
+            form.append("question_id", question_id)   // change the question_id here
+            //Upload directly with ajax
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/recorder");//This fake address can see the request data and format in the console network, and the result of the request is irrelevant
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4) {
+                    alert(xhr.status == 200 ? "upload successful" : "Test by opening the browser console, and then re-recording, you can see the upload request data and format in the network option card");
+                }
+            }
+            xhr.send(form);
+        }
+    </script>
+
+
+<script>
+    var ms = 0;
+    var secs = 0;
+    var mins = 0;
+    var hours = 0;
+    var timeoutId;
+
+    var isCounting = false;
+
+
+
+
+    function startTime() {
+        if (!isCounting) {
+            isCounting = true;
+            timeoutId = setInterval(countTime, 1);        //指定时间执行任务
+        }
+    }
+
+    function stopTime() {
+        if (isCounting) {
+            isCounting = false;
+            clearTimeout(timeoutId); //清除指定id计时器
+        }
+    }
+
+    function countTime() {
+
+        ms += 4;
+        if (ms >= 1000) {
+            secs += 1;
+            ms = 0;
+        }
+        if (secs >= 60) {
+            mins += 1;
+            secs = 0;
+        }
+        if (mins == 5 && secs==0) {
+                doOnClick();
+        }
+        document.getElementById("showTime").innerHTML = checkTime(mins) + " : " + checkTime(secs);
+    }
+
+    function checkTime(time) {
+        if (time < 10)
+            time = "0" + time;
+
+        return time;
+    }
+
+    function resetTime() {
+        ms = 0;
+        secs = 0;
+        mins = 0;
+        hours = 0;
+    }
+
+    function clearTime() {
+        resetTime();
+        document.getElementById("showTime").innerHTML = checkTime(mins) + " : " + checkTime(secs);
+        if (!isCounting)
+            document.getElementById("start").value = "Start timing";
+    }
+</script>
+
+</body>
+</html>

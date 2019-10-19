@@ -79,7 +79,7 @@ class TestUser(unittest.TestCase):
     # delete a user
     def test_user_delete(self):
         # self.student.add()
-        user = db.session.query(User).filter(User.id == '2').one()
+        user = db.session.query(User).filter(User.id == '5').one()
         user.delete()
 
     def test_task_mark(self):

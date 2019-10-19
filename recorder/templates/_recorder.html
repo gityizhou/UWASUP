@@ -1,133 +1,60 @@
 
 <input class="btn btn-primary" type="button" id="Record_{{sUnit.id}}_{{task.id}}_{{question.id}}" value="Start" >
-<!-- <input class="btn btn-primary" type="button" onclick="start()" value="Start" >
-<input class="btn btn-primary" type="button" onclick="finish()" value="finish" > -->
-<!-- <input type="button" onclick="pauseRec();resetTime();stopTime()" value="pause recording">
-<input type="button" onclick="resumeRec();startTime()" value="resume recording"> -->
-<input class="btn btn-primary" type="button" onclick="playRec();stopTime()" value="Play">
-<!-- <input class="btn btn-primary" type="button" onclick="playrecord()" value="Playrecord"> -->
-<!-- <input class="bt" type="button" onclick="uploadRec();stopTime()" value="Submit"> -->
-<input class="btn btn-primary" type="button" onclick="uploadRec()" value="upload the record">
-<!-- Add Timer -->
-<p id="showTime">00 : 00</p>           
-<!-- Add wavebox -->
-<div class="pd waveBox">
-    <div style="height:100px;width:300px;border:1px solid #ccc;box-sizing: border-box;display:inline-block" class="recwave"></div>
-    <input type="checkbox" class="recwaveSet" checked>
-</div>
-<!-- Setting for wave -->
-<div style="display: none;" class="pd">
-    Bit rate: <input type="radio" class="bit" value="64"  checked> 64 kbps
-</div>
-<div style="display: none;" class="pd">
-    Sampling rate: <input type="radio" class="sample" value="16000" checked> 16000 hz
-</div>
-<p>previous record</p>
-<audio src="{{current_user.get_question_record_url(1)}}" controls></audio>
+
+<input class="btn btn-primary" type="button" onclick="playRec()" value="Play">
+
+<input class="btn btn-primary" type="button" onclick="uploadRec({{question.id}})" value="upload the record">
+
+<p>Previous recording</p >
+<audio src="{{current_user.get_question_record_url(question.id)}}" controls></audio>
+<!-- get previous submitted recording finish -->
+
+
+
 
 <script>
-    // function start(){
-    //     stopRec();
-    //     stopTime();
-    // }
 
-    // function finish(){
-    //     startRec();
-    //     resetTime();
-    //     startTime();
-    // }
 
     $(document).ready(function doOnClick(){
         $("#Record_{{sUnit.id}}_{{task.id}}_{{question.id}}").click(function(){
-            console.log("Record_{{sUnit.id}}_{{task.id}}_{{question.id}}");
             if(document.getElementById("Record_{{sUnit.id}}_{{task.id}}_{{question.id}}").value=="Finish"){
                 document.getElementById("Record_{{sUnit.id}}_{{task.id}}_{{question.id}}").value="Start";
                 document.getElementById("Record_{{sUnit.id}}_{{task.id}}_{{question.id}}").style.color='white';
                 stopRec();
-                stopTime();
+                var question_id="{{question.id}}"
+                console.log(question_id);
+                return question_id
             }
             else if (document.getElementById("Record_{{sUnit.id}}_{{task.id}}_{{question.id}}").value=="Start"){
                 document.getElementById("Record_{{sUnit.id}}_{{task.id}}_{{question.id}}").value="Finish";
                 document.getElementById("Record_{{sUnit.id}}_{{task.id}}_{{question.id}}").style.color='red';
                 startRec();
-                resetTime();
-                startTime();
             }
         })
     })
 
-    $(document).ready(function startRec() {
+    function startRec() {
         var wave;
-        rec = Recorder(
-            {
-                onProcess:function(buffers,powerLevel,bufferDuration,bufferSampleRate){
-                    wave.input(rec.buffers[rec.buffers.length-1],powerLevel,bufferSampleRate);//input the record and show the wave
-                }
-            }
-        );//Use the default configuration, mp3 format
-
+        rec = Recorder();//Use the default configuration, mp3 format
         //Turn on the microphone and authorize resources
-        rec.open(function () {
-            // add wave 
-            wave = Recorder.WaveView({elem:".recwave"}); //build wave
+        rec.open(function () {         
             //start recording
             rec.start();
         }, function (msg, isUserNotAllow) {
             //The user has refused permission or the browser does not support it
             alert((isUserNotAllow ? "User denied permission，" : "") + "not able to record:" + msg);
         });
-    });
+    };
 
-    $(document).ready(function pauseRec() {
-        rec.pause();
-    })
 
-    $(document).ready(function resumeRec() {
-        rec.resume();
-    })
-
-    $(document).ready(function stopRec() {
+    function stopRec() {
         rec.stop(function (blob, duration) {
             recFile = blob;
         })
-    })
+    };
 
-    // var audio2
 
-    //play audio from web
-    // string读取时正确 但放进scr以后不能正确输入
-    //"https://drive.google.com/uc?authuser=0&id=1n7iLFV9RT0i3FKVAMTHWryojs1bMzTxm&export=download"
-    // var fileurl
-    //     function playrecord(){
-
-    //         fileure="{{current_user.get_question_record_url(1)}}";
-    //         //console.log(fileure.substring(0,43))
-    //         console.log(fileure.substring(43,fileure.length+1));
-    //         fileurlone="https://drive.google.com/uc?authuser=0&amp;";
-    //         fileurltwo=fileure.substring(43,fileure.length+1);
-
-    //         var fileurlfinal=fileurlone+fileurltwo;
-
-    //         console.log(fileurlfinal);
-
-    //         if (audio2==null){
-    //             audio2 = document.createElement("audio");
-    //             audio2.controls = true;
-    //             document.body.appendChild(audio2);
-    //             console.log(fileurlfinal);
-    //             audio2.src=fileurlfinal;
-    //             audio2.play();
-    //         }
-    //         else {
-    //             document.body.appendChild(audio2);
-    //             console.log(fileurlfinal);
-    //             audio2.src=fileurlfinal;
-    //             audio2.play();
-    //         }
-    //     }
-
-    $(document).ready(function playRec() {
-        var audio
+    function playRec() {
         //Stop recording and get the blob binary object of the recording file
         if(audio==null){
             audio = document.createElement("audio");
@@ -141,87 +68,30 @@
             audio.src = URL.createObjectURL(recFile);
             audio.play();
         }
-    });
+    };
 
-    $(document).ready(function uploadRec() {
+    function uploadRec(question_id) {
         //Stop recording and get the blob binary object of the recording file
-        /*
-        Blob file object, which can be read and fetched with FileReader
-        ，Or use FormData upload, which in this case uploads the binary directly
-        ，from normal application/x-www-form-urlencoded form upload
-        */
-        //var filename={{current_user.id}}+"_"+{{current_user.user_number}}+"_"+{{sUnit.id}}+"_"+{{task.id}}+"_"+{{question.id}}+".mp3";
-        var form = new FormData();
-        form.append("upfile", recFile, "record.mp3"); //Similar to ordinary form forms, files with upfile parameters, named recorder. Mp3, are received by the back-end
-        //Upload directly with ajax
-        var xhr = new XMLHttpRequest();
-        xhr.open("POST", "/recorder");//This fake address can see the request data and format in the console network, and the result of the request is irrelevant
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState == 4) {
-                alert(xhr.status == 200 ? "upload successful" : "Test by opening the browser console, and then re-recording, you can see the upload request data and format in the network option card");
+
+            /*
+            Blob file object, which can be read and fetched with FileReader
+            ，Or use FormData upload, which in this case uploads the binary directly
+            ，from normal application/x-www-form-urlencoded form upload
+            */
+            question_id = String(question_id)
+            var form = new FormData();
+            form.append("upfile", recFile, "record.mp3"); //Similar to ordinary form forms, files with upfile parameters, named recorder. Mp3, are received by the back-end
+            form.append("question_id", question_id)   // change the question_id here
+            //Upload directly with ajax
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/recorder");//This fake address can see the request data and format in the console network, and the result of the request is irrelevant
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4) {
+                    alert(xhr.status == 200 ? "upload successful" : "Test by opening the browser console, and then re-recording, you can see the upload request data and format in the network option card");
+                }
             }
+            xhr.send(form);
         }
-        xhr.send(form);
-    })
 
-    $(document).ready(function startTime() {
-        if (!isCounting) {
-            isCounting = true;
-            timeoutId = setInterval(countTime, 1);        
-        }
-    })
-
-    $(document).ready(function stopTime() {
-        if (isCounting) {
-            isCounting = false;
-            clearTimeout(timeoutId); 
-        }
-    })
-
-    $(document).ready(function countTime() {
-        ms += 4;
-        if (ms >= 1000) {
-            secs += 1;
-            ms = 0;
-        }
-        if (secs >= 60) {
-            mins += 1;
-            secs = 0;
-        }
-        if (mins == 5 && secs==0) {
-                doOnClick();
-        }
-        document.getElementById("showTime").innerHTML = checkTime(mins) + " : " + checkTime(secs);
-    })
-
-    $(document).ready(function checkTime(time) {
-        if (time < 10)
-            time = "0" + time;
-
-        return time;
-    })
-
-    let rec;
-	let recFile;
-	let ms;
-	let secs;
-	let mins;
-	let hours;
-	let timeoutId;
-    let isCounting = false;
-    
-    $(document).ready(function resetTime() {
-        ms = 0;
-        secs = 0;
-        mins = 0;
-        hours = 0;
-    })
-
-    $(document).ready(function clearTime() {
-        resetTime();
-        document.getElementById("showTime").innerHTML = checkTime(mins) + " : " + checkTime(secs);
-        if (!isCounting)
-            document.getElementById("start").value = "Start timing";
-    })
 
 </script>
