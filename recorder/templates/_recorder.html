@@ -5,6 +5,10 @@
 
 <input class="btn btn-primary" type="button" onclick="uploadRec({{question.id}})" value="upload the record">
 
+<p>Previous recording</p >
+<audio src="{{current_user.get_question_record_url(question.id)}}" controls></audio>
+<!-- get previous submitted recording finish -->
+
 
 
 
