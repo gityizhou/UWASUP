@@ -78,7 +78,7 @@ class RegisterForm(FlaskForm):
             raise ValidationError('This email address is already in use.')
 
 class PasswdResetRequestForm(FlaskForm):
-    email = StringField("Email Address", validators=[DataRequired(), Email()])
+    email = StringField("Email Address:", validators=[DataRequired(), Email()])
     submit = SubmitField('Reset Password')
 
     def validate_email(self, email):
