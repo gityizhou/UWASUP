@@ -342,9 +342,14 @@
                                                 {% set due_datetime_string = task.due_time|string() %}
                                                 <p>Due date: {{ due_datetime_string[:10] }}</p>
                                                 <p>Due time: {{ due_datetime_string[11:16] }}</p>
+                                            {% else %}
+                                                <p>Due date: not set</p>
+                                                <p>Due time: not set</p>
+                                            {% endif %}
+                                            {% if task.description is not none %}
                                                 <p>Description: {{ task.description }}</p>
                                             {% else %}
-                                                <p>Not due date set.</p>
+                                                <p>Description: no description</p>
                                             {% endif %}
                                             <!-- display due date and time if any -->
 
