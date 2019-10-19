@@ -412,157 +412,217 @@
                                             </div>
                                             <!-- end ADD QUESTION modal -->    
 
-                                            <!-- list of students for each task -->
-                                            <div id="accordion_students">
-                                                {% for student in task.get_task_users() %}
+                                            <!-- list of questions for this task outer modal -->
+                                            <div id="accordion_task_{{ task.id }}_questions">
                                                     <div class="card">
-                                                        <div class="card-header" id="heading_student_{{ student.id }}">
+                                                        <div class="card-header" id="heading_task_{{ task.id }}_questions">
                                                             <h5 class="mb-0">
-                                                                <button class="btn btn-link" data-toggle="collapse" data-target="#collapse_student_{{ student.id }}" aria-expanded="true" aria-controls="collapse_student_{{ student.id }}">
-                                                                    <p>{{ student.user_number }}: {{ student.first_name}} {{ student.last_name}}</p>
+                                                                <button class="btn btn-link" data-toggle="collapse" data-target="#collapse_task_{{ task.id }}_questions" aria-expanded="true" aria-controls="collapse_task_{{ task.id }}_questions">
+                                                                    Questions
                                                                 </button>
                                                             </h5>
-                                                            {% if student.get_task_mark(task.id) is none %}
-                                                                <p>Task: unmarked</p>
-                                                            {% else %}
-                                                                <p>Task Mark: {{ student.get_task_mark(task.id) }}/10</p>
-                                                            {% endif %}
                                                         </div>
-                                                        <div id="collapse_student_{{ student.id }}" class="collapse" aria-labelledby="heading_student_{{ student.id }}" data-parent="#accordion_students">
-                                                            <div class="card-body" style="background-color: #efd9f5;">
-                                                                <!-- TASK FEEDBACK section -->
-                                                                <div>
-                                                                    <form id="form-task-feedback-{{ student.id }}" class="form" action="" method="post" novalidate>
-                                                                        {{ form_task_feedback.hidden_tag() }}
-                                                                        <p>
-                                                                            {% if student.get_task_mark(task.id) is not none %}
-                                                                                {{ form_task_feedback.mark.label }}<br>
-                                                                                {{ form_task_feedback.mark(value=student.get_task_mark(task.id), size=32, class="form-field") }}<br>
-                                                                            {% else %}
-                                                                                {{ form_task_feedback.mark.label }}<br>
-                                                                                {{ form_task_feedback.mark(size=32, class="form-field") }}<br>
-                                                                            {% endif %}
-                                                                            {% if student.get_user_task(task.id).comment is not none %}
-                                                                                {{ form_task_feedback.feedbackComment.label }}<br>
-                                                                                {{ form_task_feedback.feedbackComment(value=student.get_user_task(task.id).comment, size=32, class="form-field", rows="10", cols="55") }}<br>
-                                                                            {% else %}
-                                                                                {{ form_task_feedback.feedbackComment.label }}<br>
-                                                                                {{ form_task_feedback.feedbackComment(size=32, class="form-field", rows="10", cols="55") }}<br>
-                                                                            {% endif %}
-                                                                            <!-- add if statement here to test for comment and recorder URL -->
-                                                                            {{ form_task_feedback.feedbackStudentID(value=student.id, style="display: none;") }}<br>
-                                                                            {{ form_task_feedback.feedbackTaskID(value=task.id, style="display: none;") }}
-                                                                        </p>
-                                                                        <a>{{ form_task_feedback.task_feedback_submit(id="btn-task-feedback-{{ student.id }}-submit", size=32, class="form-field") }}</a>
-                                                                    </form>
-                                                                </div>
-                                                                <!-- end TASK FEEDBACK section -->
+                                                        <div id="collapse_task_{{ task.id }}_questions" class="collapse" aria-labelledby="heading_task_{{ task.id }}_questions" data-parent="#accordion_task_{{ task.id }}_questions">
+                                                            <div class="card-body" style="background-color: #d7f8d7;">
 
-                                                                <!-- list of questions for each student for this task -->
-                                                                <div id="accordion_questions">
-                                                                    {% for question in student.get_task_questions(task.id) %}
-                                                                        {% if question.is_submitted %}
-                                                                            <div class="card">
-                                                                                <div class="card-header" id="heading_question_1">
-                                                                                    <h5 class="mb-0">
-                                                                                        <button class="btn btn-link" data-toggle="collapse" data-target="#collapse_question_1" aria-expanded="true" aria-controls="collapse_question_1">
-                                                                                            <p>{{ question.question_name }}</p>
-                                                                                        </button>
-                                                                                    </h5>
-                                                                                </div>
-                                                                                <div id="collapse_question_1" class="collapse" aria-labelledby="heading_question_1" data-parent="#accordion_questions">
-                                                                                    <div class="card-body" style="background-color: #d7f8d7;">
-
-                                                                                        <!-- EDIT QUESTION modal -->
-                                                                                        <!-- button to open the modal -->
-                                                                                        <button id="btn-edit-question-{{ question.id }}" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-edit-question-{{ question.id }}">
-                                                                                            Edit Question
-                                                                                        </button>
-                                                                                        <!-- code for modal window -->
-                                                                                        <div class="modal" id="modal-edit-question-{{ question.id }}">
-                                                                                            <div class="modal-dialog">
-                                                                                                <div class="modal-content">
-                                                                                                    <!-- modal header -->
-                                                                                                    <div class="modal-header">
-                                                                                                    <h4 class="modal-title">Edit Question</h4>
-                                                                                                        <button  id="btn-top-close-edit-question-{{ question.id }}-modal" type="button" class="close" data-dismiss="modal">&times;</button>
-                                                                                                    </div>
-                                                                                                    <!-- modal body -->
-                                                                                                    <div class="modal-body show">
-                                                                                                        <form id="form-edit-question-{{ question.id }}" class="form" action="" method="post" novalidate>
-                                                                                                            {{ form_edit_question.hidden_tag() }}
-                                                                                                            <p>
-                                                                                                                {{ form_edit_question.edit_questionName.label }}<br>
-                                                                                                                {{ form_edit_question.edit_questionName(value=question.question_name, size=32, class="form-field") }}<br>
-                                                                                                                {{ form_edit_question.edit_questionDescription.label }}<br>
-                                                                                                                {{ form_edit_question.edit_questionDescription(value=question.description, size=32, class="form-field") }}<br>
-                                                                                                                {{ form_edit_question.current_questionID(value=question.id, style="display: none;") }}
-                                                                                                            </p>
-                                                                                                            <a>{{ form_edit_question.edit_question_submit(id="btn-edit-question-{{ question.id }}-submit", size=32, class="form-field") }}</a>
-                                                                                                        </form>
-                                                                                                    </div>
-                                                                                                    <!-- modal footer -->
-                                                                                                    <div class="modal-footer">
-                                                                                                        <button id="btn-btm-close-edit-question-{{ question.id }}-modal" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                                                                                                    </div>
+                                                                <!-- list of questions for this task -->
+                                                                <div id="accordion_questions_task_{{ task.id }}">
+                                                                    {% for question in task.questions %}
+                                                                        <div class="card">
+                                                                            <div class="card-header" id="heading_question_{{ question.id }}">
+                                                                                <h5 class="mb-0">
+                                                                                    <button class="btn btn-link" data-toggle="collapse" data-target="#collapse_question_{{ question.id }}" aria-expanded="true" aria-controls="collapse_question_{{ question.id }}">
+                                                                                        {{ question.question_name }}
+                                                                                    </button>
+                                                                                </h5>
+                                                                            </div>
+                                                                            <div id="collapse_question_{{ question.id }}" class="collapse" aria-labelledby="heading_question_{{ question.id }}" data-parent="#accordion_questions_task_{{ task.id }}">
+                                                                                <div class="card-body" style="background-color: #d7f8d7;">
+                    
+                                                                                    <!-- EDIT QUESTION modal -->
+                                                                                    <!-- button to open the modal -->
+                                                                                    <button id="btn-edit-question-{{ question.id }}" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-edit-question-{{ question.id }}">
+                                                                                        Edit Question
+                                                                                    </button>
+                                                                                    <!-- code for modal window -->
+                                                                                    <div class="modal" id="modal-edit-question-{{ question.id }}">
+                                                                                        <div class="modal-dialog">
+                                                                                            <div class="modal-content">
+                                                                                                <!-- modal header -->
+                                                                                                <div class="modal-header">
+                                                                                                <h4 class="modal-title">Edit Question</h4>
+                                                                                                    <button  id="btn-top-close-edit-question-{{ question.id }}-modal" type="button" class="close" data-dismiss="modal">&times;</button>
+                                                                                                </div>
+                                                                                                <!-- modal body -->
+                                                                                                <div class="modal-body show">
+                                                                                                    <form id="form-edit-question-{{ question.id }}" class="form" action="" method="post" novalidate>
+                                                                                                        {{ form_edit_question.hidden_tag() }}
+                                                                                                        <p>
+                                                                                                            {{ form_edit_question.edit_questionName.label }}<br>
+                                                                                                            {{ form_edit_question.edit_questionName(value=question.question_name, size=32, class="form-field") }}<br>
+                                                                                                            {{ form_edit_question.edit_questionDescription.label }}<br>
+                                                                                                            {{ form_edit_question.edit_questionDescription(value=question.description, size=32, class="form-field") }}<br>
+                                                                                                            {{ form_edit_question.current_questionID(value=question.id, style="display: none;") }}
+                                                                                                        </p>
+                                                                                                        <a>{{ form_edit_question.edit_question_submit(id="btn-edit-question-{{ question.id }}-submit", size=32, class="form-field") }}</a>
+                                                                                                    </form>
+                                                                                                </div>
+                                                                                                <!-- modal footer -->
+                                                                                                <div class="modal-footer">
+                                                                                                    <button id="btn-btm-close-edit-question-{{ question.id }}-modal" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                                                                                                 </div>
                                                                                             </div>
                                                                                         </div>
-                                                                                        <!-- end EDIT QUESTION modal -->
-
-                                                                                        <!-- DELETE QUESTION modal -->
-                                                                                        <!-- button to open the modal -->
-                                                                                        <button id="btn-delete-question-{{ question.id }}" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-delete-question-{{ question.id }}">
-                                                                                            Delete Question
-                                                                                        </button>
-                                                                                        <!-- code for modal window -->
-                                                                                        <div class="modal" id="modal-delete-question-{{ question.id }}">
-                                                                                            <div class="modal-dialog">
-                                                                                                <div class="modal-content">
-                                                                                                    <!-- modal header -->
-                                                                                                    <div class="modal-header">
-                                                                                                    <button  id="btn-top-close-delete-question-{{ question.id }}" type="button" class="close" data-dismiss="modal">&times;</button>
-                                                                                                    </div>
-                                                                                                    <!-- modal body -->
-                                                                                                    <div class="modal-body">
-                                                                                                        <h5>Are you sure?</h5>
-                                                                                                        <p>Deleting a question will permanently delete all student submissions associated with it.</p>
-                                                                                                        <form class="form" action="" method="post" novalidate>
-                                                                                                            {{ form_delete_question.hidden_tag() }}
-                                                                                                            {{ form_delete_question.del_questionID(value=question.id, style="display: none;") }}
-                                                                                                            <a>{{ form_delete_question.delete_question_submit }}</a>
-                                                                                                        </form>
-                                                                                                    </div>
-                                                                                                    <!-- modal footer -->
-                                                                                                    <div class="modal-footer">
-                                                                                                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
-                                                                                                    </div>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                        <!-- end DELETE QUESTION modal -->
-
-                                                                                        <p>Question Description: {{ question.description }}</p>
-                                                                                        <!-- TODO: get recording from question.users.recorder_url -->
-                                                                                        <p>Play recording: </p>
-                                                                                        <!-- recording module -->
-                                                                                        <!-- end recording module -->
                                                                                     </div>
+                                                                                    <!-- end EDIT QUESTION modal -->
+                    
+                                                                                    <!-- DELETE QUESTION modal -->
+                                                                                    <!-- button to open the modal -->
+                                                                                    <button id="btn-delete-question-{{ question.id }}" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-delete-question-{{ question.id }}">
+                                                                                        Delete Question
+                                                                                    </button>
+                                                                                    <!-- code for modal window -->
+                                                                                    <div class="modal" id="modal-delete-question-{{ question.id }}">
+                                                                                        <div class="modal-dialog">
+                                                                                            <div class="modal-content">
+                                                                                                <!-- modal header -->
+                                                                                                <div class="modal-header">
+                                                                                                <button  id="btn-top-close-delete-question-{{ question.id }}" type="button" class="close" data-dismiss="modal">&times;</button>
+                                                                                                </div>
+                                                                                                <!-- modal body -->
+                                                                                                <div class="modal-body">
+                                                                                                    <h5>Are you sure?</h5>
+                                                                                                    <p>Deleting a question will permanently delete all student submissions associated with it.</p>
+                                                                                                    <form class="form" action="" method="post" novalidate>
+                                                                                                        {{ form_delete_question.hidden_tag() }}
+                                                                                                        {{ form_delete_question.del_questionID(value=question.id, style="display: none;") }}
+                                                                                                        <a>{{ form_delete_question.delete_question_submit }}</a>
+                                                                                                    </form>
+                                                                                                </div>
+                                                                                                <!-- modal footer -->
+                                                                                                <div class="modal-footer">
+                                                                                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <!-- end DELETE QUESTION modal -->
+                    
+                                                                                    <p>Question Description: {{ question.description }}</p>
                                                                                 </div>
                                                                             </div>
-                                                                            <hr>
-                                                                        {% endif %}
+                                                                        </div>
+                                                                        <hr>
                                                                     {% endfor %}
                                                                 </div>
-                                                                <!-- end list of questions for each student for the task -->
+                                                                <!-- end list of questions for this task -->
 
-                                                            </div>
                                                         </div>
                                                     </div>
-                                                    <hr>
-                                                {% endfor %}
+                                                </div>
+                                                <hr>
                                             </div>
-                                            <!-- end list of students for the task -->
+                                            <!-- end list of questions for this task outer modal -->
+
+                                            <!-- list of student submissions for this task outer modal -->
+                                            <div id="accordion_task_{{ task.id }}_student_submissions">
+                                                <div class="card">
+                                                    <div class="card-header" id="heading_task_{{ task.id }}_student_submissions">
+                                                        <h5 class="mb-0">
+                                                            <button class="btn btn-link" data-toggle="collapse" data-target="#collapse_task_{{ task.id }}_student_submissions" aria-expanded="true" aria-controls="collapse_task_{{ task.id }}_student_submissions">
+                                                                Student Submissions
+                                                            </button>
+                                                        </h5>
+                                                    </div>
+                                                    <div id="collapse_task_{{ task.id }}_student_submissions" class="collapse" aria-labelledby="heading_task_{{ task.id }}_student_submissions" data-parent="#accordion_task_{{ task.id }}_student_submissions">
+                                                        <div class="card-body" style="background-color: #d7f8d7;">
+
+                                                            <!-- list of students for each task -->
+                                                            <div id="accordion_students">
+                                                                {% for student in task.get_task_users() %}
+                                                                    <div class="card">
+                                                                        <div class="card-header" id="heading_student_{{ student.id }}">
+                                                                            <h5 class="mb-0">
+                                                                                <button class="btn btn-link" data-toggle="collapse" data-target="#collapse_student_{{ student.id }}" aria-expanded="true" aria-controls="collapse_student_{{ student.id }}">
+                                                                                    {{ student.user_number }}: {{ student.first_name}} {{ student.last_name}}
+                                                                                </button>
+                                                                            </h5>
+                                                                            {% if student.get_task_mark(task.id) is none %}
+                                                                                <p>Task: unmarked</p>
+                                                                            {% else %}
+                                                                                <p>Task Mark: {{ student.get_task_mark(task.id) }}/10</p>
+                                                                            {% endif %}
+                                                                        </div>
+                                                                        <div id="collapse_student_{{ student.id }}" class="collapse" aria-labelledby="heading_student_{{ student.id }}" data-parent="#accordion_students">
+                                                                            <div class="card-body" style="background-color: #efd9f5;">
+                                                                                <!-- TASK FEEDBACK section -->
+                                                                                <div>
+                                                                                    <form id="form-task-feedback-{{ student.id }}" class="form" action="" method="post" novalidate>
+                                                                                        {{ form_task_feedback.hidden_tag() }}
+                                                                                        <p>
+                                                                                            {% if student.get_task_mark(task.id) is not none %}
+                                                                                                {{ form_task_feedback.mark.label }}<br>
+                                                                                                {{ form_task_feedback.mark(value=student.get_task_mark(task.id), size=32, class="form-field") }}<br>
+                                                                                            {% else %}
+                                                                                                {{ form_task_feedback.mark.label }}<br>
+                                                                                                {{ form_task_feedback.mark(size=32, class="form-field") }}<br>
+                                                                                            {% endif %}
+                                                                                            {% if student.get_user_task(task.id).comment is not none %}
+                                                                                                {{ form_task_feedback.feedbackComment.label }}<br>
+                                                                                                {{ form_task_feedback.feedbackComment(value=student.get_user_task(task.id).comment, size=32, class="form-field", rows="10", cols="55") }}<br>
+                                                                                            {% else %}
+                                                                                                {{ form_task_feedback.feedbackComment.label }}<br>
+                                                                                                {{ form_task_feedback.feedbackComment(size=32, class="form-field", rows="10", cols="55") }}<br>
+                                                                                            {% endif %}
+                                                                                            <!-- add if statement here to test for comment and recorder URL -->
+                                                                                            {{ form_task_feedback.feedbackStudentID(value=student.id, style="display: none;") }}<br>
+                                                                                            {{ form_task_feedback.feedbackTaskID(value=task.id, style="display: none;") }}
+                                                                                        </p>
+                                                                                        <a>{{ form_task_feedback.task_feedback_submit(id="btn-task-feedback-{{ student.id }}-submit", size=32, class="form-field") }}</a>
+                                                                                    </form>
+                                                                                </div>
+                                                                                <!-- end TASK FEEDBACK section -->
+                
+                                                                                <!-- list of submitted questions for each student for this task -->
+                                                                                <div id="accordion_submitted_questions">
+                                                                                    {% for submitted_question in student.get_task_questions(task.id) %}
+                                                                                        <div class="card">
+                                                                                            <div class="card-header" id="heading_submitted_question_{{ submitted_question.id }}">
+                                                                                                <h5 class="mb-0">
+                                                                                                    <button class="btn btn-link" data-toggle="collapse" data-target="#collapse_submitted_question_{{ submitted_question.id }}" aria-expanded="true" aria-controls="collapse_submitted_question_{{ submitted_question.id }}">
+                                                                                                        {{ submitted_question.question_name }}
+                                                                                                    </button>
+                                                                                                </h5>
+                                                                                            </div>
+                                                                                            <div id="collapse_submitted_question_{{ submitted_question.id }}" class="collapse" aria-labelledby="heading_submitted_question_{{ submitted_question.id }}" data-parent="#accordion_submitted_questions">
+                                                                                                <div class="card-body" style="background-color: #d7f8d7;">
+                                                                                                    <p>Question Description: {{ submitted_question.description }}</p>
+                                                                                                    <!-- TODO: get recording from question.users.recorder_url -->
+                                                                                                    <p>Play recording: </p>
+                                                                                                    <!-- recording module -->
+                                                                                                    <!-- end recording module -->
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <hr>
+                                                                                    {% endfor %}
+                                                                                </div>
+                                                                                <!-- end list of submitted questions for each student for the task -->
+                
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <hr>
+                                                                {% endfor %}
+                                                            </div>
+                                                            <!-- end list of students for the task -->
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <hr>
+                                            </div>
+                                            <!-- end list of student submissions for this task outer modal -->
 
                                         </div>
                                     </div>
@@ -579,7 +639,7 @@
     <!-- end list of units for the teacher -->
 
     <!-- nested forms with validation can't be held open to show errors, need separate modal here -->
-    <!-- NOTE: Jinja variable scope does not cross for loop bounds, workaround found with namespace introduced in Jinja version 2.10 -->
+    <!-- NOTE: Jinja variable scope does not cross for-loop bounds, workaround found with namespace introduced in Jinja version 2.10 -->
 
     <!-- EDIT UNIT FORM ERRORS modal -->
     {% set ns = namespace(errors_present=false) %}
