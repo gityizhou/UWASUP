@@ -3,7 +3,10 @@ import unittest
 from recorder import create_app, db
 from recorder.models.unit import Unit
 from recorder.models.task import Task
+from recorder.models.user import User
 from recorder.models.user_task import User_task
+from pandas import DataFrame
+import os
 
 
 class TestTask(unittest.TestCase):
@@ -56,4 +59,34 @@ class TestTask(unittest.TestCase):
 
     def test_get_user_task(self):
         User_task.get_user_task(1, 1)
-        
+
+    def test_get_tasks(self):
+        results = User_task.query.filter_by(task_id=1)
+        this_task = db.session.query(Task).filter(Task.id == 1).one()
+        dir = os.getcwd() + "/csv/" + this_task.task_name + "_" + str(this_task.id) + ".csv"
+        filename = "./csv/" + this_task.task_name + "_" + str(this_task.id) + ".csv"
+        student_number = []
+        first_name = []
+        last_name = []
+        mark = []
+        for i in results:
+            id = i.user_id
+            student = db.session.query(User).filter(User.id == id).one()
+            mark.append(i.mark)
+            first_name.append(student.first_name)
+            last_name.append(student.last_name)
+            student_number.append(student.user_number)
+        data = {'student_number': student_number,
+                'first_name': first_name,
+                'last_name': last_name,
+                'mark': mark}
+        df = DataFrame(data)
+        columns = ['student_number', 'first_name', 'last_name', 'mark']
+        print(os.getcwd())
+        df.to_csv(dir, encoding="utf_8_sig", index=False, columns=columns)
+        print(df)
+
+        # print(student_number)
+        # print(first_name)
+        # print(last_name)
+        # print(mark)

@@ -1,4 +1,4 @@
-from flask import render_template, redirect, url_for, flash, request, jsonify, current_app
+from flask import render_template, redirect, url_for, flash, request, jsonify, current_app, send_from_directory
 from flask_uploads import UploadSet, ALL
 from flask_login import login_user, current_user, logout_user, login_required
 
@@ -16,6 +16,7 @@ from recorder.models.task import Task
 from recorder.models.user_question import User_question
 from recorder.models.user_task import User_task
 import os, jwt, time, datetime
+from pandas import DataFrame
 
 """
 Index page but also our login page!
@@ -349,6 +350,39 @@ def upload():
 
         os.remove("./uploads/files/" + filename)  # delete this file after uploading it to google drive
     return render_template('recorder.html')
+
+def task_result_downloader(task_id):
+    results = User_task.query.filter_by(task_id=task_id)
+    this_task = db.session.query(Task).filter(Task.id == task_id).one()
+    # print(os.getcwd())
+    path = os.getcwd() + "/recorder/csv/"
+    # print(path)
+    filepath = os.getcwd() + "/recorder/csv/" + this_task.task_name + "_" + str(this_task.id) + ".csv"
+    # print(filepath)
+    filename = this_task.task_name + "_" + str(this_task.id) + ".csv"
+    # print(filename)
+    student_number = []
+    first_name = []
+    last_name = []
+    mark = []
+    for i in results:
+        id = i.user_id
+        student = db.session.query(User).filter(User.id == id).one()
+        mark.append(i.mark)
+        first_name.append(student.first_name)
+        last_name.append(student.last_name)
+        student_number.append(student.user_number)
+    data = {'student_number': student_number,
+            'first_name': first_name,
+            'last_name': last_name,
+            'mark': mark}
+    df = DataFrame(data)
+    columns = ['student_number', 'first_name', 'last_name', 'mark']
+    df.to_csv(filepath, encoding="utf_8_sig", index=False, columns=columns)
+
+    return send_from_directory(path, filename, as_attachment=True)  # as_attachment=True 一定要写，不然会变成打开，而不是下载
+
+
 
 
 def getFilesList():
