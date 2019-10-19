@@ -5,18 +5,19 @@
     <!-- start of card -->
     <div class="col-xl-7 col-lg-10 col-md-10 col-sm-12 col-12 mx-auto main-card">
         <div class="card-deck">
-            <div class="card-body">
+            <div class="card-body text-center">
                 <!-- student details and actions -->
                 <div>
-                    <p>Hello, {{ student.first_name }}!</p>
-                    <p>Student Number: {{ student.user_number }}</p>
-                    <a href="{{ url_for('logout') }}">Logout</a>
-                    <hr>
-                    <!-- end student details and actions -->
+                    <h3>Hello, {{ student.first_name }}!</h3>
+                </div>
+                <div class="user-action-buttons">
+                    <button class="btn btn-primary btn-form-submit">
+                        <a href="{{ url_for('logout') }}">Logout</a>
+                    </button>
 
                     <!-- subscribe to unit modal -->
                     <!-- button to open the modal -->
-                    <button id="btn-subscribe-to-unit" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-subscribe-to-unit">
+                    <button id="btn-subscribe-to-unit" type="button" class="btn btn-primary btn-form-submit second-user-button" data-toggle="modal" data-target="#modal-subscribe-to-unit">
                         Subscribe to a Unit
                     </button>
                     <!-- code for modal window -->
@@ -52,6 +53,7 @@
                     <!-- end subscribe to unit modal -->
                 </div>
                 <hr>
+                <!-- end student details and actions -->
 
                 <!-- list of units, tasks and questions as a Bootstrap4 accordion -->
                 <div id="accordion_units">

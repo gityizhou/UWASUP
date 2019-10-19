@@ -43,17 +43,20 @@
     <!-- start of card -->
     <div class="col-xl-7 col-lg-10 col-md-10 col-sm-12 col-12 mx-auto main-card">
         <div class="card-deck">
-            <div class="card-body">
+            <div class="card-body text-center">
                 <!-- teacher details and actions -->
                 <div>
-                    <p>Hello, {{ teacher.first_name }}!</p>
-                    <p>Staff Number: {{ teacher.user_number }}</p>
-                    <a href="{{ url_for('logout') }}">Logout</a>
+                    <h3>Hello, {{ teacher.first_name }}!</h3>
+                </div>
+                <div class="user-action-buttons">
+                    <button class="btn btn-primary btn-form-submit">
+                        <a href="{{ url_for('logout') }}">Logout</a>
+                    </button>
 
 
                     <!-- MAKE A USER A TEACHER modal -->
                     <!-- button to open the modal -->
-                    <button id="btn-make-teacher" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-make-teacher">
+                    <button id="btn-make-teacher" type="button" class="btn btn-primary btn-form-submit second-user-button" data-toggle="modal" data-target="#modal-make-teacher">
                         Make a User a Teacher
                     </button>
                     <!-- keeps modal open if validation fails so user can see errors -->
@@ -99,7 +102,7 @@
 
                     <!-- DELETE A USER modal -->
                     <!-- button to open the modal -->
-                    <button id="btn-delete-user" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-delete-user">
+                    <button id="btn-delete-user" type="button" class="btn btn-primary btn-form-submit second-user-button" data-toggle="modal" data-target="#modal-delete-user">
                         Delete a Student or Teacher
                     </button>
                     <!-- keeps modal open if validation fails so user can see errors -->
@@ -145,7 +148,7 @@
 
                     <!-- CREATE A UNIT modal -->
                     <!-- button to open the modal -->
-                    <button id="btn-create-unit" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-create-unit">
+                    <button id="btn-create-unit" type="button" class="btn btn-primary btn-form-submit second-user-button" data-toggle="modal" data-target="#modal-create-unit">
                         Create a Unit
                     </button>
                     <!-- keeps modal open if validation fails so user can see errors -->

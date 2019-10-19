@@ -32,3 +32,16 @@
     background-color: rgb(53, 109, 75);
     border-color: rgb(53, 109, 75);
 }
+
+button > a {
+    color: white;
+}
+
+.user-action-buttons {
+    margin-top: 3vh;
+    margin-bottom: 3vh;
+}
+
+.second-user-button {
+    margin-left: 2vh;
+}
