@@ -2,7 +2,6 @@ from flask import render_template, redirect, url_for, flash, request, jsonify, c
 from flask_uploads import UploadSet, ALL
 from flask_login import login_user, current_user, logout_user, login_required
 
-
 from recorder.email import send_email
 from recorder.forms import LoginForm, RegisterForm, SubscribeUnitForm, MakeTeacherForm, PasswdResetForm, \
     PasswdResetRequestForm, DeleteUserForm, DeleteUnitForm, DeleteTaskForm, DeleteQuestionForm, CreateUnitForm, \
@@ -17,7 +16,6 @@ from recorder.models.task import Task
 from recorder.models.user_question import User_question
 from recorder.models.user_task import User_task
 import os, jwt, time, datetime
-
 
 """
 Index page but also our login page!
@@ -37,8 +35,8 @@ def index():
         if current_user.is_teacher == 0 and current_user.is_activated == 1:
             return redirect(url_for('student_view', student_number=current_user.user_number))
         else:
-            return ('Please verify you email Check your mail box') 
-    # get the loginForm object
+            return ('Please verify you email Check your mail box')
+            # get the loginForm object
     form = LoginForm()
     if form.validate_on_submit():
         # print(form.username.data)
@@ -63,15 +61,17 @@ def index():
 def student_view(student_number):
     student = current_user
     form_subscribe_unit = SubscribeUnitForm()
-    form_subscribe_unit.subscribe_units.choices = [(unit.id, ("{} ({})".format(unit.unit_id, unit.unit_name))) for unit in
-                                    Unit.query.all()]
+    form_subscribe_unit.subscribe_units.choices = [(unit.id, ("{} ({})".format(unit.unit_id, unit.unit_name))) for unit
+                                                   in
+                                                   Unit.query.all()]
     if form_subscribe_unit.validate_on_submit():
         for unit_id in form_subscribe_unit.subscribe_units.data:
             unit_object = Unit.query.get(unit_id)
             student.add_unit(unit_object)
         flash('You have been subscribed to the selected units.')
     student_units = student.get_student_units()
-    return render_template('student_view.html', student=student, student_units=student_units, form_subscribe_unit=form_subscribe_unit)
+    return render_template('student_view.html', student=student, student_units=student_units,
+                           form_subscribe_unit=form_subscribe_unit)
 
 
 # After login, teacher will be redirected to this page
@@ -156,9 +156,9 @@ def teacher_view(staff_number):
         due_time = form_edit_task.dueTime.data
         due_date_time = due_date + " " + due_time
         task = Task.query.filter_by(id=form_edit_task.current_taskID.data).first()
-        task.task_name=form_edit_task.edit_taskName.data
-        task.description=form_edit_task.edit_taskDescription.data
-        task.due_time=due_date_time
+        task.task_name = form_edit_task.edit_taskName.data
+        task.description = form_edit_task.edit_taskDescription.data
+        task.due_time = due_date_time
         task.update()
         flash('The task has been updated.')
         # need to return redirect on successful submission to clear form fields
@@ -173,9 +173,10 @@ def teacher_view(staff_number):
     # task feedback form
     if form_task_feedback.task_feedback_submit.data and form_task_feedback.validate_on_submit():
         mark = float(form_task_feedback.mark.data)
-        user_task = User_task.query.filter_by(task_id=form_task_feedback.feedbackTaskID.data, user_id=form_task_feedback.feedbackStudentID.data).first()
+        user_task = User_task.query.filter_by(task_id=form_task_feedback.feedbackTaskID.data,
+                                              user_id=form_task_feedback.feedbackStudentID.data).first()
         user_task.comment = form_task_feedback.feedbackComment.data
-        #user_task.recorder_url=,
+        # user_task.recorder_url=,
         user_task.mark = mark
         user_task.update()
         flash('The feedback has been saved.')
@@ -197,8 +198,8 @@ def teacher_view(staff_number):
     # edit question form
     if form_edit_question.edit_question_submit.data and form_edit_question.validate_on_submit():
         question = Question.query.filter_by(id=form_edit_question.current_questionID.data).first()
-        question.question_name=form_edit_question.edit_questionName.data
-        question.description=form_edit_question.edit_questionDescription.data
+        question.question_name = form_edit_question.edit_questionName.data
+        question.description = form_edit_question.edit_questionDescription.data
         question.update()
         flash('The question has been updated.')
         # need to return redirect on successful submission to clear form fields
@@ -213,17 +214,21 @@ def teacher_view(staff_number):
     all_units = Unit.query.all()
     all_users = User.query.all()
     return render_template('teacher_view.html', teacher=teacher, all_units=all_units, all_users=all_users,
-                            form_make_teacher=form_make_teacher, form_delete_user=form_delete_user,
-                            form_delete_unit=form_delete_unit, form_delete_task=form_delete_task, form_delete_question=form_delete_question,
-                            form_create_unit=form_create_unit, form_edit_unit=form_edit_unit, form_add_task=form_add_task, 
-                            form_edit_task=form_edit_task, form_add_question=form_add_question, form_edit_question=form_edit_question,
-                            form_task_feedback=form_task_feedback)
+                           form_make_teacher=form_make_teacher, form_delete_user=form_delete_user,
+                           form_delete_unit=form_delete_unit, form_delete_task=form_delete_task,
+                           form_delete_question=form_delete_question,
+                           form_create_unit=form_create_unit, form_edit_unit=form_edit_unit,
+                           form_add_task=form_add_task,
+                           form_edit_task=form_edit_task, form_add_question=form_add_question,
+                           form_edit_question=form_edit_question,
+                           form_task_feedback=form_task_feedback)
 
 
 # logout function
 def logout():
     logout_user()
     return redirect(url_for('index'))
+
 
 # register function
 def register():
@@ -246,53 +251,52 @@ def register():
         return redirect(url_for('index'))
     return render_template('register.html', title='Registration', form=form)
 
+
 def request_email_verification2(email):
     user = User.query.filter_by(email=email).first();
     token = user.get_jwt()
-    url = str(url_for("verify_email_by_token",token=token,_external=True))
-    body = "link to verify password: "+url
-    htmlbody = 'to verify your email click <a href="'+url+'">here</a>'
-    send_email(subject="",recipients=[user.email],text_body=body,html_body=htmlbody)
-    return "Verification link sent to " + user.email +"Please check you Spam box as well"
+    url = str(url_for("verify_email_by_token", token=token, _external=True))
+    body = "link to verify password: " + url
+    htmlbody = 'to verify your email click <a href="' + url + '">here</a>'
+    send_email(subject="", recipients=[user.email], text_body=body, html_body=htmlbody)
+    return "Verification link sent to " + user.email + "Please check you Spam box as well"
+
 
 @login_required
 def request_email_verification():
     token = current_user.get_jwt()
-    url = str(url_for("verify_email_by_token",token=token,_external=True))
-    body = "link to verify password: "+url # this is also can be a separate template but this msg can be enough
-    htmlbody = 'to verify your email click <a href="'+url+'">here</a>'
-    send_email(subject="",recipients=[current_user.email],text_body=body,html_body=htmlbody)
+    url = str(url_for("verify_email_by_token", token=token, _external=True))
+    body = "link to verify password: " + url  # this is also can be a separate template but this msg can be enough
+    htmlbody = 'to verify your email click <a href="' + url + '">here</a>'
+    send_email(subject="", recipients=[current_user.email], text_body=body, html_body=htmlbody)
     return "Verification link sent to " + current_user.email
-    
-    
+
+
 @login_required
 def verify_email_by_token(token):
     try:
-        obj = jwt.decode(token,current_app.config['SECRET_KEY'],algorithms=['HS256']) #will decode the token which has been send to email
+        obj = jwt.decode(token, current_app.config['SECRET_KEY'],
+                         algorithms=['HS256'])  # will decode the token which has been send to email
     except:
         return "invalid token"
     email = obj["email"]
     exp = obj["exp"]
 
-    if exp<time.time():
+    if exp < time.time():
         return "token is expired"
-    #enable this check if you want to @login_required this route
-    if current_user.email!=email:
-          return "invalid token"
+    # enable this check if you want to @login_required this route
+    if current_user.email != email:
+        return "invalid token"
 
     user = User.query.filter_by(email=email).first()
     user.email_is_verified()
-    db.session.commit() #this will change user is verified in data base from 0 to 1
+    db.session.commit()  # this will change user is verified in data base from 0 to 1
 
     # it will return to login page after verify the account 
-    #return "Email successfully verified"
+    # return "Email successfully verified"
     return render_template('index.html', title="Index", form=form)
-    
 
 
-    
-    
-    
 # # recorder upload function, the folder now is default /uploads/files/
 gauth = GoogleAuth()
 gauth.LocalWebserverAuth()
@@ -304,44 +308,68 @@ drive = GoogleDrive(gauth)
 def upload():
     files = UploadSet('files', ALL)
     student_number = current_user.user_number
-    question_id = int(request.form.get("question_id"))  # get the question id from request post
-    this_question = db.session.query(Question).filter(Question.id == question_id).one()
-    task_id = this_question.task_id
-    unit_id = db.session.query(Task).filter(Task.id == task_id).one().unit_id
-    name = student_number + '_' + unit_id + '_' + task_id + '_' + question_id
+    user_id = current_user.id
+    question_id = request.form.get("question_id")
+    user_question = User_question.query.filter_by(question_id=question_id,
+                                                  user_id=user_id).first()
+    print(user_question)
+    if question_id:
+        question_id = int(request.form.get("question_id"))  # get the question id from request post
+        question_id_str = str(question_id)
+        this_question = db.session.query(Question).filter(Question.id == question_id).one()
+        task_id = this_question.task_id
+        task_id_str = str(task_id)
+        unit_id = db.session.query(Task).filter(Task.id == task_id).one().unit_id
+        unit_id_str = str(unit_id)
+        print(student_number)
+        print(unit_id_str)
+        print(task_id_str)
+        print(question_id_str)
+
+        name = student_number + '_' + unit_id_str + '_' + task_id_str + '_' + question_id_str
     if request.method == 'POST' and 'upfile' in request.files:
         filename = files.save(
             request.files['upfile'])  # get the file from front end request, return the file name(String)
-        upload_file = drive.CreateFile()  # create the google drive file instance
-        upload_file.SetContentFile("./uploads/files/" + filename)  # set our file into this instance
-        upload_file['title'] = name  # set the file name of this file
-        upload_file.Upload()  # upload this file
-        google_file_id = upload_file[
-            'id']  # can get this file's google drive-id and use it to save the id into database
-        google_url = "https://drive.google.com/uc?authuser=0&id=" + google_file_id + "&export=download"
-        User_question.add_user_question(user=current_user, question=this_question, record_url=google_url,
-                                        record_id=google_url, record_title=name)  # save user_question to db
+        if user_question:
+            record_id = user_question.record_id
+            upload_file = drive.CreateFile({'id': record_id})
+            upload_file.SetContentFile("./uploads/files/" + filename)
+            upload_file['title'] = name  # set the file name of this file
+            upload_file.Upload()  # upload this file
+        else:
+            upload_file = drive.CreateFile()  # create the google drive file instance
+            upload_file.SetContentFile("./uploads/files/" + filename)  # set our file into this instance
+            upload_file['title'] = name  # set the file name of this file
+            upload_file.Upload()  # upload this file
+            google_file_id = upload_file[
+                'id']  # can get this file's google drive-id and use it to save the id into database
+            google_url = "https://drive.google.com/uc?authuser=0&id=" + google_file_id + "&export=download"
+            User_question.add_user_question(user=current_user, question=this_question, record_url=google_url,
+                                            record_id=google_file_id, record_title=name)  # save user_question to db
+
         os.remove("./uploads/files/" + filename)  # delete this file after uploading it to google drive
     return render_template('recorder.html')
+
 
 def getFilesList():
     upload_file = drive.CreateFile()  # create the google drive file instance
     file_list = drive.ListFile({'q': "'root' in parents and trashed=false"}).GetList()
     res = []
     for file1 in file_list:
-        res.append({"title":file1['title'],"id":file1['id']})
+        res.append({"title": file1['title'], "id": file1['id']})
     return jsonify(res)
-    #return res;
+    # return res;
 
 
-def donwload(id,title):
+def donwload(id, title):
     file = drive.CreateFile({'id': id})
-    file.GetContentFile('./downloads/'+title) # Download file as 'studentnumber.mp3'.
-    return redirect(url_for('send_download',filename=title));
-    
+    file.GetContentFile('./downloads/' + title)  # Download file as 'studentnumber.mp3'.
+    return redirect(url_for('send_download', filename=title));
+
 
 def download_access(filename):
-    return send_file('../downloads/'+filename,as_attachment=True)
+    return send_file('../downloads/' + filename, as_attachment=True)
+
 
 def reset_password_request():
     if current_user.is_authenticated:
