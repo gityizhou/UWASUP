@@ -145,7 +145,7 @@
             Create a Unit
         </button>
         <!-- keeps modal open if validation fails so user can see errors -->
-        {% if form_create_unit.unitID.errors|length != 0 %}
+        {% if form_create_unit.unitID.errors|length != 0 or form_create_unit.unitName.errors|length != 0 %}
             <script>
                 $(document).ready(function(){
                     $("#modal-create-unit").modal("show");
@@ -168,9 +168,14 @@
                             <p>
                                 {{ form_create_unit.unitID.label }}<br>
                                 {{ form_create_unit.unitID(size=32, class="form-field") }}<br>
+                                {% for error in form_create_unit.unitID.errors %}
+                                    <span style="color: red;">{{ error }}</span>
+                                {% endfor %}
+                            </p>
+                            <p>
                                 {{ form_create_unit.unitName.label }}<br>
                                 {{ form_create_unit.unitName(size=32, class="form-field") }}<br>
-                                {% for error in form_create_unit.unitID.errors %}
+                                {% for error in form_create_unit.unitName.errors %}
                                     <span style="color: red;">{{ error }}</span>
                                 {% endfor %}
                             </p>

@@ -141,22 +141,28 @@ class CreateUnitForm(FlaskForm):
     def validate_unitID(self, unitID):
         # checks for only alphanumeric characters
         if not unitID.data.isalnum():
-            raise ValidationError('Unit code must contain only uppercase letters and numbers.')
+            raise ValidationError('Character error Unit code must contain only uppercase letters and numbers.')
         # ensures letters are uppercase and code contains both letters and numbers
         else:
             hasLetters = False
             hasNumbers = False
+            letterCount = 0
+            numberCount = 0
             for char in unitID.data:
                 if not char.isdigit():
                     hasLetters = True
-                    if not char.isalpha():
-                        raise ValidationError('Unit code must contain only uppercase letters and numbers.')
+                    letterCount += 1
+                    if not char.isupper():
+                        raise ValidationError('Unit code must not contain lowercase letters.')
                 else:
+                    numberCount += 1
                     hasNumbers = True
         if not hasNumbers:
             raise ValidationError('Unit code must contain numbers.')
         elif not hasLetters:
             raise ValidationError('Unit code must contain uppercase letters.')
+        elif numberCount != 4 or letterCount != 4:
+            raise ValidationError('Unit code must be four letters and four numbers.')
         else:
             unit = Unit.query.filter_by(unit_id=unitID.data).first()
             if unit is not None:
@@ -171,22 +177,32 @@ class EditUnitForm(FlaskForm):
     def validate_edit_unitID(self, edit_unitID):
         # checks for only alphanumeric characters
         if not edit_unitID.data.isalnum():
-            raise ValidationError('Unit code must contain only uppercase letters and numbers.')
+            raise ValidationError('Character error Unit code must contain only uppercase letters and numbers.')
         # ensures letters are uppercase and code contains both letters and numbers
         else:
             hasLetters = False
             hasNumbers = False
+            letterCount = 0
+            numberCount = 0
             for char in edit_unitID.data:
                 if not char.isdigit():
                     hasLetters = True
-                    if not char.isalpha():
-                        raise ValidationError('Unit code must contain only uppercase letters and numbers.')
+                    letterCount += 1
+                    if not char.isupper():
+                        raise ValidationError('Unit code must not contain lowercase letters.')
                 else:
+                    numberCount += 1
                     hasNumbers = True
         if not hasNumbers:
             raise ValidationError('Unit code must contain numbers.')
         elif not hasLetters:
             raise ValidationError('Unit code must contain uppercase letters.')
+        elif numberCount != 4 or letterCount != 4:
+            raise ValidationError('Unit code must be four letters and four numbers.')
+        else:
+            unit = Unit.query.filter_by(unit_id=edit_unitID.data).first()
+            if unit is None:
+                raise ValidationError('This unit does not exist.')
 
 class AddTaskForm(FlaskForm):
     taskName = StringField('Task name', validators=[DataRequired()])

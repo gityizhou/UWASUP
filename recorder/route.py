@@ -19,6 +19,11 @@ from recorder.models.user_task import User_task
 import os, jwt, time, datetime
 
 
+# # recorder upload function, the folder now is default /uploads/files/
+gauth = GoogleAuth()
+gauth.LocalWebserverAuth()
+drive = GoogleDrive(gauth)
+
 """
 Index page but also our login page!
 1. it will check if you are authenticated firstly, if authenticated, redirect to the personal page
@@ -288,16 +293,6 @@ def verify_email_by_token(token):
     # it will return to login page after verify the account 
     #return "Email successfully verified"
     return render_template('index.html', title="Index", form=form)
-    
-
-
-    
-    
-    
-# # recorder upload function, the folder now is default /uploads/files/
-gauth = GoogleAuth()
-gauth.LocalWebserverAuth()
-drive = GoogleDrive(gauth)
 
 
 # recorder upload function, the folder now is default /uploads/files/
