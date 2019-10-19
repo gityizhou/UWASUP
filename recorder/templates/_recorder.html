@@ -1,0 +1,93 @@
+
+<input class="btn btn-primary" type="button" id="Record_{{sUnit.id}}_{{task.id}}_{{question.id}}" value="Start" >
+
+<input class="btn btn-primary" type="button" onclick="playRec()" value="Play">
+
+<input class="btn btn-primary" type="button" onclick="uploadRec({{question.id}})" value="upload the record">
+
+
+
+
+<script>
+
+
+    $(document).ready(function doOnClick(){
+        $("#Record_{{sUnit.id}}_{{task.id}}_{{question.id}}").click(function(){
+            if(document.getElementById("Record_{{sUnit.id}}_{{task.id}}_{{question.id}}").value=="Finish"){
+                document.getElementById("Record_{{sUnit.id}}_{{task.id}}_{{question.id}}").value="Start";
+                document.getElementById("Record_{{sUnit.id}}_{{task.id}}_{{question.id}}").style.color='white';
+                stopRec();
+                var question_id="{{question.id}}"
+                console.log(question_id);
+                return question_id
+            }
+            else if (document.getElementById("Record_{{sUnit.id}}_{{task.id}}_{{question.id}}").value=="Start"){
+                document.getElementById("Record_{{sUnit.id}}_{{task.id}}_{{question.id}}").value="Finish";
+                document.getElementById("Record_{{sUnit.id}}_{{task.id}}_{{question.id}}").style.color='red';
+                startRec();
+            }
+        })
+    })
+
+    function startRec() {
+        var wave;
+        rec = Recorder();//Use the default configuration, mp3 format
+        //Turn on the microphone and authorize resources
+        rec.open(function () {         
+            //start recording
+            rec.start();
+        }, function (msg, isUserNotAllow) {
+            //The user has refused permission or the browser does not support it
+            alert((isUserNotAllow ? "User denied permission，" : "") + "not able to record:" + msg);
+        });
+    };
+
+
+    function stopRec() {
+        rec.stop(function (blob, duration) {
+            recFile = blob;
+        })
+    };
+
+
+    function playRec() {
+        //Stop recording and get the blob binary object of the recording file
+        if(audio==null){
+            audio = document.createElement("audio");
+            audio.controls = true;
+            document.body.appendChild(audio);
+            audio.src = URL.createObjectURL(recFile);
+            audio.play();
+        }
+        else{
+            document.body.appendChild(audio);
+            audio.src = URL.createObjectURL(recFile);
+            audio.play();
+        }
+    };
+
+    function uploadRec(question_id) {
+        //Stop recording and get the blob binary object of the recording file
+
+            /*
+            Blob file object, which can be read and fetched with FileReader
+            ，Or use FormData upload, which in this case uploads the binary directly
+            ，from normal application/x-www-form-urlencoded form upload
+            */
+            question_id = String(question_id)
+            var form = new FormData();
+            form.append("upfile", recFile, "record.mp3"); //Similar to ordinary form forms, files with upfile parameters, named recorder. Mp3, are received by the back-end
+            form.append("question_id", question_id)   // change the question_id here
+            //Upload directly with ajax
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/recorder");//This fake address can see the request data and format in the console network, and the result of the request is irrelevant
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4) {
+                    alert(xhr.status == 200 ? "upload successful" : "Test by opening the browser console, and then re-recording, you can see the upload request data and format in the network option card");
+                }
+            }
+            xhr.send(form);
+        }
+
+
+</script>
