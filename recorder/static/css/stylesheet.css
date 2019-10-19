@@ -15,12 +15,12 @@
 }
 
 .logo-card {
-    margin-top: 2vh;
+    margin-top: 3vh;
     margin-bottom: 1vh;
 }
 
 .logo-image {
-    width: 25vw;
+    width: 24vw;
     height: 18vh;
 }
 
@@ -29,6 +29,6 @@
 }
 
 .btn-form-submit {
-    background-color: #639A95;
-    border-color: #639A95;
+    background-color: rgb(53, 109, 75);
+    border-color: rgb(53, 109, 75);
 }
