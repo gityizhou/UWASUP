@@ -342,6 +342,10 @@ def upload():
             upload_file.SetContentFile("./uploads/files/" + filename)  # set our file into this instance
             upload_file['title'] = name  # set the file name of this file
             upload_file.Upload()  # upload this file
+            permission = upload_file.InsertPermission({
+                'type': 'anyone',
+                'value': 'anyone',
+                'role': 'reader'})
             google_file_id = upload_file[
                 'id']  # can get this file's google drive-id and use it to save the id into database
             google_url = "https://drive.google.com/uc?authuser=0&id=" + google_file_id + "&export=download"
