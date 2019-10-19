@@ -258,15 +258,14 @@ def register():
         user.set_password(form.password.data)
         # add the new user to database
         user.add()
-        flash('Congratulations. You have registered successfully! Please verify you email\
-            Check your mail box and your Spam!')
+        flash('Congratulations. You have registered successfully! Please verify you email before loggin in. Check your email inbox and spam folder.')
         request_email_verification2(form.email.data)
         return redirect(url_for('index'))
     return render_template('register.html', title='Registration', form=form)
 
 
 def request_email_verification2(email):
-    user = User.query.filter_by(email=email).first();
+    user = User.query.filter_by(email=email).first()
     token = user.get_jwt()
     url = str(url_for("verify_email_by_token", token=token, _external=True))
     body = "link to verify password: " + url
@@ -279,8 +278,8 @@ def request_email_verification2(email):
 def request_email_verification():
     token = current_user.get_jwt()
     url = str(url_for("verify_email_by_token", token=token, _external=True))
-    body = "link to verify password: " + url  # this is also can be a separate template but this msg can be enough
-    htmlbody = 'to verify your email click <a href="' + url + '">here</a>'
+    body = "Link to verify password: " + url  # this is also can be a separate template but this msg can be enough
+    htmlbody = 'To verify your email click <a href="' + url + '">here</a>'
     send_email(subject="", recipients=[current_user.email], text_body=body, html_body=htmlbody)
     return "Verification link sent to " + current_user.email
 
@@ -307,7 +306,7 @@ def verify_email_by_token(token):
 
     # it will return to login page after verify the account 
     # return "Email successfully verified"
-    return render_template('index.html', title="Index", form=form)
+    return render_template('index.html', form=form)
 
 
 # recorder upload function, the folder now is default /uploads/files/
@@ -391,8 +390,6 @@ def task_result_downloader(task_id):
     df.to_csv(filepath, encoding="utf_8_sig", index=False, columns=columns)
 
     return send_from_directory(path, filename, as_attachment=True)  # as_attachment=True 一定要写，不然会变成打开，而不是下载
-
-
 
 
 def getFilesList():
