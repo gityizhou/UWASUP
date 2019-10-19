@@ -6,7 +6,6 @@ class User_question(db.Model):
     __tablename__ = 'user_question'
     question_id = db.Column(db.Integer, db.ForeignKey('question.id'), primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
-    is_submitted = db.Column(db.Integer, primary_key=True, default=0)
     record_url = db.Column(db.String(140))
     record_id = db.Column(db.String(140))
     record_title = db.Column(db.String(140))
