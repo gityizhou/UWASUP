@@ -18,7 +18,7 @@ from recorder.models.user_task import User_task
 import os, jwt, time, datetime
 from pandas import DataFrame
 
-# # recorder upload function, the folder now is default /uploads/files/
+# # google verification
 gauth = GoogleAuth()
 gauth.LocalWebserverAuth()
 drive = GoogleDrive(gauth)
@@ -309,12 +309,6 @@ def verify_email_by_token(token):
     # return "Email successfully verified"
     # return render_template('index.html', title="Index", form=form)
     return render_template('index.html', title="Index")
-
-
-# # recorder upload function, the folder now is default /uploads/files/
-gauth = GoogleAuth()
-gauth.LocalWebserverAuth()
-drive = GoogleDrive(gauth)
 
 
 # record upload function, the folder now is default /uploads/files/
