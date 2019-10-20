@@ -85,7 +85,7 @@
                                     </button>
                                     <!-- code for modal window -->
                                     <div class="modal" id="modal-unsubscribe-unit-{{ sUnit.id }}">
-                                        <div class="modal-dialog sup-model-dialog">
+                                        <div class="modal-dialog sup-modal-dialog">
                                             <div class="modal-content sup-modal">
                                                 <!-- modal header -->
                                                 <div class="modal-header">
@@ -131,9 +131,15 @@
                                                                 <div class="card">
                                                                     <div class="card-header" id="heading_question_{{ question.id }}">
                                                                         <h5 class="mb-0">
-                                                                            <button class="btn btn-link" data-toggle="collapse" data-target="#collapse_question_{{ question.id }}" aria-expanded="true" aria-controls="collapse_question_{{ question.id }}">
-                                                                                {{ question.question_name }}
-                                                                            </button>
+                                                                            {% if question.id not in answered_questions_IDs %}
+                                                                                <button class="btn btn-link" data-toggle="collapse" data-target="#collapse_question_{{ question.id }}" aria-expanded="true" aria-controls="collapse_question_{{ question.id }}">
+                                                                                    {{ question.question_name }}
+                                                                                </button>
+                                                                            {% else %}
+                                                                                <button class="btn answered-question" data-toggle="collapse" data-target="#collapse_question_{{ question.id }}" aria-expanded="true" aria-controls="collapse_question_{{ question.id }}">
+                                                                                    {{ question.question_name }}
+                                                                                </button>
+                                                                            {% endif %}
                                                                         </h5>
                                                                     </div>
                                                                     <div id="collapse_question_{{ question.id }}" class="collapse" aria-labelledby="heading_question_{{ question.id }}" data-parent="#accordion_questions">

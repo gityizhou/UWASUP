@@ -67,6 +67,10 @@ def index():
 @login_required
 def student_view(student_number):
     student = current_user
+    answered_questions_IDs = []
+    answered_questions = User_question.query.filter_by(user_id=student.id)
+    for record in answered_questions:
+        answered_questions_IDs.append(record.question_id)
     form_subscribe_unit = SubscribeUnitForm()
     form_unsubscribe_unit = UnsubscribeUnitForm()
     form_subscribe_unit.subscribe_units.choices = [(unit.id, ("{} ({})".format(unit.unit_id, unit.unit_name))) for unit
@@ -88,7 +92,8 @@ def student_view(student_number):
         # need to return redirect on successful submission to clear form fields
         return redirect(url_for('student_view', student_number=student_number))
     return render_template('student_view.html', student=student, student_units=student_units,
-                           form_subscribe_unit=form_subscribe_unit, form_unsubscribe_unit=form_unsubscribe_unit)
+                           form_subscribe_unit=form_subscribe_unit, form_unsubscribe_unit=form_unsubscribe_unit,
+                           answered_questions_IDs=answered_questions_IDs)
 
 
 # After login, teacher will be redirected to this page
