@@ -23,6 +23,7 @@ from pandas import DataFrame
 gauth = GoogleAuth()
 gauth.LocalWebserverAuth()
 drive = GoogleDrive(gauth)
+DOMAIN_NAME = "http://localhost:5000"
 
 """
 Index page but also our login page!
@@ -250,7 +251,7 @@ def teacher_view(staff_number):
                            form_add_task=form_add_task,
                            form_edit_task=form_edit_task, form_add_question=form_add_question,
                            form_edit_question=form_edit_question,
-                           form_task_feedback=form_task_feedback)
+                           form_task_feedback=form_task_feedback, DOMAIN_NAME=DOMAIN_NAME)
 
 
 # logout function

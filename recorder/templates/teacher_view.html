@@ -603,6 +603,13 @@
                                                                 <div id="collapse_task_{{ task.id }}_student_submissions" class="collapse" aria-labelledby="heading_task_{{ task.id }}_student_submissions" data-parent="#accordion_task_{{ task.id }}_student_submissions">
                                                                     <div class="card-body sup-accordian-third-level">
 
+                                                                        <!-- download .csv of submitters button -->
+                                                                        <button id="btn-download-csv-{{ task.id }}" class="btn btn-primary btn-form-submit publish-feedback-button" onclick="downloadCSV('{{ task.id }}')">
+                                                                            Download Submission List
+                                                                        </button>
+                                                                        <p id="csv-{{ task.id }}">before function</p>
+                                                                        <!-- download .csv of submitters button -->
+
                                                                         <!-- list of students for each task -->
                                                                         <div id="accordion_students">
                                                                             {% for student in task.get_task_users() %}
@@ -952,5 +959,13 @@
         </div>
     {% endif %}
     <!-- end EDIT QUESTION FORM ERRORS modal -->
+
+    <!-- download .csv of submitters function -->
+    <script>
+        function downloadCSV(taskID){
+            document.location.href = '{{ DOMAIN_NAME }}' + '/download_csv/sakjhuzhcu213huhd8sacukkd/' + taskID;
+        }
+    </script>
+    <!-- end download .csv of submitters function -->
 
 {% endblock %}
