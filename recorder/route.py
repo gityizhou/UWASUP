@@ -18,6 +18,11 @@ from recorder.models.user_task import User_task
 import os, jwt, time, datetime
 from pandas import DataFrame
 
+# # recorder upload function, the folder now is default /uploads/files/
+gauth = GoogleAuth()
+gauth.LocalWebserverAuth()
+drive = GoogleDrive(gauth)
+
 """
 Index page but also our login page!
 1. it will check if you are authenticated firstly, if authenticated, redirect to the personal page
@@ -134,10 +139,13 @@ def teacher_view(staff_number):
     # add task form
     if form_add_task.add_task_submit.data and form_add_task.validate_on_submit():
         # create DateTime format "YYYY-MM-DD HH:MM"
-        due_date = form_add_task.taskDueDate.data
-        due_time = form_add_task.taskDueTime.data
-        due_date_time = due_date + " " + due_time
-        datetime_obj = datetime.datetime.strptime(due_date_time, '%Y-%m-%d %H:%M')
+        if form_add_task.taskDueDate.data and form_add_task.taskDueTime.data:
+            due_date = form_add_task.taskDueDate.data
+            due_time = form_add_task.taskDueTime.data
+            due_date_time = due_date + " " + due_time
+            datetime_obj = datetime.datetime.strptime(due_date_time, '%Y-%m-%d %H:%M')
+        else:
+            datetime_obj = None
         task = Task(
             task_name=form_add_task.taskName.data,
             description=form_add_task.taskDescription.data,
@@ -153,13 +161,17 @@ def teacher_view(staff_number):
     # edit task form
     if form_edit_task.edit_task_submit.data and form_edit_task.validate_on_submit():
         # create DateTime format "YYYY-MM-DD HH:MM"
-        due_date = form_edit_task.dueDate.data
-        due_time = form_edit_task.dueTime.data
-        due_date_time = due_date + " " + due_time
+        if form_edit_task.edit_taskDueDate.data and form_edit_task.edit_taskDueTime.data:
+            due_date = form_edit_task.edit_taskDueDate.data
+            due_time = form_edit_task.edit_taskDueTime.data
+            due_date_time = due_date + " " + due_time
+            datetime_obj = datetime.datetime.strptime(due_date_time, '%Y-%m-%d %H:%M')
+        else:
+            datetime_obj = None
         task = Task.query.filter_by(id=form_edit_task.current_taskID.data).first()
-        task.task_name = form_edit_task.edit_taskName.data
-        task.description = form_edit_task.edit_taskDescription.data
-        task.due_time = due_date_time
+        task.task_name=form_edit_task.edit_taskName.data
+        task.description=form_edit_task.edit_taskDescription.data
+        task.due_time=datetime_obj
         task.update()
         flash('The task has been updated.')
         # need to return redirect on successful submission to clear form fields
@@ -246,15 +258,14 @@ def register():
         user.set_password(form.password.data)
         # add the new user to database
         user.add()
-        flash('Congratulations. You have registered successfully! Please verify you email\
-            Check your mail box and your Spam!')
+        flash('Congratulations. You have registered successfully! Please verify you email before loggin in. Check your email inbox and spam folder.')
         request_email_verification2(form.email.data)
         return redirect(url_for('index'))
     return render_template('register.html', title='Registration', form=form)
 
 
 def request_email_verification2(email):
-    user = User.query.filter_by(email=email).first();
+    user = User.query.filter_by(email=email).first()
     token = user.get_jwt()
     url = str(url_for("verify_email_by_token", token=token, _external=True))
     body = "link to verify password: " + url
@@ -267,8 +278,8 @@ def request_email_verification2(email):
 def request_email_verification():
     token = current_user.get_jwt()
     url = str(url_for("verify_email_by_token", token=token, _external=True))
-    body = "link to verify password: " + url  # this is also can be a separate template but this msg can be enough
-    htmlbody = 'to verify your email click <a href="' + url + '">here</a>'
+    body = "Link to verify password: " + url  # this is also can be a separate template but this msg can be enough
+    htmlbody = 'To verify your email click <a href="' + url + '">here</a>'
     send_email(subject="", recipients=[current_user.email], text_body=body, html_body=htmlbody)
     return "Verification link sent to " + current_user.email
 

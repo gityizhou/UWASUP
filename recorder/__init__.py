@@ -38,9 +38,9 @@ def create_app(config_name='development'):
     app.add_url_rule('/recorder', 'recorder', upload, methods=['GET', 'POST'])
     app.add_url_rule('/download_csv/sakjhuzhcu213huhd8sacukkd/<task_id>', 'download_csv', task_result_downloader, methods=['GET', 'POST'])
     # #download
-    # app.add_url_rule('/listfiles', 'listfiles',getFilesList)
-    # app.add_url_rule('/downloads/<filename>', 'send_download',download_access)
-    # app.add_url_rule('/download/<id>/<title>', 'download',donwload)
+    app.add_url_rule('/listfiles', 'listfiles',getFilesList)
+    app.add_url_rule('/downloads/<filename>', 'send_download',download_access)
+    app.add_url_rule('/download/<id>/<title>', 'download',donwload)
     
     #verify email
     app.add_url_rule('/request_email_verify', 'request_email_verify',request_email_verification)
