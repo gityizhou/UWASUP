@@ -5,7 +5,7 @@ from flask_login import login_user, current_user, logout_user, login_required
 from recorder.email import send_email
 from recorder.forms import LoginForm, RegisterForm, SubscribeUnitForm, MakeTeacherForm, PasswdResetForm, \
     PasswdResetRequestForm, DeleteUserForm, DeleteUnitForm, DeleteTaskForm, DeleteQuestionForm, CreateUnitForm, \
-    EditUnitForm, AddTaskForm, EditTaskForm, AddQuestionForm, EditQuestionForm, TaskFeedbackForm, UnsubscribeUnitForm
+    EditUnitForm, AddTaskForm, EditTaskForm, AddQuestionForm, EditQuestionForm, UnsubscribeUnitForm
 from recorder.models.user import User
 from recorder.models.unit import Unit
 from recorder.models.user_unit import User_unit
@@ -109,7 +109,6 @@ def teacher_view(staff_number):
     form_add_task = AddTaskForm()
     form_edit_task = EditTaskForm()
     form_delete_task = DeleteTaskForm()
-    form_task_feedback = TaskFeedbackForm()
     form_add_question = AddQuestionForm()
     form_edit_question = EditQuestionForm()
     form_delete_question = DeleteQuestionForm()
@@ -200,18 +199,6 @@ def teacher_view(staff_number):
         flash('The task has been deleted.')
         # need to return redirect on successful submission to clear form fields
         return redirect(url_for('teacher_view', staff_number=staff_number))
-    # task feedback form
-    if form_task_feedback.task_feedback_submit.data and form_task_feedback.validate_on_submit():
-        mark = float(form_task_feedback.mark.data)
-        user_task = User_task.query.filter_by(task_id=form_task_feedback.feedbackTaskID.data,
-                                              user_id=form_task_feedback.feedbackStudentID.data).first()
-        user_task.comment = form_task_feedback.feedbackComment.data
-        # user_task.recorder_url=,
-        user_task.mark = mark
-        user_task.update()
-        flash('The feedback has been saved.')
-        # need to return redirect on successful submission to clear form fields
-        return redirect(url_for('teacher_view', staff_number=staff_number))
     # add question form
     if form_add_question.add_question_submit.data and form_add_question.validate_on_submit():
         question = Question(
@@ -246,12 +233,10 @@ def teacher_view(staff_number):
     return render_template('teacher_view.html', teacher=teacher, all_units=all_units, all_users=all_users,
                            form_make_teacher=form_make_teacher, form_delete_user=form_delete_user,
                            form_delete_unit=form_delete_unit, form_delete_task=form_delete_task,
-                           form_delete_question=form_delete_question,
-                           form_create_unit=form_create_unit, form_edit_unit=form_edit_unit,
-                           form_add_task=form_add_task,
+                           form_delete_question=form_delete_question, form_create_unit=form_create_unit,
+                           form_edit_unit=form_edit_unit, form_add_task=form_add_task,
                            form_edit_task=form_edit_task, form_add_question=form_add_question,
-                           form_edit_question=form_edit_question,
-                           form_task_feedback=form_task_feedback, DOMAIN_NAME=DOMAIN_NAME)
+                           form_edit_question=form_edit_question, DOMAIN_NAME=DOMAIN_NAME)
 
 
 # logout function
