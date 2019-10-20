@@ -573,6 +573,9 @@ def teacher_recorder():
             upload_file.SetContentFile("./uploads/files/" + filename)
             upload_file['title'] = name  # set the file name of this file
             upload_file.Upload()  # upload this file
+            user_task.comment = comment
+            user_task.mark = mark
+            user_task.update()
         else:
             upload_file = drive.CreateFile()  # create the google drive file instance
             upload_file.SetContentFile("./uploads/files/" + filename)  # set our file into this instance
@@ -590,9 +593,6 @@ def teacher_recorder():
             user_task.record_url = google_url
             user_task.record_id = google_file_id
             user_task.record_title = name
-            # User_task.add_user_question(user=this_student, task=this_task, record_url=google_url,
-            #                             record_id=google_file_id, record_title=name, mark=mark,
-            #                             comment=comment)  # save user_question to db
             user_task.update()
 
         os.remove("./uploads/files/" + filename)  # delete this file after uploading it to google drive
