@@ -8,7 +8,7 @@
             <div class="card-body text-center">
                 <!-- student details and actions -->
                 <div>
-                    <h3>Hello, {{ student.first_name }}!</h3>
+                    <h3 class="greeting">Hello, {{ student.first_name }}!</h3>
                 </div>
                 <div class="user-action-buttons">
                     <button class="btn btn-primary btn-form-submit">
@@ -20,10 +20,18 @@
                     <button id="btn-subscribe-to-unit" type="button" class="btn btn-primary btn-form-submit second-user-button" data-toggle="modal" data-target="#modal-subscribe-to-unit">
                         Subscribe to a Unit
                     </button>
+                    <!-- keeps modal open if validation fails so user can see errors -->
+                    {% if form_subscribe_unit.subscribe_units.errors|length != 0 %}
+                        <script>
+                            $(document).ready(function(){
+                                $("#modal-subscribe-to-unit").modal("show");
+                            });
+                        </script>
+                    {% endif %}
                     <!-- code for modal window -->
                     <div class="modal" id="modal-subscribe-to-unit">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
+                        <div class="modal-dialog sup-modal-dialog sup-modal-dialog-large">
+                            <div class="modal-content sup-modal">
                                 <!-- modal header -->
                                 <div class="modal-header">
                                 <h4 class="modal-title">Subscribe to a Unit</h4>
@@ -34,18 +42,18 @@
                                     <form class="form" action="" method="post" novalidate>
                                         {{ form_subscribe_unit.hidden_tag() }}
                                         <p>
-                                            {{ form_subscribe_unit.subscribe_units.label }}<br>
                                             {{ form_subscribe_unit.subscribe_units }}<br>
+                                            {{ form_subscribe_unit.studentID(value=student.id, style="display: none;") }}<br>
                                             {% for error in form_subscribe_unit.subscribe_units.errors %}
                                                 <span style="color: red;">[{{ error }}]</span>
                                             {% endfor %}
                                         </p>
-                                        <a>{{ form_subscribe_unit.subscribe_unit_submit }}</a>
+                                        <a>{{ form_subscribe_unit.subscribe_unit_submit(class="btn btn-primary btn-form-submit") }}</a>
                                     </form>
                                 </div>
                                 <!-- modal footer -->
                                 <div class="modal-footer">
-                                <button id="btn-btm-close-subscribe-to-unit-modal" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                <button id="btn-btm-close-subscribe-to-unit-modal" type="button" class="btn btn-form-secondary" data-dismiss="modal">Close</button>
                                 </div>
                             </div>
                         </div>
@@ -68,7 +76,42 @@
                                 </h5>
                             </div>
                             <div id="collapse_unit_{{ sUnit.id }}" class="collapse" aria-labelledby="heading_unit_{{ sUnit.id }}" data-parent="#accordion_units">
-                                <div class="card-body" style="background-color: #ecd29d;">
+                                <div class="card-body sup-accordian-first-level">
+
+                                    <!-- UNSUBSCRIBE UNIT modal -->
+                                    <!-- button to open the modal -->
+                                    <button id="btn-unsubscribe-unit-{{ sUnit.id }}" type="button" class="btn btn-primary inner-accordian-button" data-toggle="modal" data-target="#modal-unsubscribe-unit-{{ sUnit.id }}">
+                                        Unsubscribe from Unit
+                                    </button>
+                                    <!-- code for modal window -->
+                                    <div class="modal" id="modal-unsubscribe-unit-{{ sUnit.id }}">
+                                        <div class="modal-dialog sup-model-dialog">
+                                            <div class="modal-content sup-modal">
+                                                <!-- modal header -->
+                                                <div class="modal-header">
+                                                    <button  id="btn-top-close-unsubscribe-unit-{{ sUnit.id }}" type="button" class="close" data-dismiss="modal">&times;</button>
+                                                </div>
+                                                <!-- modal body -->
+                                                <div class="modal-body">
+                                                    <h5>Are you sure?</h5>
+                                                    <p>Unsubscribing from a unit will permanently delete all your submissions associated with this unit.</p>
+                                                    <p>This action cannot be reversed.</p>
+                                                    <form class="form" action="" method="post" novalidate>
+                                                        {{ form_unsubscribe_unit.hidden_tag() }}
+                                                        {{ form_unsubscribe_unit.unsub_studentID(value=student.id, style="display: none;") }}
+                                                        {{ form_unsubscribe_unit.unsub_unitID(value=sUnit.id, style="display: none;") }}
+                                                        <a>{{ form_unsubscribe_unit.unsubscribe_unit_submit(class="btn btn-primary btn-form-submit") }}</a>
+                                                    </form>
+                                                </div>
+                                                <!-- modal footer -->
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-form-secondary" data-dismiss="modal">Cancel</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- end UNSUBSCRIBE UNIT modal -->
+
                                     <div id="accordion_tasks">
                                         <!-- list of tasks for each unit -->
                                         {% for task in sUnit.tasks %}
@@ -81,7 +124,7 @@
                                                     </h5>
                                                 </div>
                                                 <div id="collapse_task_{{ task.id }}" class="collapse" aria-labelledby="heading_task_{{ task.id }}" data-parent="#accordion_tasks">
-                                                    <div class="card-body" style="background-color: #aecee4;">
+                                                    <div class="card-body sup-accordian-second-level">
                                                         <div id="accordion_questions">
                                                             <!-- list of questions for each task -->
                                                             {% for question in task.questions %}
@@ -94,7 +137,7 @@
                                                                         </h5>
                                                                     </div>
                                                                     <div id="collapse_question_{{ question.id }}" class="collapse" aria-labelledby="heading_question_{{ question.id }}" data-parent="#accordion_questions">
-                                                                        <div class="card-body" style="background-color: #d7f8d7;">
+                                                                        <div class="card-body sup-accordian-third-level">
                                                                             {{ question.description }}
                                                                             <!-- recording module -->
                                                                             {% include '_recorder.html' %}

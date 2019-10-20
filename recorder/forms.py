@@ -7,6 +7,7 @@ from wtforms.widgets import ListWidget, CheckboxInput
 from recorder.models.user import User
 from recorder.models.unit import Unit
 from recorder.models.task import Task
+from recorder.models.user_unit import User_unit
 from recorder.models.question import Question
 
 import sys, datetime, time
@@ -108,7 +109,21 @@ class MultiCheckboxField(SelectMultipleField):
 class SubscribeUnitForm(FlaskForm):
     subscribe_units = MultiCheckboxField('Units', [DataRequired(message='Please select one or more units.')],
                                          coerce=int)
+    studentID = StringField('Student number')
     subscribe_unit_submit = SubmitField('Subscribe')
+
+    def validate_subscribe_units(self, subscribe_units):
+        for u in subscribe_units.data:
+            user_unit = User_unit.query.filter_by(user_id=self.studentID.data,
+                                              unit_id=u).first()
+            if user_unit is not None:
+                raise ValidationError('You are already subscribed to one or more of these units.')
+
+# validators not needed as this form will only be generated for existing units
+class UnsubscribeUnitForm(FlaskForm):
+    unsub_unitID = StringField()
+    unsub_studentID = StringField()
+    unsubscribe_unit_submit = SubmitField('Unsubscribe from Unit')
 
 
 ############################
