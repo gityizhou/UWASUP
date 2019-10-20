@@ -125,6 +125,24 @@
                                                 </div>
                                                 <div id="collapse_task_{{ task.id }}" class="collapse" aria-labelledby="heading_task_{{ task.id }}" data-parent="#accordion_tasks">
                                                     <div class="card-body sup-accordian-second-level">
+
+                                                        <!-- section for feedback from teacher -->
+                                                        {% if student.get_task_mark(task.id) is none %}
+                                                            <p class="details">Task: unmarked</p>
+                                                        {% else %}
+                                                            <p class="details">Task Mark: {{ student.get_task_mark(task.id) }}/100</p>
+                                                        {% endif %}
+                                                        {% if student.get_task_comment(task.id) is none %}
+                                                            <p class="details">Comments: no comments</p>
+                                                        {% else %}
+                                                            <p class="details">Comments: </p>
+                                                            <p class="details">{{ student.get_task_comment(task.id) }}</p>
+                                                        {% endif %}
+                                                        <!-- feedback recording module -->
+                                                            
+                                                        <!-- feedback recording module -->
+                                                        <!-- end section for feedback from teacher -->
+
                                                         <div id="accordion_questions">
                                                             <!-- list of questions for each task -->
                                                             {% for question in task.questions %}
@@ -148,7 +166,7 @@
                                                                             <!-- recording module -->
                                                                             {% include '_recorder.html' %}
                                                                             <!-- end recording module -->
-                                                                            <p class="details last-detail">Playback:</p>
+                                                                            <hr>
                                                                             <div id="playback-{{ question.id }}"></div>
                                                                         </div>
                                                                     </div>

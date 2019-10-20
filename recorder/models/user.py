@@ -109,6 +109,12 @@ class User(db.Model, UserMixin):
             if task.task_id == task_id:
                 return task.mark
 
+    # you can use this method to get the comment for the task of a student of a specific task
+    def get_task_comment(self, task_id):
+        for task in self.tasks:
+            if task.task_id == task_id:
+                return task.comment
+
     # get the record url of this question of this student
     def get_question_record_url(self, question_id):
         for question in self.questions:

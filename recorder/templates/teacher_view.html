@@ -35,8 +35,6 @@
             Edit Unit
             Add Task
             Edit Task
-            Add Question
-            Task Feedback
             Edit Question
         ...................
      -->
@@ -624,13 +622,19 @@
                                                                                         {% else %}
                                                                                             <p class="details">Task Mark: {{ student.get_task_mark(task.id) }}/100</p>
                                                                                         {% endif %}
+                                                                                        {% if student.get_task_comment(task.id) is none %}
+                                                                                            <p class="details">Comments: no comments</p>
+                                                                                        {% else %}
+                                                                                            <p class="details">Comments: </p>
+                                                                                            <p class="details">{{ student.get_task_comment(task.id) }}</p>
+                                                                                        {% endif %}
                                                                                     </div>
                                                                                     <div id="collapse_student_{{ student.id }}" class="collapse" aria-labelledby="heading_student_{{ student.id }}" data-parent="#accordion_students">
                                                                                         <div class="card-body sup-accordian-fourth-level">
+                                                                                            
                                                                                             <!-- TASK FEEDBACK section -->
                                                                                             {% include 'teacher_recorder.html' %}
                                                                                             <!-- end TASK FEEDBACK section -->
-
                             
                                                                                             <!-- list of submitted questions for each student for this task -->
                                                                                             <div id="accordion_submitted_questions">
@@ -649,6 +653,7 @@
                                                                                                                 <!-- TODO: get recording from question.users.recorder_url -->
                                                                                                                 <p>Play submission: </p>
                                                                                                                 <!-- recording module -->
+
                                                                                                                 <!-- end recording module -->
                                                                                                             </div>
                                                                                                         </div>

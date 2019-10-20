@@ -67,6 +67,7 @@ button > a {
 
 .recorder-buttons {
     font-family: "Comic Sans MS", cursive, sans-serif;
+    margin-bottom: 2rem;
 }
 
 .footer {
@@ -135,4 +136,8 @@ button > a {
 
  .answered-question {
     color: green;
+ }
+
+ .bottom-margin {
+     margin-bottom: 2rem;
  }
