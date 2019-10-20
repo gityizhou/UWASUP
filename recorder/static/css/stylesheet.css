@@ -65,6 +65,10 @@ button > a {
     margin-bottom: 4vh;
 }
 
+.recorder-buttons {
+    font-family: "Comic Sans MS", cursive, sans-serif;
+}
+
 .footer {
     width: 100%;
     color: black;
