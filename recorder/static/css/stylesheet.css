@@ -65,6 +65,10 @@ button > a {
     margin-bottom: 4vh;
 }
 
+.recorder-buttons {
+    font-family: "Comic Sans MS", cursive, sans-serif;
+}
+
 .footer {
     width: 100%;
     color: black;
@@ -87,7 +91,7 @@ button > a {
  }
 
  .sup-modal-dialog {
-    margin-top: 10vw;
+    margin-top: 13vw;
  }
 
  .sup-modal-dialog-large {
@@ -127,4 +131,8 @@ button > a {
  .previous-rec-text {
     margin-top: 1.5rem;
     margin-bottom: 0.5rem;
+ }
+
+ .answered-question {
+    color: green;
  }

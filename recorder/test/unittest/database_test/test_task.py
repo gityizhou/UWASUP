@@ -55,7 +55,9 @@ class TestTask(unittest.TestCase):
         task = db.session.query(Task).filter(Task.id == '1').one()
         users = task.get_task_users()
         for user in users:
+            print(type(user))
             print(user.email)
+
 
     def test_get_user_task(self):
         User_task.get_user_task(1, 1)

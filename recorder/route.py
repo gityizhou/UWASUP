@@ -5,7 +5,7 @@ from flask_login import login_user, current_user, logout_user, login_required
 from recorder.email import send_email
 from recorder.forms import LoginForm, RegisterForm, SubscribeUnitForm, MakeTeacherForm, PasswdResetForm, \
     PasswdResetRequestForm, DeleteUserForm, DeleteUnitForm, DeleteTaskForm, DeleteQuestionForm, CreateUnitForm, \
-    EditUnitForm, AddTaskForm, EditTaskForm, AddQuestionForm, EditQuestionForm, TaskFeedbackForm, UnsubscribeUnitForm
+    EditUnitForm, AddTaskForm, EditTaskForm, AddQuestionForm, EditQuestionForm, UnsubscribeUnitForm
 from recorder.models.user import User
 from recorder.models.unit import Unit
 from recorder.models.user_unit import User_unit
@@ -23,6 +23,7 @@ from pandas import DataFrame
 gauth = GoogleAuth()
 gauth.LocalWebserverAuth()
 drive = GoogleDrive(gauth)
+DOMAIN_NAME = "http://localhost:5000"
 
 """
 Index page but also our login page!
@@ -67,6 +68,10 @@ def index():
 @login_required
 def student_view(student_number):
     student = current_user
+    answered_questions_IDs = []
+    answered_questions = User_question.query.filter_by(user_id=student.id)
+    for record in answered_questions:
+        answered_questions_IDs.append(record.question_id)
     form_subscribe_unit = SubscribeUnitForm()
     form_unsubscribe_unit = UnsubscribeUnitForm()
     form_subscribe_unit.subscribe_units.choices = [(unit.id, ("{} ({})".format(unit.unit_id, unit.unit_name))) for unit
@@ -88,7 +93,8 @@ def student_view(student_number):
         # need to return redirect on successful submission to clear form fields
         return redirect(url_for('student_view', student_number=student_number))
     return render_template('student_view.html', student=student, student_units=student_units,
-                           form_subscribe_unit=form_subscribe_unit, form_unsubscribe_unit=form_unsubscribe_unit)
+                           form_subscribe_unit=form_subscribe_unit, form_unsubscribe_unit=form_unsubscribe_unit,
+                           answered_questions_IDs=answered_questions_IDs)
 
 
 # After login, teacher will be redirected to this page
@@ -103,7 +109,6 @@ def teacher_view(staff_number):
     form_add_task = AddTaskForm()
     form_edit_task = EditTaskForm()
     form_delete_task = DeleteTaskForm()
-    form_task_feedback = TaskFeedbackForm()
     form_add_question = AddQuestionForm()
     form_edit_question = EditQuestionForm()
     form_delete_question = DeleteQuestionForm()
@@ -194,18 +199,6 @@ def teacher_view(staff_number):
         flash('The task has been deleted.')
         # need to return redirect on successful submission to clear form fields
         return redirect(url_for('teacher_view', staff_number=staff_number))
-    # task feedback form
-    if form_task_feedback.task_feedback_submit.data and form_task_feedback.validate_on_submit():
-        mark = float(form_task_feedback.mark.data)
-        user_task = User_task.query.filter_by(task_id=form_task_feedback.feedbackTaskID.data,
-                                              user_id=form_task_feedback.feedbackStudentID.data).first()
-        user_task.comment = form_task_feedback.feedbackComment.data
-        # user_task.recorder_url=,
-        user_task.mark = mark
-        user_task.update()
-        flash('The feedback has been saved.')
-        # need to return redirect on successful submission to clear form fields
-        return redirect(url_for('teacher_view', staff_number=staff_number))
     # add question form
     if form_add_question.add_question_submit.data and form_add_question.validate_on_submit():
         question = Question(
@@ -240,12 +233,10 @@ def teacher_view(staff_number):
     return render_template('teacher_view.html', teacher=teacher, all_units=all_units, all_users=all_users,
                            form_make_teacher=form_make_teacher, form_delete_user=form_delete_user,
                            form_delete_unit=form_delete_unit, form_delete_task=form_delete_task,
-                           form_delete_question=form_delete_question,
-                           form_create_unit=form_create_unit, form_edit_unit=form_edit_unit,
-                           form_add_task=form_add_task,
+                           form_delete_question=form_delete_question, form_create_unit=form_create_unit,
+                           form_edit_unit=form_edit_unit, form_add_task=form_add_task,
                            form_edit_task=form_edit_task, form_add_question=form_add_question,
-                           form_edit_question=form_edit_question,
-                           form_task_feedback=form_task_feedback)
+                           form_edit_question=form_edit_question, DOMAIN_NAME=DOMAIN_NAME)
 
 
 # logout function
@@ -269,7 +260,8 @@ def register():
         user.set_password(form.password.data)
         # add the new user to database
         user.add()
-        flash('Congratulations. You have registered successfully! Please verify you email before logging in. Check your email inbox and spam folder.')
+        flash(
+            'Congratulations. You have registered successfully! Please verify you email before logging in. Check your email inbox and spam folder.')
         request_email_verification2(form.email.data)
         return redirect(url_for('index'))
     return render_template('register.html', title='Registration', form=form)
@@ -424,7 +416,39 @@ def upload():
 #                                             record_id=google_file_id, record_title=name, mark=mark, comment=comment)  # save user_question to db
 #
 #         os.remove("./uploads/files/" + filename)  # delete this file after uploading it to google drive
+def pdf_upload():
+    files = UploadSet('files', ALL)
+    task_id_str = request.form.get("task_id")
+    if task_id_str:
+        task_id = int(task_id_str)
+        this_task = Task.query.filter_by(id=task_id).first()
+    if request.method == 'POST' and 'upfile' in request.files:
+        filename = files.save(
+            request.files['upfile'])  # get the file from front end request, return the file name(String)
+        if this_task.pdf_url:
+            pdf_id = this_task.pdf_id
+            upload_file = drive.CreateFile({'id': pdf_id})
+            upload_file.SetContentFile("./uploads/files/" + filename)
+            upload_file['title'] = filename  # set the file name of this file
+            upload_file.Upload()  # upload this file
+        else:
+            upload_file = drive.CreateFile()  # create the google drive file instance
+            upload_file.SetContentFile("./uploads/files/" + filename)  # set our file into this instance
+            upload_file['title'] = filename  # set the file name of this file
+            upload_file.Upload()  # upload this file
+            permission = upload_file.InsertPermission({
+                'type': 'anyone',
+                'value': 'anyone',
+                'role': 'reader'})
+            google_file_id = upload_file[
+                'id']  # can get this file's google drive-id and use it to save the id into database
+            google_url = "https://drive.google.com/uc?authuser=0&id=" + google_file_id + "&export=download"
+            this_task.pdf_url = google_url
+            this_task.pdf_id = google_file_id
+            this_task.update()
 
+        os.remove("./uploads/files/" + filename)  # delete this file after uploading it to google drive
+    return render_template('pdf_upload.html')
 
 def task_result_downloader(task_id):
     results = User_task.query.filter_by(task_id=task_id)

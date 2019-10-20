@@ -14,10 +14,6 @@ class User_unit(db.Model):
         db.session.commit()
 
     def delete(self):
-        # this_unit = db.session.query(Unit).filter(Unit.id == self.unit_id).first()
-        # tasks = this_unit.tasks
-        # for task in tasks:
-        #     User_task.query.filter_by(task_id=task.id, user_id=self.user_id).first().delete()
         tasks = self.unit.tasks
         for task in tasks:
             user_task = User_task.query.filter_by(task_id=task.id, user_id=self.user_id).first()
