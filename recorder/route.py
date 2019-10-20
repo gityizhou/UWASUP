@@ -320,12 +320,16 @@ def upload():
     question_id = request.form.get("question_id")
     user_question = User_question.query.filter_by(question_id=question_id,
                                                   user_id=user_id).first()
+
     print(user_question)
     if question_id:
         question_id = int(request.form.get("question_id"))  # get the question id from request post
         question_id_str = str(question_id)
         this_question = db.session.query(Question).filter(Question.id == question_id).one()
         task_id = this_question.task_id
+        this_task = db.session.query(Task).filter(Task.id == task_id).one()
+
+        user_task = User_task.query.filter_by(task_id=task_id, user_id=user_id).first()
         task_id_str = str(task_id)
         unit_id = db.session.query(Task).filter(Task.id == task_id).one().unit_id
         unit_id_str = str(unit_id)
@@ -333,8 +337,11 @@ def upload():
         print(unit_id_str)
         print(task_id_str)
         print(question_id_str)
-
         name = student_number + '_' + unit_id_str + '_' + task_id_str + '_' + question_id_str
+
+    if not user_task:
+        User_task.add_user_task(user=current_user, task=this_task)  # save user_question to db
+
     if request.method == 'POST' and 'upfile' in request.files:
         filename = files.save(
             request.files['upfile'])  # get the file from front end request, return the file name(String)
