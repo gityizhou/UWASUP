@@ -616,7 +616,7 @@
                                                                                         {% if student.get_task_mark(task.id) is none %}
                                                                                             <p>Task: unmarked</p>
                                                                                         {% else %}
-                                                                                            <p>Task Mark: {{ student.get_task_mark(task.id) }}/10</p>
+                                                                                            <p>Task Mark: {{ student.get_task_mark(task.id) }}/100</p>
                                                                                         {% endif %}
                                                                                     </div>
                                                                                     <div id="collapse_student_{{ student.id }}" class="collapse" aria-labelledby="heading_student_{{ student.id }}" data-parent="#accordion_students">

@@ -270,7 +270,7 @@ class AddQuestionForm(FlaskForm):
 class TaskFeedbackForm(FlaskForm):
     feedbackStudentID = StringField('studentID')
     feedbackTaskID = StringField('taskID')
-    mark = StringField('Mark (format 0.0)')
+    mark = StringField('Mark (format 00.0)')
     #feedbackRecorderUrl = StringField('feedbackURL')
     feedbackComment = TextAreaField('Comments')
     task_feedback_submit = SubmitField('Publish Feedback')
@@ -281,11 +281,11 @@ class TaskFeedbackForm(FlaskForm):
             if not char.isdigit() and char != '.':
                 hasLetters = True
         if hasLetters:
-            raise ValidationError('Mark must not include letters.')
-        if len(mark.data) != 3:
-            raise ValidationError('Mark must be three characters.')
-        if mark.data[1] != '.':
-            raise ValidationError('Mark must be in the format 0.0')
+            raise ValidationError("Mark must not include letters or characters other than '.'")
+        if len(mark.data) != 4:
+            raise ValidationError('Mark must be four characters.')
+        if mark.data[2] != '.':
+            raise ValidationError('Mark must be in the format 00.0')
 
 
 class EditQuestionForm(FlaskForm):
