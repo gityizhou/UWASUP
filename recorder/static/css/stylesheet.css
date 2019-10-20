@@ -115,3 +115,18 @@ button > a {
  .feedback-form-body {
     margin-bottom: 0rem;
  }
+
+ .details {
+    color: rgb(92, 90, 90);
+    margin: 0.5rem;
+    padding: 0rem;
+ }
+
+ .last-detail {
+    margin-bottom: 1.5rem;
+ }
+
+ .previous-rec-text {
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+ }

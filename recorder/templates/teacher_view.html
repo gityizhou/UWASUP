@@ -347,16 +347,16 @@
                                                         <!-- display due date and time if any -->
                                                         {% if task.due_time is not none %}
                                                             {% set due_datetime_string = task.due_time|string() %}
-                                                            <p>Due date: {{ due_datetime_string[:10] }}</p>
-                                                            <p>Due time: {{ due_datetime_string[11:16] }}</p>
+                                                            <p class="details">Due date: {{ due_datetime_string[:10] }}</p>
+                                                            <p class="details">Due time: {{ due_datetime_string[11:16] }}</p>
                                                         {% else %}
-                                                            <p>Due date: not set</p>
-                                                            <p>Due time: not set</p>
+                                                            <p class="details">Due date: not set</p>
+                                                            <p class="details">Due time: not set</p>
                                                         {% endif %}
                                                         {% if task.description is not none %}
-                                                            <p>Description: {{ task.description }}</p>
+                                                            <p class="details last-detail">Description: {{ task.description }}</p>
                                                         {% else %}
-                                                            <p>Description: no description</p>
+                                                            <p class="details last-detail">Description: no description</p>
                                                         {% endif %}
                                                         <!-- display due date and time if any -->
 
@@ -614,9 +614,9 @@
                                                                                             </button>
                                                                                         </h5>
                                                                                         {% if student.get_task_mark(task.id) is none %}
-                                                                                            <p>Task: unmarked</p>
+                                                                                            <p class="details">Task: unmarked</p>
                                                                                         {% else %}
-                                                                                            <p>Task Mark: {{ student.get_task_mark(task.id) }}/100</p>
+                                                                                            <p class="details">Task Mark: {{ student.get_task_mark(task.id) }}/100</p>
                                                                                         {% endif %}
                                                                                     </div>
                                                                                     <div id="collapse_student_{{ student.id }}" class="collapse" aria-labelledby="heading_student_{{ student.id }}" data-parent="#accordion_students">
