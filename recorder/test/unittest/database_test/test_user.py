@@ -2,6 +2,7 @@ import unittest
 
 from recorder import create_app, db
 from recorder.models.user import User
+from recorder.models.user_unit import User_unit
 from recorder.models.unit import Unit
 from recorder.models.task import Task
 from recorder.models.question import Question
@@ -110,3 +111,8 @@ class TestUser(unittest.TestCase):
         user = db.session.query(User).filter(User.id == '1').one()
         user_task = user.get_user_task(1)
         print(type(user_task))
+
+    def test_delete_user_unit(self):
+        user_unit = User_unit.query.filter_by(user_id=1, unit_id=1).first()
+        print(type(user_unit))
+        user_unit.delete()

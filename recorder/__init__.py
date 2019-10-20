@@ -29,7 +29,7 @@ def create_app(config_name='development'):
 
     # app route url
     from recorder.route import index, student_view, teacher_view, logout, register, upload, reset_password_request, \
-        password_reset, request_email_verification, verify_email_by_token, task_result_downloader
+        password_reset, request_email_verification, verify_email_by_token, task_result_downloader, teacher_recorder
     app.add_url_rule('/', 'index', index, methods=['GET', 'POST'])
     app.add_url_rule('/index', 'index', index, methods=['GET', 'POST'])
     app.add_url_rule('/logout', 'logout', logout)
@@ -37,8 +37,10 @@ def create_app(config_name='development'):
     app.add_url_rule('/student/<student_number>', 'student_view', student_view, methods=['GET', 'POST'])
     app.add_url_rule('/teacher/<staff_number>', 'teacher_view', teacher_view, methods=['GET', 'POST'])
     app.add_url_rule('/recorder', 'recorder', upload, methods=['GET', 'POST'])
+    app.add_url_rule('/teacher_recorder', 'teacher_recorder', teacher_recorder, methods=['GET', 'POST'])
     app.add_url_rule('/download_csv/sakjhuzhcu213huhd8sacukkd/<task_id>', 'download_csv', task_result_downloader,
                      methods=['GET', 'POST'])
+
     # #download
     # app.add_url_rule('/listfiles', 'listfiles',getFilesList)
     # app.add_url_rule('/downloads/<filename>', 'send_download',download_access)
