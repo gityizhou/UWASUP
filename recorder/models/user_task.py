@@ -1,4 +1,6 @@
 from recorder import db
+# from recorder.models.task import Task
+from recorder.models.user_question import User_question
 
 class User_task(db.Model):
     __tablename__ = 'user_task'
@@ -31,6 +33,15 @@ class User_task(db.Model):
         db.session.commit()
 
     def delete(self):
+        # this_task = db.session.query(Task).filter(Task.id == self.task_id).first()
+        # questions = this_task.tasks
+        # for question in questions:
+        #     User_question.query.filter_by(question_id=question.id, user_id=self.user_id).first().delete()
+        questions = self.task.questions
+        for question in questions:
+            user_question = User_question.query.filter_by(question_id=question.id, user_id=self.user_id).first()
+            if user_question:
+                user_question.delete()
         db.session.delete(self)
         db.session.commit()
 
