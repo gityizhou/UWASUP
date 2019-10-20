@@ -1,0 +1,9 @@
+List of Account for running this application.
+
+Gmail account for google drive
+USER: languageapp19@gmail.com
+PASS: L@nguageapp19
+
+Heroku account for deploying
+USER: languageapp19@gmail.com
+PASS: l@NGUAGE19
