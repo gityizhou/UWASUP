@@ -458,26 +458,6 @@ def task_result_downloader(task_id):
     return send_from_directory(path, filename, as_attachment=True)  # as_attachment=True
 
 
-# def getFilesList():
-#     upload_file = drive.CreateFile()  # create the google drive file instance
-#     file_list = drive.ListFile({'q': "'root' in parents and trashed=false"}).GetList()
-#     res = []
-#     for file1 in file_list:
-#         res.append({"title": file1['title'], "id": file1['id']})
-#     return jsonify(res)
-#     # return res;
-#
-#
-# def donwload(id, title):
-#     file = drive.CreateFile({'id': id})
-#     file.GetContentFile('./downloads/' + title)  # Download file as 'studentnumber.mp3'.
-#     return redirect(url_for('send_download', filename=title));
-#
-#
-# # def download_access(filename):
-# #     return send_file('../downloads/' + filename, as_attachment=True)
-
-
 def reset_password_request():
     if current_user.is_authenticated:
         return redirect(url_for('index'))
