@@ -258,7 +258,7 @@ def register():
         user.set_password(form.password.data)
         # add the new user to database
         user.add()
-        flash('Congratulations. You have registered successfully! Please verify you email before loggin in. Check your email inbox and spam folder.')
+        flash('Congratulations. You have registered successfully! Please verify you email before logging in. Check your email inbox and spam folder.')
         request_email_verification2(form.email.data)
         return redirect(url_for('index'))
     return render_template('register.html', title='Registration', form=form)

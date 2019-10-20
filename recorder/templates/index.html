@@ -2,11 +2,11 @@
 
 {% block content %}
     <!-- start of card -->
-    <div class="col-xl-3 col-lg-6 col-md-10 col-sm-12 col-12 mx-auto main-card text-center">
+    <div class="col-xl-4 col-lg-6 col-md-10 col-sm-12 col-12 mx-auto main-card text-center">
         <div class="card-deck">
             <div class="card-body">
                 <h3>Sign In</h3><br>
-                <form class="small-form text-right" action="" method="post">
+                <form class="text-center" action="" method="post">
                     <p>
                         {{ form.username.label }}
                         {{ form.username() }}
@@ -24,8 +24,8 @@
                     </p>
                     <p>
                         <a href="{{ url_for('register') }}">New User?</a>
-                    <p>
                     </p>
+                    <p>
                         <a href="{{ url_for('reset_password_request') }}">Forgot Password?</a>
                     </p>
                 </form>
