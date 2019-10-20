@@ -260,7 +260,8 @@ def register():
         user.set_password(form.password.data)
         # add the new user to database
         user.add()
-        flash('Congratulations. You have registered successfully! Please verify you email before logging in. Check your email inbox and spam folder.')
+        flash(
+            'Congratulations. You have registered successfully! Please verify you email before logging in. Check your email inbox and spam folder.')
         request_email_verification2(form.email.data)
         return redirect(url_for('index'))
     return render_template('register.html', title='Registration', form=form)
@@ -415,6 +416,43 @@ def upload():
 #                                             record_id=google_file_id, record_title=name, mark=mark, comment=comment)  # save user_question to db
 #
 #         os.remove("./uploads/files/" + filename)  # delete this file after uploading it to google drive
+def pdf_upload():
+    files = UploadSet('files', ALL)
+    task_id_str = request.form.get("task_id")
+    if task_id_str:
+        task_id = int(task_id_str)
+        print(task_id)
+        this_task = Task.query.filter_by(id=task_id).first()
+        print(this_task)
+        print(this_task.pdf_url)
+    if request.method == 'POST' and 'file' in request.files:
+        filename = files.save(
+            request.files['file'])  # get the file from front end request, return the file name(String)
+        print(filename)
+        if this_task.pdf_url:
+            pdf_id = this_task.pdf_id
+            upload_file = drive.CreateFile({'id': pdf_id})
+            upload_file.SetContentFile("./uploads/files/" + filename)
+            upload_file['title'] = filename  # set the file name of this file
+            upload_file.Upload()  # upload this file
+        else:
+            upload_file = drive.CreateFile()  # create the google drive file instance
+            upload_file.SetContentFile("./uploads/files/" + filename)  # set our file into this instance
+            upload_file['title'] = filename  # set the file name of this file
+            upload_file.Upload()  # upload this file
+            permission = upload_file.InsertPermission({
+                'type': 'anyone',
+                'value': 'anyone',
+                'role': 'reader'})
+            google_file_id = upload_file[
+                'id']  # can get this file's google drive-id and use it to save the id into database
+            google_url = "https://drive.google.com/uc?authuser=0&id=" + google_file_id + "&export=download"
+            this_task.pdf_url = google_url
+            this_task.pdf_id = google_file_id
+            print(this_task)
+            this_task.update()
+        os.remove("./uploads/files/" + filename)  # delete this file after uploading it to google drive
+    return render_template('pdf_upload.html')
 
 
 def task_result_downloader(task_id):
@@ -540,6 +578,9 @@ def teacher_recorder():
             upload_file.SetContentFile("./uploads/files/" + filename)
             upload_file['title'] = name  # set the file name of this file
             upload_file.Upload()  # upload this file
+            user_task.comment = comment
+            user_task.mark = mark
+            user_task.update()
         else:
             upload_file = drive.CreateFile()  # create the google drive file instance
             upload_file.SetContentFile("./uploads/files/" + filename)  # set our file into this instance
@@ -557,9 +598,6 @@ def teacher_recorder():
             user_task.record_url = google_url
             user_task.record_id = google_file_id
             user_task.record_title = name
-            # User_task.add_user_question(user=this_student, task=this_task, record_url=google_url,
-            #                             record_id=google_file_id, record_title=name, mark=mark,
-            #                             comment=comment)  # save user_question to db
             user_task.update()
 
         os.remove("./uploads/files/" + filename)  # delete this file after uploading it to google drive
