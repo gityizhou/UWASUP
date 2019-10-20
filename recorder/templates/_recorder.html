@@ -1,4 +1,4 @@
-
+<div>
 <p class="details previous-rec-text">Make a new recording:</p >
 <input class="btn btn-primary btn-form-submit second-user-button" type="button" id="Record_{{sUnit.id}}_{{task.id}}_{{question.id}}" value="Start" >
 
@@ -36,7 +36,7 @@
         var wave;
         rec = Recorder();//Use the default configuration, mp3 format
         //Turn on the microphone and authorize resources
-        rec.open(function () {         
+        rec.open(function () {
             //start recording
             rec.start();
         }, function (msg, isUserNotAllow) {
@@ -53,7 +53,7 @@
     };
 
 
-    function playRec() {
+{#    function playRec() {
         //Stop recording and get the blob binary object of the recording file
         if(audio==null){
             audio = document.createElement("audio");
@@ -67,7 +67,7 @@
             audio.src = URL.createObjectURL(recFile);
             audio.play();
         }
-    };
+    };#}
 
     function uploadRec(question_id) {
         //Stop recording and get the blob binary object of the recording file
