@@ -125,6 +125,16 @@
                                                 </div>
                                                 <div id="collapse_task_{{ task.id }}" class="collapse" aria-labelledby="heading_task_{{ task.id }}" data-parent="#accordion_tasks">
                                                     <div class="card-body sup-accordian-second-level">
+                                                        
+                                                        <!-- DOWNLOAD PDF button -->
+                                                        {% if task.pdf_url is not none %}  
+                                                        <div>
+                                                            <button id="btn-download-pdf-{{ task.id }}-submit" onclick="downloadPDF('{{ task.pdf_url }}')" class="btn btn-primary inner-accordian-button">
+                                                                Download PDF
+                                                            </button>
+                                                        </div>
+                                                        {% endif %}
+                                                        <!-- end DOWNLOAD PDF button -->
 
                                                         <!-- section for feedback from teacher -->
                                                         {% if student.get_task_mark(task.id) is none %}
@@ -136,10 +146,20 @@
                                                             <p class="details">Comments: no comments</p>
                                                         {% else %}
                                                             <p class="details">Comments: </p>
-                                                            <p class="details">{{ student.get_task_comment(task.id) }}</p>
+                                                            <p class="details last-detail">{{ student.get_task_comment(task.id) }}</p>
                                                         {% endif %}
                                                         <!-- feedback recording module -->
-                                                            
+
+                                                        <!-- DOWNLOAD PDF button -->
+                                                        {% if task.pdf_url is not none %}  
+                                                        <div>
+                                                            <button id="btn-download-pdf-{{ task.id }}-submit" onclick="downloadPDF('{{ task.pdf_url }}')" class="btn btn-primary inner-accordian-button">
+                                                                Download PDF
+                                                            </button>
+                                                        </div>
+                                                        {% endif %}
+                                                        <!-- end DOWNLOAD PDF button -->
+
                                                         <!-- feedback recording module -->
                                                         <!-- end section for feedback from teacher -->
 
@@ -193,7 +213,12 @@
 
     <script>
     
-    var audio;
+        var audio;
+    
+        // download pdf function
+        function downloadPDF(pdfURL){
+            document.location.href = pdfURL;
+        }
     
     </script>
 

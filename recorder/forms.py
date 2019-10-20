@@ -42,7 +42,7 @@ class RegisterForm(FlaskForm):
     6. username, email should not be existed in current database.
     """
 
-    username = StringField("Student Number / Staff Number", validators=[DataRequired(),
+    username = StringField("Student/Staff Number", validators=[DataRequired(),
                                                                         Length(min=8, max=8,
                                                                                message="UWA student/staff numbers should be 8 digits.")])
 
