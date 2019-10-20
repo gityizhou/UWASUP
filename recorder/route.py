@@ -338,7 +338,7 @@ def upload():
         print(unit_id_str)
         print(task_id_str)
         print(question_id_str)
-        name = student_number + '_' + unit_id_str + '_' + task_id_str + '_' + question_id_str
+        name = student_number + '_' + unit_id_str + '_' + task_id_str + '_' + question_id_str + '.mp3'
 
     if not user_task:
         User_task.add_user_task(user=current_user, task=this_task)  # save user_question to db
@@ -529,7 +529,7 @@ def teacher_recorder():
         print(this_student)
         task_name = this_task.task_name
         student_number = this_student.user_number
-        name = task_id_str + "_" + task_name + "_" + student_number
+        name = task_id_str + "_" + task_name + "_" + student_number + ".mp3"
         print(name)
     if request.method == 'POST' and 'upfile' in request.files:
         filename = files.save(

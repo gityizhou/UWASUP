@@ -1,8 +1,10 @@
 
 <p class="details previous-rec-text">Make a new recording:</p >
-<input class="btn btn-primary btn-form-submit second-user-button" type="button" id="Record_{{sUnit.id}}_{{task.id}}_{{question.id}}" value="Start" >
+<input class="btn btn-primary btn-form-submit second-user-button fontstyle" type="button" id="Record_{{sUnit.id}}_{{task.id}}_{{question.id}}" value="Start" >
 
-<input class="btn btn-primary btn-form-submit second-user-button" type="button" onclick="uploadRec({{question.id}})" value="Submit">
+<input class="btn btn-primary btn-form-submit second-user-button fontstyle" type="button" onclick="playRec()" value="PlayRec">
+
+<input class="btn btn-primary btn-form-submit second-user-button fontstyle" type="button" onclick="uploadRec({{question.id}})" value="Submit">
 
 <p class="details previous-rec-text">Previous submission:</p >
 <audio src="{{current_user.get_question_record_url(question.id)}}" controls></audio>
@@ -53,7 +55,7 @@
     };
 
 
-{#    function playRec() {
+    function playRec() {
         //Stop recording and get the blob binary object of the recording file
         if(audio==null){
             audio = document.createElement("audio");
@@ -67,7 +69,7 @@
             audio.src = URL.createObjectURL(recFile);
             audio.play();
         }
-    };#}
+    };
 
     function uploadRec(question_id) {
         //Stop recording and get the blob binary object of the recording file
