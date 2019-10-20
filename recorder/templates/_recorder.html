@@ -2,7 +2,7 @@
 <p class="details previous-rec-text">Make a new recording:</p >
 <input class="btn btn-primary btn-form-submit second-user-button recorder-buttons" type="button" id="Record_{{sUnit.id}}_{{task.id}}_{{question.id}}" value="Start" >
 
-<input class="btn btn-primary btn-form-submit second-user-button recorder-buttons" type="button" onclick="playRec()" value="PlayRec">
+<input class="btn btn-primary btn-form-submit second-user-button recorder-buttons" type="button" onclick="playRec('#playback-{{ question.id }}')" value="Play">
 
 <input class="btn btn-primary btn-form-submit second-user-button recorder-buttons" type="button" onclick="uploadRec({{question.id}})" value="Submit">
 
@@ -55,17 +55,19 @@
     };
 
 
-    function playRec() {
+    function playRec(divID) {
         //Stop recording and get the blob binary object of the recording file
         if(audio==null){
             audio = document.createElement("audio");
             audio.controls = true;
-            document.body.appendChild(audio);
+            console.log("divID = " + divID);
+            //document.body.appendChild(audio)
+            $(divID).append(audio);
             audio.src = URL.createObjectURL(recFile);
             audio.play();
         }
         else{
-            document.body.appendChild(audio);
+            $(divID).append(audio);
             audio.src = URL.createObjectURL(recFile);
             audio.play();
         }
