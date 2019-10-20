@@ -1,12 +1,10 @@
-<div>
-    <input class="btn btn-primary" type="button" id="Record_{{sUnit.id}}_{{task.id}}_{{question.id}}" value="Start" >
 
-    {#<input class="btn btn-primary" type="button" onclick="playRec()" value="Play">#}
+<p class="details previous-rec-text">Make a new recording:</p >
+<input class="btn btn-primary btn-form-submit second-user-button" type="button" id="Record_{{sUnit.id}}_{{task.id}}_{{question.id}}" value="Start" >
 
-    <input class="btn btn-primary" type="button" onclick="uploadRec({{question.id}})" value="upload the record">
-</div>
+<input class="btn btn-primary btn-form-submit second-user-button" type="button" onclick="uploadRec({{question.id}})" value="Submit">
 
-
+<p class="details previous-rec-text">Previous submission:</p >
 <audio src="{{current_user.get_question_record_url(question.id)}}" controls></audio>
 <!-- get previous submitted recording finish -->
 

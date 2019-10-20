@@ -5,9 +5,10 @@ from flask_login import login_user, current_user, logout_user, login_required
 from recorder.email import send_email
 from recorder.forms import LoginForm, RegisterForm, SubscribeUnitForm, MakeTeacherForm, PasswdResetForm, \
     PasswdResetRequestForm, DeleteUserForm, DeleteUnitForm, DeleteTaskForm, DeleteQuestionForm, CreateUnitForm, \
-    EditUnitForm, AddTaskForm, EditTaskForm, AddQuestionForm, EditQuestionForm, TaskFeedbackForm
+    EditUnitForm, AddTaskForm, EditTaskForm, AddQuestionForm, EditQuestionForm, TaskFeedbackForm, UnsubscribeUnitForm
 from recorder.models.user import User
 from recorder.models.unit import Unit
+from recorder.models.user_unit import User_unit
 from recorder import db
 from pydrive.auth import GoogleAuth
 from pydrive.drive import GoogleDrive
@@ -67,6 +68,7 @@ def index():
 def student_view(student_number):
     student = current_user
     form_subscribe_unit = SubscribeUnitForm()
+    form_unsubscribe_unit = UnsubscribeUnitForm()
     form_subscribe_unit.subscribe_units.choices = [(unit.id, ("{} ({})".format(unit.unit_id, unit.unit_name))) for unit
                                                    in
                                                    Unit.query.all()]
@@ -76,8 +78,17 @@ def student_view(student_number):
             student.add_unit(unit_object)
         flash('You have been subscribed to the selected units.')
     student_units = student.get_student_units()
+    # unsubscribe from unit form (validation not strictly necessary here for this form, see forms.py)
+    if form_unsubscribe_unit.unsubscribe_unit_submit.data and form_unsubscribe_unit.validate_on_submit():
+        user_unit = User_unit.query.filter_by(user_id=form_unsubscribe_unit.unsub_studentID.data,
+                                              unit_id=form_unsubscribe_unit.unsub_unitID.data).first()
+        user_unit.delete()
+        # add in any function for deleting user_task and user_question entries assco with this user_unit
+        flash('You have been unsubscribed from the unit.')
+        # need to return redirect on successful submission to clear form fields
+        return redirect(url_for('student_view', student_number=student_number))
     return render_template('student_view.html', student=student, student_units=student_units,
-                           form_subscribe_unit=form_subscribe_unit)
+                           form_subscribe_unit=form_subscribe_unit, form_unsubscribe_unit=form_unsubscribe_unit)
 
 
 # After login, teacher will be redirected to this page
@@ -258,8 +269,7 @@ def register():
         user.set_password(form.password.data)
         # add the new user to database
         user.add()
-        flash(
-            'Congratulations. You have registered successfully! Please verify you email before loggin in. Check your email inbox and spam folder.')
+        flash('Congratulations. You have registered successfully! Please verify you email before logging in. Check your email inbox and spam folder.')
         request_email_verification2(form.email.data)
         return redirect(url_for('index'))
     return render_template('register.html', title='Registration', form=form)

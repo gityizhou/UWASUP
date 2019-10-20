@@ -1,12 +1,10 @@
-
-
 .base-background {
     background-color: rgb(205, 248, 188);
 }
 
 .main-card {
     margin-top: 2vh;
-    margin-bottom: 15vh;
+    margin-bottom: 20vh;
     padding: 2rem;
     border-radius: 3rem;
     border: 0.0rem solid rgb(235, 236, 233);
@@ -25,10 +23,108 @@
 }
 
 .small-form {
-    padding-right: 10vh;
+    padding-right: 10vw;
 }
 
 .btn-form-submit {
     background-color: rgb(53, 109, 75);
     border-color: rgb(53, 109, 75);
 }
+
+.btn-form-secondary {
+    background-color: rgb(53, 109, 75);
+    border-color: rgb(53, 109, 75);
+    color: white;
+}
+
+button > a {
+    color: white;
+}
+
+.user-action-buttons {
+    margin-top: 3vh;
+    margin-bottom: 3vh;
+}
+
+.greeting {
+    color: rgb(92, 90, 90);
+}
+
+.second-user-button {
+    margin-left: 2vh;
+}
+
+.inner-accordian-button {
+    margin-bottom: 2vh;
+    background-color: rgb(252, 197, 46);
+    border-color: rgb(252, 197, 46);
+    color: rgb(92, 90, 90);
+}
+
+.publish-feedback-button {
+    margin-bottom: 4vh;
+}
+
+.footer {
+    width: 100%;
+    color: black;
+    text-align: center;
+    margin: 1rem;
+ }
+
+ .footer-item {
+    margin: 0rem;
+    font-size: 0.7rem;
+ }
+
+ .sup-modal {
+    border-radius: 2rem;
+    text-align: left;
+    border: 0.0rem solid rgb(235, 236, 233);
+    box-shadow: 0 1rem 3rem rgba(0,0,0,0.5);
+    background-color: rgb(239, 252, 251);
+    padding: 1vw;
+ }
+
+ .sup-modal-dialog {
+    margin-top: 10vw;
+ }
+
+ .sup-modal-dialog-large {
+    max-width: 45vw;
+ }
+
+ .sup-accordian-first-level {
+    background-color: #64A6A3;
+ }
+
+ .sup-accordian-second-level {
+    background-color: #aecee4;
+ }
+
+  .sup-accordian-third-level {
+    background-color: #f7df9e;
+ }
+
+ .sup-accordian-fourth-level {
+    background-color: rgb(205, 248, 188);
+ }
+
+ .feedback-form-body {
+    margin-bottom: 0rem;
+ }
+
+ .details {
+    color: rgb(92, 90, 90);
+    margin: 0.5rem;
+    padding: 0rem;
+ }
+
+ .last-detail {
+    margin-bottom: 1.5rem;
+ }
+
+ .previous-rec-text {
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+ }

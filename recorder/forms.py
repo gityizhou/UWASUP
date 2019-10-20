@@ -7,6 +7,7 @@ from wtforms.widgets import ListWidget, CheckboxInput
 from recorder.models.user import User
 from recorder.models.unit import Unit
 from recorder.models.task import Task
+from recorder.models.user_unit import User_unit
 from recorder.models.question import Question
 
 import sys, datetime, time
@@ -108,7 +109,21 @@ class MultiCheckboxField(SelectMultipleField):
 class SubscribeUnitForm(FlaskForm):
     subscribe_units = MultiCheckboxField('Units', [DataRequired(message='Please select one or more units.')],
                                          coerce=int)
+    studentID = StringField('Student number')
     subscribe_unit_submit = SubmitField('Subscribe')
+
+    def validate_subscribe_units(self, subscribe_units):
+        for u in subscribe_units.data:
+            user_unit = User_unit.query.filter_by(user_id=self.studentID.data,
+                                              unit_id=u).first()
+            if user_unit is not None:
+                raise ValidationError('You are already subscribed to one or more of these units.')
+
+# validators not needed as this form will only be generated for existing units
+class UnsubscribeUnitForm(FlaskForm):
+    unsub_unitID = StringField()
+    unsub_studentID = StringField()
+    unsubscribe_unit_submit = SubmitField('Unsubscribe from Unit')
 
 
 ############################
@@ -270,7 +285,7 @@ class AddQuestionForm(FlaskForm):
 class TaskFeedbackForm(FlaskForm):
     feedbackStudentID = StringField('studentID')
     feedbackTaskID = StringField('taskID')
-    mark = StringField('Mark (format 0.0)')
+    mark = StringField('Mark (format 00.0)')
     #feedbackRecorderUrl = StringField('feedbackURL')
     feedbackComment = TextAreaField('Comments')
     task_feedback_submit = SubmitField('Publish Feedback')
@@ -281,11 +296,11 @@ class TaskFeedbackForm(FlaskForm):
             if not char.isdigit() and char != '.':
                 hasLetters = True
         if hasLetters:
-            raise ValidationError('Mark must not include letters.')
-        if len(mark.data) != 3:
-            raise ValidationError('Mark must be three characters.')
-        if mark.data[1] != '.':
-            raise ValidationError('Mark must be in the format 0.0')
+            raise ValidationError("Mark must not include letters or characters other than '.'")
+        if len(mark.data) != 4:
+            raise ValidationError('Mark must be four characters.')
+        if mark.data[2] != '.':
+            raise ValidationError('Mark must be in the format 00.0')
 
 
 class EditQuestionForm(FlaskForm):
