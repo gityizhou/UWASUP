@@ -421,10 +421,14 @@ def pdf_upload():
     task_id_str = request.form.get("task_id")
     if task_id_str:
         task_id = int(task_id_str)
+        print(task_id)
         this_task = Task.query.filter_by(id=task_id).first()
-    if request.method == 'POST' and 'upfile' in request.files:
+        print(this_task)
+        print(this_task.pdf_url)
+    if request.method == 'POST' and 'file' in request.files:
         filename = files.save(
-            request.files['upfile'])  # get the file from front end request, return the file name(String)
+            request.files['file'])  # get the file from front end request, return the file name(String)
+        print(filename)
         if this_task.pdf_url:
             pdf_id = this_task.pdf_id
             upload_file = drive.CreateFile({'id': pdf_id})
@@ -445,10 +449,11 @@ def pdf_upload():
             google_url = "https://drive.google.com/uc?authuser=0&id=" + google_file_id + "&export=download"
             this_task.pdf_url = google_url
             this_task.pdf_id = google_file_id
+            print(this_task)
             this_task.update()
-
         os.remove("./uploads/files/" + filename)  # delete this file after uploading it to google drive
     return render_template('pdf_upload.html')
+
 
 def task_result_downloader(task_id):
     results = User_task.query.filter_by(task_id=task_id)
