@@ -28,7 +28,7 @@ def create_app(config_name='development'):
     mail.init_app(app)
 
     # app route url
-    from recorder.route import index, student_view, teacher_view, logout, register, upload, reset_password_request, password_reset,getFilesList,request_email_verification,verify_email_by_token, task_result_downloader
+    from recorder.route import index, student_view, teacher_view, logout, register, upload, reset_password_request, password_reset, request_email_verification,verify_email_by_token, task_result_downloader
     app.add_url_rule('/', 'index', index, methods=['GET', 'POST'])
     app.add_url_rule('/index', 'index', index, methods=['GET', 'POST'])
     app.add_url_rule('/logout', 'logout', logout)
