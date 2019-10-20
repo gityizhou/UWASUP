@@ -607,7 +607,6 @@
                                                                         <button id="btn-download-csv-{{ task.id }}" class="btn btn-primary btn-form-submit publish-feedback-button" onclick="downloadCSV('{{ task.id }}')">
                                                                             Download Submission List
                                                                         </button>
-                                                                        <p id="csv-{{ task.id }}">before function</p>
                                                                         <!-- download .csv of submitters button -->
 
                                                                         <!-- list of students for each task -->
@@ -629,32 +628,9 @@
                                                                                     <div id="collapse_student_{{ student.id }}" class="collapse" aria-labelledby="heading_student_{{ student.id }}" data-parent="#accordion_students">
                                                                                         <div class="card-body sup-accordian-fourth-level">
                                                                                             <!-- TASK FEEDBACK section -->
-                                                                                            <div>
-                                                                                                <form id="form-task-feedback-{{ student.id }}" class="form" action="" method="post" novalidate>
-                                                                                                    {{ form_task_feedback.hidden_tag() }}
-                                                                                                    <p class="feedback-form-body">
-                                                                                                        {% if student.get_task_mark(task.id) is not none %}
-                                                                                                            {{ form_task_feedback.mark.label }}<br>
-                                                                                                            {{ form_task_feedback.mark(value=student.get_task_mark(task.id), size=32, class="form-field") }}<br>
-                                                                                                        {% else %}
-                                                                                                            {{ form_task_feedback.mark.label }}<br>
-                                                                                                            {{ form_task_feedback.mark(size=32, class="form-field") }}<br>
-                                                                                                        {% endif %}
-                                                                                                        {% if student.get_user_task(task.id).comment is not none %}
-                                                                                                            {{ form_task_feedback.feedbackComment.label }}<br>
-                                                                                                            {{ form_task_feedback.feedbackComment(value=student.get_user_task(task.id).comment, size=32, class="form-field", rows="10", cols="55") }}<br>
-                                                                                                        {% else %}
-                                                                                                            {{ form_task_feedback.feedbackComment.label }}<br>
-                                                                                                            {{ form_task_feedback.feedbackComment(size=32, class="form-field", rows="10", cols="55") }}<br>
-                                                                                                        {% endif %}
-                                                                                                        <!-- add if statement here to test for comment and recorder URL -->
-                                                                                                        {{ form_task_feedback.feedbackStudentID(value=student.id, style="display: none;") }}<br>
-                                                                                                        {{ form_task_feedback.feedbackTaskID(value=task.id, style="display: none;") }}
-                                                                                                    </p>
-                                                                                                    <a>{{ form_task_feedback.task_feedback_submit(id="btn-task-feedback-{{ student.id }}-submit", size=32, class="form-field btn btn-primary btn-form-submit publish-feedback-button") }}</a>
-                                                                                                </form>
-                                                                                            </div>
+                                                                                            {% include 'teacher_recorder.html' %}
                                                                                             <!-- end TASK FEEDBACK section -->
+
                             
                                                                                             <!-- list of submitted questions for each student for this task -->
                                                                                             <div id="accordion_submitted_questions">
@@ -671,7 +647,7 @@
                                                                                                             <div class="card-body sup-accordian-first-level">
                                                                                                                 <p>Question Description: {{ submitted_question.description }}</p>
                                                                                                                 <!-- TODO: get recording from question.users.recorder_url -->
-                                                                                                                <p>Play recording: </p>
+                                                                                                                <p>Play submission: </p>
                                                                                                                 <!-- recording module -->
                                                                                                                 <!-- end recording module -->
                                                                                                             </div>
@@ -882,44 +858,6 @@
         </div>
     {% endif %}
     <!-- end ADD QUESTION FORM ERRORS modal -->
-
-
-    <!-- TASK FEEDBACK FORM ERRORS modal -->
-    {% set ns = namespace(errors_present=false) %}
-    {% for field in form_task_feedback %}
-        {% if field.errors|length != 0 %}
-            {% set ns.errors_present = true %}
-        {% endif %}
-    {% endfor %}
-    {% if ns.errors_present == true %}
-        <script>
-            $(document).ready(function(){
-                $("#modal-task-feedback-form-errors").modal("show");
-            });
-        </script>
-        <!-- code for modal window -->
-        <div class="modal fade" id="modal-task-feedback-form-errors">
-            <div class="modal-dialog sup-modal-dialog">
-                <div class="modal-content sup-modal">
-                    <!-- modal body -->
-                    <div class="modal-body show">
-                        <ul>
-                            {% for error in form_task_feedback.mark.errors %}
-                                <li style="color: red;">Error: {{ error }}</li>
-                            {% endfor %}
-                        </ul>
-                        <p>Please resubmit form.</p>
-                    </div>
-                    <!-- modal footer -->
-                    <div class="modal-footer">
-                        <button id="btn-btm-close-task-feedback-form-errors-modal" type="button" class="btn btn-form-secondary" data-dismiss="modal">Close</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    {% endif %}
-    <!-- end TASK FEEDBACK FORM ERRORS modal -->
-
 
     <!-- EDIT QUESTION FORM ERRORS modal -->
     {% set ns = namespace(errors_present=false) %}
