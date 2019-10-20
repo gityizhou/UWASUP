@@ -322,7 +322,7 @@ class DeleteTaskForm(FlaskForm):
 # validators not needed as this form will only be generated for existing tasks
 class DeletePDFForm(FlaskForm):
     del_pdf_taskID = StringField()
-    delete_pdf_task_submit = SubmitField('Delete PDF')
+    delete_pdf_submit = SubmitField('Delete PDF')
 
 # validators not needed as this form will only be generated for existing questions
 class DeleteQuestionForm(FlaskForm):

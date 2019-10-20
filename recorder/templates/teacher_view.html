@@ -390,6 +390,7 @@
                                                         </div>
                                                         <!-- end UPLOAD PDF modal -->    
 
+                                                        {% if task.pdf_url is not none %}
                                                         <!-- DELETE PDF form -->
                                                         <!-- button to open the modal -->
                                                         <button id="btn-delete-pdf-{{ task.id }}" type="button" class="btn btn-primary inner-accordian-button" data-toggle="modal" data-target="#modal-delete-pdf-{{ task.id }}">
@@ -420,7 +421,8 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <!-- end DELETE PDF modal -->    
+                                                        <!-- end DELETE PDF modal -->
+                                                        {% endif %}  
 
                                                         <!-- EDIT TASK modal -->
                                                         <!-- button to open the modal -->
