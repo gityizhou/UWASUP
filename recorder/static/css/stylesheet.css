@@ -58,9 +58,13 @@ button > a {
 
 .inner-accordian-button {
     margin-bottom: 2vh;
-    background-color: rgb(249, 252, 69);
-    border-color: rgb(249, 252, 69);
+    background-color: rgb(252, 197, 46);
+    border-color: rgb(252, 197, 46);
     color: rgb(92, 90, 90);
+}
+
+.publish-feedback-button {
+    margin-bottom: 4vh;
 }
 
 .footer {
@@ -106,4 +110,8 @@ button > a {
 
  .sup-accordian-fourth-level {
     background-color: rgb(205, 248, 188);
+ }
+
+ .feedback-form-body {
+    margin-bottom: 0rem;
  }

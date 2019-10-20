@@ -69,8 +69,8 @@
                     {% endif %}
                     <!-- code for modal window -->
                     <div class="modal" id="modal-make-teacher">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
+                        <div class="modal-dialog sup-modal-dialog">
+                            <div class="modal-content sup-modal">
                                 <!-- modal header -->
                                 <div class="modal-header">
                                 <h4 class="modal-title">Make a User a Teacher</h4>
@@ -87,12 +87,12 @@
                                                 <span style="color: red;">{{ error }}</span>
                                             {% endfor %}
                                         </p>
-                                        <a>{{ form_make_teacher.make_teacher_submit(id="btn-make-teacher-submit") }}</a>
+                                        <a>{{ form_make_teacher.make_teacher_submit(id="btn-make-teacher-submit", class="btn btn-primary btn-form-submit") }}</a>
                                     </form>
                                 </div>
                                 <!-- modal footer -->
                                 <div class="modal-footer">
-                                    <button id="btn-btm-close-make-teacher-modal" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                    <button id="btn-btm-close-make-teacher-modal" type="button" class="btn btn-form-secondary" data-dismiss="modal">Close</button>
                                 </div>
                             </div>
                         </div>
@@ -115,8 +115,8 @@
                     {% endif %}
                     <!-- code for modal window -->
                     <div class="modal" id="modal-delete-user">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
+                        <div class="modal-dialog sup-modal-dialog">
+                            <div class="modal-content sup-modal">
                                 <!-- modal header -->
                                 <div class="modal-header">
                                 <h4 class="modal-title">Delete a User</h4>
@@ -133,12 +133,12 @@
                                                 <span style="color: red;">{{ error }}</span>
                                             {% endfor %}
                                         </p>
-                                        <a>{{ form_delete_user.delete_user_submit(id="btn-delete-user-submit") }}</a>
+                                        <a>{{ form_delete_user.delete_user_submit(id="btn-delete-user-submit", class="btn btn-primary btn-form-submit") }}</a>
                                     </form>
                                 </div>
                                 <!-- modal footer -->
                                 <div class="modal-footer">
-                                    <button id="btn-btm-close-delete-user-modal" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                    <button id="btn-btm-close-delete-user-modal" type="button" class="btn btn-form-secondary" data-dismiss="modal">Close</button>
                                 </div>
                             </div>
                         </div>
@@ -161,8 +161,8 @@
                     {% endif %}
                     <!-- code for modal window -->
                     <div class="modal" id="modal-create-unit">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
+                        <div class="modal-dialog sup-modal-dialog">
+                            <div class="modal-content sup-modal">
                                 <!-- modal header -->
                                 <div class="modal-header">
                                 <h4 class="modal-title">Create a Unit</h4>
@@ -186,12 +186,12 @@
                                                 <span style="color: red;">{{ error }}</span>
                                             {% endfor %}
                                         </p>
-                                        <a>{{ form_create_unit.create_unit_submit(id="btn-create-unit-submit") }}</a>
+                                        <a>{{ form_create_unit.create_unit_submit(id="btn-create-unit-submit", class="btn btn-primary btn-form-submit") }}</a>
                                     </form>
                                 </div>
                                 <!-- modal footer -->
                                 <div class="modal-footer">
-                                    <button id="btn-btm-close-create-unit-modal" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                    <button id="btn-btm-close-create-unit-modal" type="button" class="btn btn-form-secondary" data-dismiss="modal">Close</button>
                                 </div>
                             </div>
                         </div>
@@ -216,17 +216,17 @@
                             </h5>
                         </div>
                         <div id="collapse_unit_{{ unit.id }}" class="collapse" aria-labelledby="heading_unit_{{ unit.id }}" data-parent="#accordion_units">
-                            <div class="card-body" style="background-color: #ecd29d;">
+                            <div class="card-body sup-accordian-first-level">
 
                                 <!-- EDIT UNIT modal -->
                                 <!-- button to open the modal -->
-                                <button id="btn-edit-unit-{{ unit.id }}" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-edit-unit-{{ unit.id }}">
+                                <button id="btn-edit-unit-{{ unit.id }}" type="button" class="btn btn-primary inner-accordian-button" data-toggle="modal" data-target="#modal-edit-unit-{{ unit.id }}">
                                     Edit Unit
                                 </button>
                                 <!-- code for modal window -->
                                 <div class="modal" id="modal-edit-unit-{{ unit.id }}">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
+                                    <div class="modal-dialog sup-modal-dialog">
+                                        <div class="modal-content sup-modal">
                                             <!-- modal header -->
                                             <div class="modal-header">
                                             <h4 class="modal-title">Edit Unit</h4>
@@ -243,12 +243,12 @@
                                                         {{ form_edit_unit.edit_unitName(value=unit.unit_name, size=32, class="form-field") }}<br>
                                                         {{ form_edit_unit.current_unitID(value=unit.unit_id, style="display: none;") }}
                                                     </p>
-                                                    <a>{{ form_edit_unit.edit_unit_submit(id="btn-edit-unit-{{ unit.id }}-submit") }}</a>
+                                                    <a>{{ form_edit_unit.edit_unit_submit(id="btn-edit-unit-{{ unit.id }}-submit", class="btn btn-primary btn-form-submit") }}</a>
                                                 </form>
                                             </div>
                                             <!-- modal footer -->
                                             <div class="modal-footer">
-                                                <button id="btn-btm-close-edit-unit-{{ unit.id }}-modal" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                                <button id="btn-btm-close-edit-unit-{{ unit.id }}-modal" type="button" class="btn btn-form-secondary" data-dismiss="modal">Close</button>
                                             </div>
                                         </div>
                                     </div>
@@ -258,13 +258,13 @@
 
                                 <!-- DELETE UNIT modal -->
                                 <!-- button to open the modal -->
-                                <button id="btn-delete-unit-{{ unit.id }}" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-delete-unit-{{ unit.id }}">
+                                <button id="btn-delete-unit-{{ unit.id }}" type="button" class="btn btn-primary inner-accordian-button" data-toggle="modal" data-target="#modal-delete-unit-{{ unit.id }}">
                                         Delete Unit
                                     </button>
                                     <!-- code for modal window -->
                                     <div class="modal" id="modal-delete-unit-{{ unit.id }}">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
+                                        <div class="modal-dialog sup-modal-dialog">
+                                            <div class="modal-content sup-modal">
                                                 <!-- modal header -->
                                                 <div class="modal-header">
                                                     <button  id="btn-top-close-delete-unit-{{ unit.id }}" type="button" class="close" data-dismiss="modal">&times;</button>
@@ -276,12 +276,12 @@
                                                     <form class="form" action="" method="post" novalidate>
                                                         {{ form_delete_unit.hidden_tag() }}
                                                         {{ form_delete_unit.del_unitID(value=unit.id, style="display: none;") }}
-                                                        <a>{{ form_delete_unit.delete_unit_submit }}</a>
+                                                        <a>{{ form_delete_unit.delete_unit_submit(class="btn btn-primary btn-form-submit") }}</a>
                                                     </form>
                                                 </div>
                                                 <!-- modal footer -->
                                                 <div class="modal-footer">
-                                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                                                    <button type="button" class="btn btn-form-secondary" data-dismiss="modal">Cancel</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -291,13 +291,13 @@
 
                                     <!-- ADD TASK modal -->
                                     <!-- button to open the modal -->
-                                    <button id="btn-add-task-{{ unit.id }}" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-add-task-{{ unit.id }}">
+                                    <button id="btn-add-task-{{ unit.id }}" type="button" class="btn btn-primary inner-accordian-button" data-toggle="modal" data-target="#modal-add-task-{{ unit.id }}">
                                         Add Task
                                     </button>
                                     <!-- code for modal window -->
                                     <div class="modal" id="modal-add-task-{{ unit.id }}">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
+                                        <div class="modal-dialog sup-modal-dialog">
+                                            <div class="modal-content sup-modal">
                                                 <!-- modal header -->
                                                 <div class="modal-header">
                                                 <h4 class="modal-title">Add Task to Unit</h4>
@@ -318,12 +318,12 @@
                                                             {{ form_add_task.taskDueTime(size=32, class="form-field") }}<br>
                                                             {{ form_add_task.task_unitID(value=unit.id, style="display: none;") }}
                                                         </p>
-                                                        <a>{{ form_add_task.add_task_submit(id="btn-add-task-{{ unit.id }}-submit", size=32, class="form-field") }}</a>
+                                                        <a>{{ form_add_task.add_task_submit(id="btn-add-task-{{ unit.id }}-submit", size=32, class="form-field btn btn-primary btn-form-submit") }}</a>
                                                     </form>
                                                 </div>
                                                 <!-- modal footer -->
                                                 <div class="modal-footer">
-                                                    <button id="btn-btm-close-add-task-{{ unit.id }}-modal" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                                    <button id="btn-btm-close-add-task-{{ unit.id }}-modal" type="button" class="btn btn-form-secondary" data-dismiss="modal">Close</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -343,7 +343,7 @@
                                                     </h5>
                                                 </div>
                                                 <div id="collapse_task_{{ task.id }}" class="collapse" aria-labelledby="heading_task_{{ task.id }}" data-parent="#accordion_tasks">
-                                                    <div class="card-body" style="background-color: #aecee4;">
+                                                    <div class="card-body sup-accordian-second-level">
                                                         <!-- display due date and time if any -->
                                                         {% if task.due_time is not none %}
                                                             {% set due_datetime_string = task.due_time|string() %}
@@ -362,13 +362,13 @@
 
                                                         <!-- EDIT TASK modal -->
                                                         <!-- button to open the modal -->
-                                                        <button id="btn-edit-task-{{ task.id }}" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-edit-task-{{ task.id }}">
+                                                        <button id="btn-edit-task-{{ task.id }}" type="button" class="btn btn-primary inner-accordian-button" data-toggle="modal" data-target="#modal-edit-task-{{ task.id }}">
                                                             Edit Task
                                                         </button>
                                                         <!-- code for modal window -->
                                                         <div class="modal" id="modal-edit-task-{{ task.id }}">
-                                                            <div class="modal-dialog">
-                                                                <div class="modal-content">
+                                                            <div class="modal-dialog sup-modal-dialog">
+                                                                <div class="modal-content sup-modal">
                                                                     <!-- modal header -->
                                                                     <div class="modal-header">
                                                                     <h4 class="modal-title">Edit Task</h4>
@@ -397,12 +397,12 @@
                                                                                 {% endif %}
                                                                                 {{ form_edit_task.current_taskID(value=task.id, style="display: none;") }}
                                                                             </p>
-                                                                            <a>{{ form_edit_task.edit_task_submit(id="btn-edit-task-{{ task.id }}-submit", size=32, class="form-field") }}</a>
+                                                                            <a>{{ form_edit_task.edit_task_submit(id="btn-edit-task-{{ task.id }}-submit", size=32, class="form-field btn btn-primary btn-form-submit") }}</a>
                                                                         </form>
                                                                     </div>
                                                                     <!-- modal footer -->
                                                                     <div class="modal-footer">
-                                                                        <button id="btn-btm-close-edit-task-{{ task.id }}-modal" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                                                        <button id="btn-btm-close-edit-task-{{ task.id }}-modal" type="button" class="btn btn-form-secondary" data-dismiss="modal">Close</button>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -411,13 +411,13 @@
                                                         
                                                         <!-- DELETE TASK modal -->
                                                         <!-- button to open the modal -->
-                                                        <button id="btn-delete-task-{{ task.id }}" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-delete-task-{{ task.id }}">
+                                                        <button id="btn-delete-task-{{ task.id }}" type="button" class="btn btn-primary inner-accordian-button" data-toggle="modal" data-target="#modal-delete-task-{{ task.id }}">
                                                             Delete Task
                                                         </button>
                                                         <!-- code for modal window -->
                                                         <div class="modal" id="modal-delete-task-{{ task.id }}">
-                                                            <div class="modal-dialog">
-                                                                <div class="modal-content">
+                                                            <div class="modal-dialog sup-modal-dialog">
+                                                                <div class="modal-content sup-modal">
                                                                     <!-- modal header -->
                                                                     <div class="modal-header">
                                                                     <button id="btn-top-close-delete-task-{{ task.id }}" type="button" class="close" data-dismiss="modal">&times;</button>
@@ -429,12 +429,12 @@
                                                                         <form class="form" action="" method="post" novalidate>
                                                                             {{ form_delete_task.hidden_tag() }}
                                                                             {{ form_delete_task.del_taskID(value=task.id, style="display: none;") }}
-                                                                            <a>{{ form_delete_task.delete_task_submit }}</a>
+                                                                            <a>{{ form_delete_task.delete_task_submit(class="btn btn-primary btn-form-submit") }}</a>
                                                                         </form>
                                                                     </div>
                                                                     <!-- modal footer -->
                                                                     <div class="modal-footer">
-                                                                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                                                                        <button type="button" class="btn btn-form-secondary" data-dismiss="modal">Cancel</button>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -443,13 +443,13 @@
 
                                                         <!-- ADD QUESTION modal -->
                                                         <!-- button to open the modal -->
-                                                        <button id="btn-add-question-{{ task.id }}" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-add-question-{{ task.id }}">
+                                                        <button id="btn-add-question-{{ task.id }}" type="button" class="btn btn-primary inner-accordian-button" data-toggle="modal" data-target="#modal-add-question-{{ task.id }}">
                                                             Add Question
                                                         </button>
                                                         <!-- code for modal window -->
                                                         <div class="modal" id="modal-add-question-{{ task.id }}">
-                                                            <div class="modal-dialog">
-                                                                <div class="modal-content">
+                                                            <div class="modal-dialog sup-modal-dialog">
+                                                                <div class="modal-content sup-modal">
                                                                     <!-- modal header -->
                                                                     <div class="modal-header">
                                                                     <h4 class="modal-title">Add Question to Task</h4>
@@ -466,12 +466,12 @@
                                                                                 {{ form_add_question.questionDescription(size=32, class="form-field") }}<br>
                                                                                 {{ form_add_question.question_taskID(value=task.id, style="display: none;") }}
                                                                             </p>
-                                                                            <a>{{ form_add_question.add_question_submit(id="btn-add-question-{{ task.id }}-submit", size=32, class="form-field") }}</a>
+                                                                            <a>{{ form_add_question.add_question_submit(id="btn-add-question-{{ task.id }}-submit", size=32, class="form-field btn btn-primary btn-form-submit") }}</a>
                                                                         </form>
                                                                     </div>
                                                                     <!-- modal footer -->
                                                                     <div class="modal-footer">
-                                                                        <button id="btn-btm-close-add-question-{{ task.id }}-modal" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                                                        <button id="btn-btm-close-add-question-{{ task.id }}-modal" type="button" class="btn btn-form-secondary" data-dismiss="modal">Close</button>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -489,7 +489,7 @@
                                                                     </h5>
                                                                 </div>
                                                                 <div id="collapse_task_{{ task.id }}_questions" class="collapse" aria-labelledby="heading_task_{{ task.id }}_questions" data-parent="#accordion_task_{{ task.id }}_questions">
-                                                                    <div class="card-body" style="background-color: #d7f8d7;">
+                                                                    <div class="card-body sup-accordian-third-level">
 
                                                                         <!-- list of questions for this task -->
                                                                         <div id="accordion_questions_task_{{ task.id }}">
@@ -503,17 +503,17 @@
                                                                                         </h5>
                                                                                     </div>
                                                                                     <div id="collapse_question_{{ question.id }}" class="collapse" aria-labelledby="heading_question_{{ question.id }}" data-parent="#accordion_questions_task_{{ task.id }}">
-                                                                                        <div class="card-body" style="background-color: #d7f8d7;">
+                                                                                        <div class="card-body sup-accordian-fourth-level">
                             
                                                                                             <!-- EDIT QUESTION modal -->
                                                                                             <!-- button to open the modal -->
-                                                                                            <button id="btn-edit-question-{{ question.id }}" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-edit-question-{{ question.id }}">
+                                                                                            <button id="btn-edit-question-{{ question.id }}" type="button" class="btn btn-primary inner-accordian-button" data-toggle="modal" data-target="#modal-edit-question-{{ question.id }}">
                                                                                                 Edit Question
                                                                                             </button>
                                                                                             <!-- code for modal window -->
                                                                                             <div class="modal" id="modal-edit-question-{{ question.id }}">
-                                                                                                <div class="modal-dialog">
-                                                                                                    <div class="modal-content">
+                                                                                                <div class="modal-dialog sup-modal-dialog">
+                                                                                                    <div class="modal-content sup-modal">
                                                                                                         <!-- modal header -->
                                                                                                         <div class="modal-header">
                                                                                                         <h4 class="modal-title">Edit Question</h4>
@@ -530,12 +530,12 @@
                                                                                                                     {{ form_edit_question.edit_questionDescription(value=question.description, size=32, class="form-field") }}<br>
                                                                                                                     {{ form_edit_question.current_questionID(value=question.id, style="display: none;") }}
                                                                                                                 </p>
-                                                                                                                <a>{{ form_edit_question.edit_question_submit(id="btn-edit-question-{{ question.id }}-submit", size=32, class="form-field") }}</a>
+                                                                                                                <a>{{ form_edit_question.edit_question_submit(id="btn-edit-question-{{ question.id }}-submit", size=32, class="form-field btn btn-primary btn-form-submit") }}</a>
                                                                                                             </form>
                                                                                                         </div>
                                                                                                         <!-- modal footer -->
                                                                                                         <div class="modal-footer">
-                                                                                                            <button id="btn-btm-close-edit-question-{{ question.id }}-modal" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                                                                                            <button id="btn-btm-close-edit-question-{{ question.id }}-modal" type="button" class="btn btn-form-secondary" data-dismiss="modal">Close</button>
                                                                                                         </div>
                                                                                                     </div>
                                                                                                 </div>
@@ -544,13 +544,13 @@
                             
                                                                                             <!-- DELETE QUESTION modal -->
                                                                                             <!-- button to open the modal -->
-                                                                                            <button id="btn-delete-question-{{ question.id }}" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-delete-question-{{ question.id }}">
+                                                                                            <button id="btn-delete-question-{{ question.id }}" type="button" class="btn btn-primary inner-accordian-button" data-toggle="modal" data-target="#modal-delete-question-{{ question.id }}">
                                                                                                 Delete Question
                                                                                             </button>
                                                                                             <!-- code for modal window -->
                                                                                             <div class="modal" id="modal-delete-question-{{ question.id }}">
-                                                                                                <div class="modal-dialog">
-                                                                                                    <div class="modal-content">
+                                                                                                <div class="modal-dialog sup-modal-dialog">
+                                                                                                    <div class="modal-content sup-modal">
                                                                                                         <!-- modal header -->
                                                                                                         <div class="modal-header">
                                                                                                         <button  id="btn-top-close-delete-question-{{ question.id }}" type="button" class="close" data-dismiss="modal">&times;</button>
@@ -562,12 +562,12 @@
                                                                                                             <form class="form" action="" method="post" novalidate>
                                                                                                                 {{ form_delete_question.hidden_tag() }}
                                                                                                                 {{ form_delete_question.del_questionID(value=question.id, style="display: none;") }}
-                                                                                                                <a>{{ form_delete_question.delete_question_submit }}</a>
+                                                                                                                <a>{{ form_delete_question.delete_question_submit(class="btn btn-primary btn-form-submit") }}</a>
                                                                                                             </form>
                                                                                                         </div>
                                                                                                         <!-- modal footer -->
                                                                                                         <div class="modal-footer">
-                                                                                                            <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                                                                                                            <button type="button" class="btn btn-form-secondary" data-dismiss="modal">Cancel</button>
                                                                                                         </div>
                                                                                                     </div>
                                                                                                 </div>
@@ -601,7 +601,7 @@
                                                                     </h5>
                                                                 </div>
                                                                 <div id="collapse_task_{{ task.id }}_student_submissions" class="collapse" aria-labelledby="heading_task_{{ task.id }}_student_submissions" data-parent="#accordion_task_{{ task.id }}_student_submissions">
-                                                                    <div class="card-body" style="background-color: #d7f8d7;">
+                                                                    <div class="card-body sup-accordian-third-level">
 
                                                                         <!-- list of students for each task -->
                                                                         <div id="accordion_students">
@@ -620,12 +620,12 @@
                                                                                         {% endif %}
                                                                                     </div>
                                                                                     <div id="collapse_student_{{ student.id }}" class="collapse" aria-labelledby="heading_student_{{ student.id }}" data-parent="#accordion_students">
-                                                                                        <div class="card-body" style="background-color: #efd9f5;">
+                                                                                        <div class="card-body sup-accordian-fourth-level">
                                                                                             <!-- TASK FEEDBACK section -->
                                                                                             <div>
                                                                                                 <form id="form-task-feedback-{{ student.id }}" class="form" action="" method="post" novalidate>
                                                                                                     {{ form_task_feedback.hidden_tag() }}
-                                                                                                    <p>
+                                                                                                    <p class="feedback-form-body">
                                                                                                         {% if student.get_task_mark(task.id) is not none %}
                                                                                                             {{ form_task_feedback.mark.label }}<br>
                                                                                                             {{ form_task_feedback.mark(value=student.get_task_mark(task.id), size=32, class="form-field") }}<br>
@@ -644,7 +644,7 @@
                                                                                                         {{ form_task_feedback.feedbackStudentID(value=student.id, style="display: none;") }}<br>
                                                                                                         {{ form_task_feedback.feedbackTaskID(value=task.id, style="display: none;") }}
                                                                                                     </p>
-                                                                                                    <a>{{ form_task_feedback.task_feedback_submit(id="btn-task-feedback-{{ student.id }}-submit", size=32, class="form-field") }}</a>
+                                                                                                    <a>{{ form_task_feedback.task_feedback_submit(id="btn-task-feedback-{{ student.id }}-submit", size=32, class="form-field btn btn-primary btn-form-submit publish-feedback-button") }}</a>
                                                                                                 </form>
                                                                                             </div>
                                                                                             <!-- end TASK FEEDBACK section -->
@@ -661,7 +661,7 @@
                                                                                                             </h5>
                                                                                                         </div>
                                                                                                         <div id="collapse_submitted_question_{{ submitted_question.id }}" class="collapse" aria-labelledby="heading_submitted_question_{{ submitted_question.id }}" data-parent="#accordion_submitted_questions">
-                                                                                                            <div class="card-body" style="background-color: #d7f8d7;">
+                                                                                                            <div class="card-body sup-accordian-first-level">
                                                                                                                 <p>Question Description: {{ submitted_question.description }}</p>
                                                                                                                 <!-- TODO: get recording from question.users.recorder_url -->
                                                                                                                 <p>Play recording: </p>
@@ -726,8 +726,8 @@
         </script>
         <!-- code for modal window -->
         <div class="modal fade" id="modal-edit-unit-form-errors">
-            <div class="modal-dialog">
-                <div class="modal-content">
+            <div class="modal-dialog sup-modal-dialog">
+                <div class="modal-content sup-modal">
                     <!-- modal body -->
                     <div class="modal-body show">
                         {% for error in form_edit_unit.edit_unitID.errors %}
@@ -737,7 +737,7 @@
                     </div>
                     <!-- modal footer -->
                     <div class="modal-footer">
-                        <button id="btn-btm-close-edit-unit-form-errors-modal" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        <button id="btn-btm-close-edit-unit-form-errors-modal" type="button" class="btn btn-form-secondary" data-dismiss="modal">Close</button>
                     </div>
                 </div>
             </div>
@@ -761,8 +761,8 @@
         </script>
         <!-- code for modal window -->
         <div class="modal fade" id="modal-add-task-form-errors">
-            <div class="modal-dialog">
-                <div class="modal-content">
+            <div class="modal-dialog sup-modal-dialog">
+                <div class="modal-content sup-modal">
                     <!-- modal body -->
                     <div class="modal-body show">
                         <ul>
@@ -783,7 +783,7 @@
                     </div>
                     <!-- modal footer -->
                     <div class="modal-footer">
-                        <button id="btn-btm-close-add-task-form-errors-modal" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        <button id="btn-btm-close-add-task-form-errors-modal" type="button" class="btn btn-form-secondary" data-dismiss="modal">Close</button>
                     </div>
                 </div>
             </div>
@@ -806,8 +806,8 @@
         </script>
         <!-- code for modal window -->
         <div class="modal fade" id="modal-edit-task-form-errors">
-            <div class="modal-dialog">
-                <div class="modal-content">
+            <div class="modal-dialog sup-modal-dialog">
+                <div class="modal-content sup-modal">
                     <!-- modal body -->
                     <div class="modal-body show">
                         <ul>
@@ -828,7 +828,7 @@
                     </div>
                     <!-- modal footer -->
                     <div class="modal-footer">
-                        <button id="btn-btm-close-edit-task-form-errors-modal" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        <button id="btn-btm-close-edit-task-form-errors-modal" type="button" class="btn btn-form-secondary" data-dismiss="modal">Close</button>
                     </div>
                 </div>
             </div>
@@ -852,8 +852,8 @@
         </script>
         <!-- code for modal window -->
         <div class="modal fade" id="modal-add-question-form-errors">
-            <div class="modal-dialog">
-                <div class="modal-content">
+            <div class="modal-dialog sup-modal-dialog">
+                <div class="modal-content sup-modal">
                     <!-- modal body -->
                     <div class="modal-body show">
                         <ul>
@@ -868,7 +868,7 @@
                     </div>
                     <!-- modal footer -->
                     <div class="modal-footer">
-                        <button id="btn-btm-close-add-question-form-errors-modal" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        <button id="btn-btm-close-add-question-form-errors-modal" type="button" class="btn btn-form-secondary" data-dismiss="modal">Close</button>
                     </div>
                 </div>
             </div>
@@ -892,8 +892,8 @@
         </script>
         <!-- code for modal window -->
         <div class="modal fade" id="modal-task-feedback-form-errors">
-            <div class="modal-dialog">
-                <div class="modal-content">
+            <div class="modal-dialog sup-modal-dialog">
+                <div class="modal-content sup-modal">
                     <!-- modal body -->
                     <div class="modal-body show">
                         <ul>
@@ -905,7 +905,7 @@
                     </div>
                     <!-- modal footer -->
                     <div class="modal-footer">
-                        <button id="btn-btm-close-task-feedback-form-errors-modal" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        <button id="btn-btm-close-task-feedback-form-errors-modal" type="button" class="btn btn-form-secondary" data-dismiss="modal">Close</button>
                     </div>
                 </div>
             </div>
@@ -929,8 +929,8 @@
         </script>
         <!-- code for modal window -->
         <div class="modal fade" id="modal-edit-question-form-errors">
-            <div class="modal-dialog">
-                <div class="modal-content">
+            <div class="modal-dialog sup-modal-dialog">
+                <div class="modal-content sup-modal">
                     <!-- modal body -->
                     <div class="modal-body show">
                         <ul>
@@ -945,7 +945,7 @@
                     </div>
                     <!-- modal footer -->
                     <div class="modal-footer">
-                        <button id="btn-btm-close-edit-question-form-errors-modal" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        <button id="btn-btm-close-edit-question-form-errors-modal" type="button" class="btn btn-form-secondary" data-dismiss="modal">Close</button>
                     </div>
                 </div>
             </div>
