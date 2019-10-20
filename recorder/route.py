@@ -501,8 +501,7 @@ def reset_password_request():
         if user:
             flash(
                 "You should soon receive an email allowing you to reset your \
-                password. Please make sure to check your spam and trash \
-                if you can't find the email."
+                password. Please make sure to check your spam if you can't find the email."
             )
             token = user.get_jwt()
             url_password_reset = url_for(
