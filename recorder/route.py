@@ -169,9 +169,9 @@ def teacher_view(staff_number):
         else:
             datetime_obj = None
         task = Task.query.filter_by(id=form_edit_task.current_taskID.data).first()
-        task.task_name=form_edit_task.edit_taskName.data
-        task.description=form_edit_task.edit_taskDescription.data
-        task.due_time=datetime_obj
+        task.task_name = form_edit_task.edit_taskName.data
+        task.description = form_edit_task.edit_taskDescription.data
+        task.due_time = datetime_obj
         task.update()
         flash('The task has been updated.')
         # need to return redirect on successful submission to clear form fields
@@ -258,7 +258,8 @@ def register():
         user.set_password(form.password.data)
         # add the new user to database
         user.add()
-        flash('Congratulations. You have registered successfully! Please verify you email before loggin in. Check your email inbox and spam folder.')
+        flash(
+            'Congratulations. You have registered successfully! Please verify you email before loggin in. Check your email inbox and spam folder.')
         request_email_verification2(form.email.data)
         return redirect(url_for('index'))
     return render_template('register.html', title='Registration', form=form)
