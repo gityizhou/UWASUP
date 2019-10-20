@@ -2,6 +2,7 @@ from datetime import datetime
 from recorder import db
 from recorder.models.user import User
 from recorder.models.user_task import User_task
+from recorder.route import drive
 
 
 class Task(db.Model):
@@ -28,6 +29,9 @@ class Task(db.Model):
         db.session.commit()
 
     def delete(self):
+        pdf_id = self.pdf_id
+        file = drive.CreateFile({'id': pdf_id})
+        file.Delete()
         for question in self.questions:
             print(question)
             question.delete()
@@ -37,6 +41,14 @@ class Task(db.Model):
             user_task.delete()
         db.session.delete(self)
         db.session.commit()
+
+    def delete_pdf(self):
+        pdf_id = self.pdf_id
+        file = drive.CreateFile({'id': pdf_id})
+        file.Delete()
+        self.pdf_id = None
+        self.pdf_url = None
+        self.update()
 
     def update(self):
         db.session.commit()

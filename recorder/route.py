@@ -5,7 +5,7 @@ from flask_login import login_user, current_user, logout_user, login_required
 from recorder.email import send_email
 from recorder.forms import LoginForm, RegisterForm, SubscribeUnitForm, MakeTeacherForm, PasswdResetForm, \
     PasswdResetRequestForm, DeleteUserForm, DeleteUnitForm, DeleteTaskForm, DeleteQuestionForm, CreateUnitForm, \
-    EditUnitForm, AddTaskForm, EditTaskForm, AddQuestionForm, EditQuestionForm, UnsubscribeUnitForm
+    EditUnitForm, AddTaskForm, EditTaskForm, AddQuestionForm, EditQuestionForm, UnsubscribeUnitForm, DeletePDFForm
 from recorder.models.user import User
 from recorder.models.unit import Unit
 from recorder.models.user_unit import User_unit
@@ -109,6 +109,7 @@ def teacher_view(staff_number):
     form_add_task = AddTaskForm()
     form_edit_task = EditTaskForm()
     form_delete_task = DeleteTaskForm()
+    form_delete_pdf = DeletePDFForm()
     form_add_question = AddQuestionForm()
     form_edit_question = EditQuestionForm()
     form_delete_question = DeleteQuestionForm()
@@ -199,6 +200,13 @@ def teacher_view(staff_number):
         flash('The task has been deleted.')
         # need to return redirect on successful submission to clear form fields
         return redirect(url_for('teacher_view', staff_number=staff_number))
+    # delete pdf form (validation not strictly necessary here for this form, see forms.py)
+    if form_delete_pdf.delete_pdf_submit.data and form_delete_pdf.validate_on_submit():
+        task = Task.query.filter_by(id=form_delete_pdf.del_pdf_taskID.data).first()
+        task.delete_pdf()
+        flash('The PDF has been deleted.')
+        # need to return redirect on successful submission to clear form fields
+        return redirect(url_for('teacher_view', staff_number=staff_number))
     # add question form
     if form_add_question.add_question_submit.data and form_add_question.validate_on_submit():
         question = Question(
@@ -236,7 +244,8 @@ def teacher_view(staff_number):
                            form_delete_question=form_delete_question, form_create_unit=form_create_unit,
                            form_edit_unit=form_edit_unit, form_add_task=form_add_task,
                            form_edit_task=form_edit_task, form_add_question=form_add_question,
-                           form_edit_question=form_edit_question, DOMAIN_NAME=DOMAIN_NAME)
+                           form_edit_question=form_edit_question, DOMAIN_NAME=DOMAIN_NAME,
+                           form_delete_pdf=form_delete_pdf)
 
 
 # logout function
@@ -452,7 +461,8 @@ def pdf_upload():
             print(this_task)
             this_task.update()
         os.remove("./uploads/files/" + filename)  # delete this file after uploading it to google drive
-    return render_template('pdf_upload.html')
+    flash("The PDF has been uploaded successfully.")
+    return redirect(url_for('teacher_view', staff_number=current_user.user_number))
 
 
 def task_result_downloader(task_id):
