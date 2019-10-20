@@ -6,7 +6,7 @@
 
 .main-card {
     margin-top: 2vh;
-    margin-bottom: 15vh;
+    margin-bottom: 20vh;
     padding: 2rem;
     border-radius: 3rem;
     border: 0.0rem solid rgb(235, 236, 233);
@@ -45,3 +45,15 @@ button > a {
 .second-user-button {
     margin-left: 2vh;
 }
+
+.footer {
+    width: 100%;
+    color: black;
+    text-align: center;
+    margin: 1rem;
+ }
+
+ .footer-item {
+    margin: 0rem;
+    font-size: 0.7rem;
+ }
