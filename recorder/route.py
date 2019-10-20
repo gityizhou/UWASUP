@@ -5,9 +5,10 @@ from flask_login import login_user, current_user, logout_user, login_required
 from recorder.email import send_email
 from recorder.forms import LoginForm, RegisterForm, SubscribeUnitForm, MakeTeacherForm, PasswdResetForm, \
     PasswdResetRequestForm, DeleteUserForm, DeleteUnitForm, DeleteTaskForm, DeleteQuestionForm, CreateUnitForm, \
-    EditUnitForm, AddTaskForm, EditTaskForm, AddQuestionForm, EditQuestionForm, TaskFeedbackForm
+    EditUnitForm, AddTaskForm, EditTaskForm, AddQuestionForm, EditQuestionForm, TaskFeedbackForm, UnsubscribeUnitForm
 from recorder.models.user import User
 from recorder.models.unit import Unit
+from recorder.models.user_unit import User_unit
 from recorder import db
 from pydrive.auth import GoogleAuth
 from pydrive.drive import GoogleDrive
@@ -17,6 +18,11 @@ from recorder.models.user_question import User_question
 from recorder.models.user_task import User_task
 import os, jwt, time, datetime
 from pandas import DataFrame
+
+# # google verification
+gauth = GoogleAuth()
+gauth.LocalWebserverAuth()
+drive = GoogleDrive(gauth)
 
 """
 Index page but also our login page!
@@ -62,6 +68,7 @@ def index():
 def student_view(student_number):
     student = current_user
     form_subscribe_unit = SubscribeUnitForm()
+    form_unsubscribe_unit = UnsubscribeUnitForm()
     form_subscribe_unit.subscribe_units.choices = [(unit.id, ("{} ({})".format(unit.unit_id, unit.unit_name))) for unit
                                                    in
                                                    Unit.query.all()]
@@ -71,8 +78,17 @@ def student_view(student_number):
             student.add_unit(unit_object)
         flash('You have been subscribed to the selected units.')
     student_units = student.get_student_units()
+    # unsubscribe from unit form (validation not strictly necessary here for this form, see forms.py)
+    if form_unsubscribe_unit.unsubscribe_unit_submit.data and form_unsubscribe_unit.validate_on_submit():
+        user_unit = User_unit.query.filter_by(user_id=form_unsubscribe_unit.unsub_studentID.data,
+                                              unit_id=form_unsubscribe_unit.unsub_unitID.data).first()
+        user_unit.delete()
+        # add in any function for deleting user_task and user_question entries assco with this user_unit
+        flash('You have been unsubscribed from the unit.')
+        # need to return redirect on successful submission to clear form fields
+        return redirect(url_for('student_view', student_number=student_number))
     return render_template('student_view.html', student=student, student_units=student_units,
-                           form_subscribe_unit=form_subscribe_unit)
+                           form_subscribe_unit=form_subscribe_unit, form_unsubscribe_unit=form_unsubscribe_unit)
 
 
 # After login, teacher will be redirected to this page
@@ -134,10 +150,13 @@ def teacher_view(staff_number):
     # add task form
     if form_add_task.add_task_submit.data and form_add_task.validate_on_submit():
         # create DateTime format "YYYY-MM-DD HH:MM"
-        due_date = form_add_task.taskDueDate.data
-        due_time = form_add_task.taskDueTime.data
-        due_date_time = due_date + " " + due_time
-        datetime_obj = datetime.datetime.strptime(due_date_time, '%Y-%m-%d %H:%M')
+        if form_add_task.taskDueDate.data and form_add_task.taskDueTime.data:
+            due_date = form_add_task.taskDueDate.data
+            due_time = form_add_task.taskDueTime.data
+            due_date_time = due_date + " " + due_time
+            datetime_obj = datetime.datetime.strptime(due_date_time, '%Y-%m-%d %H:%M')
+        else:
+            datetime_obj = None
         task = Task(
             task_name=form_add_task.taskName.data,
             description=form_add_task.taskDescription.data,
@@ -153,13 +172,17 @@ def teacher_view(staff_number):
     # edit task form
     if form_edit_task.edit_task_submit.data and form_edit_task.validate_on_submit():
         # create DateTime format "YYYY-MM-DD HH:MM"
-        due_date = form_edit_task.dueDate.data
-        due_time = form_edit_task.dueTime.data
-        due_date_time = due_date + " " + due_time
+        if form_edit_task.edit_taskDueDate.data and form_edit_task.edit_taskDueTime.data:
+            due_date = form_edit_task.edit_taskDueDate.data
+            due_time = form_edit_task.edit_taskDueTime.data
+            due_date_time = due_date + " " + due_time
+            datetime_obj = datetime.datetime.strptime(due_date_time, '%Y-%m-%d %H:%M')
+        else:
+            datetime_obj = None
         task = Task.query.filter_by(id=form_edit_task.current_taskID.data).first()
         task.task_name = form_edit_task.edit_taskName.data
         task.description = form_edit_task.edit_taskDescription.data
-        task.due_time = due_date_time
+        task.due_time = datetime_obj
         task.update()
         flash('The task has been updated.')
         # need to return redirect on successful submission to clear form fields
@@ -246,15 +269,14 @@ def register():
         user.set_password(form.password.data)
         # add the new user to database
         user.add()
-        flash('Congratulations. You have registered successfully! Please verify you email\
-            Check your mail box and your Spam!')
+        flash('Congratulations. You have registered successfully! Please verify you email before logging in. Check your email inbox and spam folder.')
         request_email_verification2(form.email.data)
         return redirect(url_for('index'))
     return render_template('register.html', title='Registration', form=form)
 
 
 def request_email_verification2(email):
-    user = User.query.filter_by(email=email).first();
+    user = User.query.filter_by(email=email).first()
     token = user.get_jwt()
     url = str(url_for("verify_email_by_token", token=token, _external=True))
     body = "link to verify password: " + url
@@ -267,8 +289,8 @@ def request_email_verification2(email):
 def request_email_verification():
     token = current_user.get_jwt()
     url = str(url_for("verify_email_by_token", token=token, _external=True))
-    body = "link to verify password: " + url  # this is also can be a separate template but this msg can be enough
-    htmlbody = 'to verify your email click <a href="' + url + '">here</a>'
+    body = "Link to verify password: " + url  # this is also can be a separate template but this msg can be enough
+    htmlbody = 'To verify your email click <a href="' + url + '">here</a>'
     send_email(subject="", recipients=[current_user.email], text_body=body, html_body=htmlbody)
     return "Verification link sent to " + current_user.email
 
@@ -295,16 +317,11 @@ def verify_email_by_token(token):
 
     # it will return to login page after verify the account 
     # return "Email successfully verified"
-    return render_template('index.html', title="Index", form=form)
+    # return render_template('index.html', title="Index", form=form)
+    return render_template('index.html', title="Index")
 
 
-# # recorder upload function, the folder now is default /uploads/files/
-gauth = GoogleAuth()
-gauth.LocalWebserverAuth()
-drive = GoogleDrive(gauth)
-
-
-# recorder upload function, the folder now is default /uploads/files/
+# record upload function, the folder now is default /uploads/files/
 # and will be uploaded to google drive
 def upload():
     files = UploadSet('files', ALL)
@@ -313,12 +330,16 @@ def upload():
     question_id = request.form.get("question_id")
     user_question = User_question.query.filter_by(question_id=question_id,
                                                   user_id=user_id).first()
+
     print(user_question)
     if question_id:
         question_id = int(request.form.get("question_id"))  # get the question id from request post
         question_id_str = str(question_id)
         this_question = db.session.query(Question).filter(Question.id == question_id).one()
         task_id = this_question.task_id
+        this_task = db.session.query(Task).filter(Task.id == task_id).one()
+
+        user_task = User_task.query.filter_by(task_id=task_id, user_id=user_id).first()
         task_id_str = str(task_id)
         unit_id = db.session.query(Task).filter(Task.id == task_id).one().unit_id
         unit_id_str = str(unit_id)
@@ -326,8 +347,11 @@ def upload():
         print(unit_id_str)
         print(task_id_str)
         print(question_id_str)
+        name = student_number + '_' + unit_id_str + '_' + task_id_str + '_' + question_id_str + '.mp3'
 
-        name = student_number + '_' + unit_id_str + '_' + task_id_str + '_' + question_id_str
+    if not user_task:
+        User_task.add_user_task(user=current_user, task=this_task)  # save user_question to db
+
     if request.method == 'POST' and 'upfile' in request.files:
         filename = files.save(
             request.files['upfile'])  # get the file from front end request, return the file name(String)
@@ -354,6 +378,53 @@ def upload():
 
         os.remove("./uploads/files/" + filename)  # delete this file after uploading it to google drive
     return render_template('recorder.html')
+
+
+# def teacher_comment_record_upload():
+#     files = UploadSet('files', ALL)
+#     task_id_str = request.form.get("task_id")
+#     student_id_str = request.form.get("student_id")
+#     comment = request.form.get("comment")
+#     mark = request.form.get("mark")
+#
+#     user_task = User_task.query.filter_by(task_id=task_id_str,
+#                                           user_id=student_id_str).first()
+#     if task_id_str & student_id_str:
+#         mark = float(mark)
+#         task_id = int(task_id_str)
+#         student_id = int(student_id_str)
+#         this_task = db.session.query(Task).filter(Task.id == task_id).one()
+#         this_student = db.session.query(User).filter(User.id == student_id).one()
+#         task_name = this_task.task_name
+#         student_number = this_student.user_number
+#         name = task_id_str + "_" + task_name + "_" + student_number
+#
+#     if request.method == 'POST' and 'upfile' in request.files:
+#         filename = files.save(
+#             request.files['upfile'])  # get the file from front end request, return the file name(String)
+#         if user_task:
+#             record_id = user_task.record_id
+#             upload_file = drive.CreateFile({'id': record_id})
+#             upload_file.SetContentFile("./uploads/files/" + filename)
+#             upload_file['title'] = name  # set the file name of this file
+#             upload_file.Upload()  # upload this file
+#         else:
+#             upload_file = drive.CreateFile()  # create the google drive file instance
+#             upload_file.SetContentFile("./uploads/files/" + filename)  # set our file into this instance
+#             upload_file['title'] = name  # set the file name of this file
+#             upload_file.Upload()  # upload this file
+#             permission = upload_file.InsertPermission({
+#                 'type': 'anyone',
+#                 'value': 'anyone',
+#                 'role': 'reader'})
+#             google_file_id = upload_file[
+#                 'id']  # can get this file's google drive-id and use it to save the id into database
+#             google_url = "https://drive.google.com/uc?authuser=0&id=" + google_file_id + "&export=download"
+#             User_task.add_user_question(user=this_student, task=this_task, record_url=google_url,
+#                                             record_id=google_file_id, record_title=name, mark=mark, comment=comment)  # save user_question to db
+#
+#         os.remove("./uploads/files/" + filename)  # delete this file after uploading it to google drive
+
 
 def task_result_downloader(task_id):
     results = User_task.query.filter_by(task_id=task_id)
@@ -384,29 +455,7 @@ def task_result_downloader(task_id):
     columns = ['student_number', 'first_name', 'last_name', 'mark']
     df.to_csv(filepath, encoding="utf_8_sig", index=False, columns=columns)
 
-    return send_from_directory(path, filename, as_attachment=True)  # as_attachment=True 一定要写，不然会变成打开，而不是下载
-
-
-
-
-def getFilesList():
-    upload_file = drive.CreateFile()  # create the google drive file instance
-    file_list = drive.ListFile({'q': "'root' in parents and trashed=false"}).GetList()
-    res = []
-    for file1 in file_list:
-        res.append({"title": file1['title'], "id": file1['id']})
-    return jsonify(res)
-    # return res;
-
-
-def donwload(id, title):
-    file = drive.CreateFile({'id': id})
-    file.GetContentFile('./downloads/' + title)  # Download file as 'studentnumber.mp3'.
-    return redirect(url_for('send_download', filename=title));
-
-
-def download_access(filename):
-    return send_file('../downloads/' + filename, as_attachment=True)
+    return send_from_directory(path, filename, as_attachment=True)  # as_attachment=True
 
 
 def reset_password_request():
@@ -465,3 +514,62 @@ def password_reset(token):
     return render_template(
         'password_reset.html', title='Password Reset', form=form
     )
+
+
+def teacher_recorder():
+    files = UploadSet('files', ALL)
+    task_id_str = request.form.get("task_id")
+    student_id_str = request.form.get("student_id")
+    comment = request.form.get("comment")
+    mark = request.form.get("mark")
+
+    user_task = User_task.query.filter_by(task_id=task_id_str,
+                                          user_id=student_id_str).first()
+    if task_id_str:
+        mark = float(mark)
+        print(mark)
+        task_id = int(task_id_str)
+        print(task_id)
+        student_id = int(student_id_str)
+        print(student_id)
+        this_task = db.session.query(Task).filter(Task.id == task_id).one()
+        print(this_task)
+        this_student = db.session.query(User).filter(User.id == student_id).one()
+        print(this_student)
+        task_name = this_task.task_name
+        student_number = this_student.user_number
+        name = task_id_str + "_" + task_name + "_" + student_number + ".mp3"
+        print(name)
+    if request.method == 'POST' and 'upfile' in request.files:
+        filename = files.save(
+            request.files['upfile'])  # get the file from front end request, return the file name(String)
+        if user_task.mark:
+            record_id = user_task.record_id
+            upload_file = drive.CreateFile({'id': record_id})
+            upload_file.SetContentFile("./uploads/files/" + filename)
+            upload_file['title'] = name  # set the file name of this file
+            upload_file.Upload()  # upload this file
+        else:
+            upload_file = drive.CreateFile()  # create the google drive file instance
+            upload_file.SetContentFile("./uploads/files/" + filename)  # set our file into this instance
+            upload_file['title'] = name  # set the file name of this file
+            upload_file.Upload()  # upload this file
+            permission = upload_file.InsertPermission({
+                'type': 'anyone',
+                'value': 'anyone',
+                'role': 'reader'})
+            google_file_id = upload_file[
+                'id']  # can get this file's google drive-id and use it to save the id into database
+            google_url = "https://drive.google.com/uc?authuser=0&id=" + google_file_id + "&export=download"
+            user_task.comment = comment
+            user_task.mark = mark
+            user_task.record_url = google_url
+            user_task.record_id = google_file_id
+            user_task.record_title = name
+            # User_task.add_user_question(user=this_student, task=this_task, record_url=google_url,
+            #                             record_id=google_file_id, record_title=name, mark=mark,
+            #                             comment=comment)  # save user_question to db
+            user_task.update()
+
+        os.remove("./uploads/files/" + filename)  # delete this file after uploading it to google drive
+    return render_template('teacher_recorder.html')

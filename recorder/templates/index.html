@@ -1,29 +1,37 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Login</h1>
-    <form action="" method="post">
-        <p>
-            {{ form.username.label }}
-            {{ form.username() }}
-        </p>
-        <p>
-            {{ form.password.label }}
-            {{ form.password() }}
-        </p>
-        <p>
-            {{ form.remember_me() }}
-            {{ form.remember_me.label }}
-        </p>
-        <p>
-            {{ form.submit() }}
-        </p>
-        <p>
-            <a href="{{ url_for('register') }}">New User?</a>or
-            <a href="{{ url_for('reset_password_request') }}">Forgot Password?</a>
-        </p>
-        <div>
-            <a style="color: red">{{get_flashed_messages()[0]}}</a>
+    <!-- start of card -->
+    <div class="col-xl-4 col-lg-6 col-md-10 col-sm-12 col-12 mx-auto main-card text-center">
+        <div class="card-deck">
+            <div class="card-body">
+                <h3>Sign In</h3><br>
+                <form class="text-center" action="" method="post">
+                    <p>
+                        {{ form.username.label }}
+                        {{ form.username() }}
+                    </p>
+                    <p>
+                        {{ form.password.label }}
+                        {{ form.password() }}
+                    </p>
+                    <p>
+                        {{ form.remember_me() }}
+                        {{ form.remember_me.label }}
+                    </p>
+                    <p>
+                        {{ form.submit(class="btn btn-primary btn-form-submit") }}
+                    </p>
+                    <p>
+                        <a href="{{ url_for('register') }}">New User?</a>
+                    </p>
+                    <p>
+                        <a href="{{ url_for('reset_password_request') }}">Forgot Password?</a>
+                    </p>
+                </form>
+                <!-- end form -->
+            </div>
         </div>
-    </form>
+    </div>
+    <!-- end card -->
 {% endblock %}

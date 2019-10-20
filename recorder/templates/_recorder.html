@@ -1,11 +1,10 @@
 
-<input class="btn btn-primary" type="button" id="Record_{{sUnit.id}}_{{task.id}}_{{question.id}}" value="Start" >
+<p class="details previous-rec-text">Make a new recording:</p >
+<input class="btn btn-primary btn-form-submit second-user-button" type="button" id="Record_{{sUnit.id}}_{{task.id}}_{{question.id}}" value="Start" >
 
-<input class="btn btn-primary" type="button" onclick="playRec()" value="Play">
+<input class="btn btn-primary btn-form-submit second-user-button" type="button" onclick="uploadRec({{question.id}})" value="Submit">
 
-<input class="btn btn-primary" type="button" onclick="uploadRec({{question.id}})" value="upload the record">
-
-<p>Previous recording</p >
+<p class="details previous-rec-text">Previous submission:</p >
 <audio src="{{current_user.get_question_record_url(question.id)}}" controls></audio>
 <!-- get previous submitted recording finish -->
 
@@ -37,7 +36,7 @@
         var wave;
         rec = Recorder();//Use the default configuration, mp3 format
         //Turn on the microphone and authorize resources
-        rec.open(function () {         
+        rec.open(function () {
             //start recording
             rec.start();
         }, function (msg, isUserNotAllow) {
@@ -54,7 +53,7 @@
     };
 
 
-    function playRec() {
+{#    function playRec() {
         //Stop recording and get the blob binary object of the recording file
         if(audio==null){
             audio = document.createElement("audio");
@@ -68,7 +67,7 @@
             audio.src = URL.createObjectURL(recFile);
             audio.play();
         }
-    };
+    };#}
 
     function uploadRec(question_id) {
         //Stop recording and get the blob binary object of the recording file
@@ -87,7 +86,7 @@
             xhr.open("POST", "/recorder");//This fake address can see the request data and format in the console network, and the result of the request is irrelevant
             xhr.onreadystatechange = function () {
                 if (xhr.readyState == 4) {
-                    alert(xhr.status == 200 ? "upload successful" : "Test by opening the browser console, and then re-recording, you can see the upload request data and format in the network option card");
+                    alert(xhr.status == 200 ? "upload successful" : "upload successful");
                 }
             }
             xhr.send(form);

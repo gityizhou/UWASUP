@@ -7,6 +7,7 @@ from wtforms.widgets import ListWidget, CheckboxInput
 from recorder.models.user import User
 from recorder.models.unit import Unit
 from recorder.models.task import Task
+from recorder.models.user_unit import User_unit
 from recorder.models.question import Question
 
 import sys, datetime, time
@@ -78,7 +79,7 @@ class RegisterForm(FlaskForm):
             raise ValidationError('This email address is already in use.')
 
 class PasswdResetRequestForm(FlaskForm):
-    email = StringField("Email Address", validators=[DataRequired(), Email()])
+    email = StringField("Email Address:", validators=[DataRequired(), Email()])
     submit = SubmitField('Reset Password')
 
     def validate_email(self, email):
@@ -108,7 +109,21 @@ class MultiCheckboxField(SelectMultipleField):
 class SubscribeUnitForm(FlaskForm):
     subscribe_units = MultiCheckboxField('Units', [DataRequired(message='Please select one or more units.')],
                                          coerce=int)
+    studentID = StringField('Student number')
     subscribe_unit_submit = SubmitField('Subscribe')
+
+    def validate_subscribe_units(self, subscribe_units):
+        for u in subscribe_units.data:
+            user_unit = User_unit.query.filter_by(user_id=self.studentID.data,
+                                              unit_id=u).first()
+            if user_unit is not None:
+                raise ValidationError('You are already subscribed to one or more of these units.')
+
+# validators not needed as this form will only be generated for existing units
+class UnsubscribeUnitForm(FlaskForm):
+    unsub_unitID = StringField()
+    unsub_studentID = StringField()
+    unsubscribe_unit_submit = SubmitField('Unsubscribe from Unit')
 
 
 ############################
@@ -141,22 +156,28 @@ class CreateUnitForm(FlaskForm):
     def validate_unitID(self, unitID):
         # checks for only alphanumeric characters
         if not unitID.data.isalnum():
-            raise ValidationError('Unit code must contain only uppercase letters and numbers.')
+            raise ValidationError('Character error Unit code must contain only uppercase letters and numbers.')
         # ensures letters are uppercase and code contains both letters and numbers
         else:
             hasLetters = False
             hasNumbers = False
+            letterCount = 0
+            numberCount = 0
             for char in unitID.data:
                 if not char.isdigit():
                     hasLetters = True
-                    if not char.isalpha():
-                        raise ValidationError('Unit code must contain only uppercase letters and numbers.')
+                    letterCount += 1
+                    if not char.isupper():
+                        raise ValidationError('Unit code must not contain lowercase letters.')
                 else:
+                    numberCount += 1
                     hasNumbers = True
         if not hasNumbers:
             raise ValidationError('Unit code must contain numbers.')
         elif not hasLetters:
             raise ValidationError('Unit code must contain uppercase letters.')
+        elif numberCount != 4 or letterCount != 4:
+            raise ValidationError('Unit code must be four letters and four numbers.')
         else:
             unit = Unit.query.filter_by(unit_id=unitID.data).first()
             if unit is not None:
@@ -171,22 +192,32 @@ class EditUnitForm(FlaskForm):
     def validate_edit_unitID(self, edit_unitID):
         # checks for only alphanumeric characters
         if not edit_unitID.data.isalnum():
-            raise ValidationError('Unit code must contain only uppercase letters and numbers.')
+            raise ValidationError('Character error Unit code must contain only uppercase letters and numbers.')
         # ensures letters are uppercase and code contains both letters and numbers
         else:
             hasLetters = False
             hasNumbers = False
+            letterCount = 0
+            numberCount = 0
             for char in edit_unitID.data:
                 if not char.isdigit():
                     hasLetters = True
-                    if not char.isalpha():
-                        raise ValidationError('Unit code must contain only uppercase letters and numbers.')
+                    letterCount += 1
+                    if not char.isupper():
+                        raise ValidationError('Unit code must not contain lowercase letters.')
                 else:
+                    numberCount += 1
                     hasNumbers = True
         if not hasNumbers:
             raise ValidationError('Unit code must contain numbers.')
         elif not hasLetters:
             raise ValidationError('Unit code must contain uppercase letters.')
+        elif numberCount != 4 or letterCount != 4:
+            raise ValidationError('Unit code must be four letters and four numbers.')
+        else:
+            unit = Unit.query.filter_by(unit_id=edit_unitID.data).first()
+            if unit is None:
+                raise ValidationError('This unit does not exist.')
 
 class AddTaskForm(FlaskForm):
     taskName = StringField('Task name', validators=[DataRequired()])
@@ -195,19 +226,27 @@ class AddTaskForm(FlaskForm):
     taskDueTime = StringField('Due time in 24h format (HH:MM)')
     task_unitID = StringField('unitID')
     pdfTitle = StringField('PDF Attachment Title')
-    add_task_submit = SubmitField('Add Task')
+    add_task_submit = SubmitField('Publish Task')
 
     def validate_taskDueDate(self, taskDueDate):
-        try:
-            datetime.datetime.strptime(taskDueDate.data, '%Y-%m-%d')
-        except ValueError:
-            raise ValidationError('Due date must be in format YYYY-MM-DD.')
+        if taskDueDate.data:
+            if self.taskDueTime.data:
+                try:
+                    datetime.datetime.strptime(taskDueDate.data, '%Y-%m-%d')
+                except ValueError:
+                    raise ValidationError('Due date must be in format YYYY-MM-DD.')
+            else:
+                raise ValidationError('Due date must also have a due time.')
 
     def validate_taskDueTime(self, taskDueTime):
-        try:
-            time.strptime(taskDueTime.data, '%H:%M')
-        except ValueError:
-            raise ValidationError('Due time must be in format HH:MM.')
+        if taskDueTime.data:
+            if self.taskDueDate.data:
+                try:
+                    time.strptime(taskDueTime.data, '%H:%M')
+                except ValueError:
+                    raise ValidationError('Due time must be in format HH:MM.')
+            else:
+                raise ValidationError('Due time must also have a due date.')
 
 class EditTaskForm(FlaskForm):
     current_taskID = StringField('Current taskID')
@@ -218,30 +257,38 @@ class EditTaskForm(FlaskForm):
     edit_task_submit = SubmitField('Update Task')
 
     def validate_edit_taskDueDate(self, edit_taskDueDate):
-        try:
-            datetime.datetime.strptime(edit_taskDueDate.data, '%Y-%m-%d')
-        except ValueError:
-            raise ValidationError('Due date must be in format YYYY-MM-DD.')
+        if edit_taskDueDate.data:
+            if self.edit_taskDueTime.data:
+                try:
+                    datetime.datetime.strptime(edit_taskDueDate.data, '%Y-%m-%d')
+                except ValueError:
+                    raise ValidationError('Due date must be in format YYYY-MM-DD.')
+            else:
+                raise ValidationError('Due date must also have a due time.')
 
     def validate_edit_taskDueTime(self, edit_taskDueTime):
-        try:
-            time.strptime(edit_taskDueTime.data, '%H:%M')
-        except ValueError:
-            raise ValidationError('Due time must be in format HH:MM.')
+        if edit_taskDueTime.data:
+            if self.edit_taskDueDate.data:
+                try:
+                    time.strptime(edit_taskDueTime.data, '%H:%M')
+                except ValueError:
+                    raise ValidationError('Due time must be in format HH:MM.')
+            else:
+                raise ValidationError('Due time must also have a due date.')
 
 class AddQuestionForm(FlaskForm):
     questionName = StringField('Question name', validators=[DataRequired()])
     questionDescription = StringField('Description', validators=[DataRequired()])
     question_taskID = StringField('taskID')
-    add_question_submit = SubmitField('Add Question')
+    add_question_submit = SubmitField('Publish Question')
 
 class TaskFeedbackForm(FlaskForm):
     feedbackStudentID = StringField('studentID')
     feedbackTaskID = StringField('taskID')
-    mark = StringField('Mark (format 0.0)')
+    mark = StringField('Mark (format 00.0)')
     #feedbackRecorderUrl = StringField('feedbackURL')
     feedbackComment = TextAreaField('Comments')
-    task_feedback_submit = SubmitField('Save Feedback')
+    task_feedback_submit = SubmitField('Publish Feedback')
 
     def validate_mark(self, mark):
         hasLetters = False
@@ -249,11 +296,11 @@ class TaskFeedbackForm(FlaskForm):
             if not char.isdigit() and char != '.':
                 hasLetters = True
         if hasLetters:
-            raise ValidationError('Mark must not include letters.')
-        if len(mark.data) != 3:
-            raise ValidationError('Mark must be three characters.')
-        if mark.data[1] != '.':
-            raise ValidationError('Mark must be in the format 0.0')
+            raise ValidationError("Mark must not include letters or characters other than '.'")
+        if len(mark.data) != 4:
+            raise ValidationError('Mark must be four characters.')
+        if mark.data[2] != '.':
+            raise ValidationError('Mark must be in the format 00.0')
 
 
 class EditQuestionForm(FlaskForm):

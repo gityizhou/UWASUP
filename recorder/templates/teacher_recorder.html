@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>test</title>
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery@3.1.1/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.1/dist/jquery.validate.js"></script>
+    <script src="https://xiangyuecn.github.io/Recorder/recorder.mp3.min.js"></script>
+</head>
+<body>
+<form id="teacher_comment" action="#" method="post">
+    <input type="hidden" id="task_id" name="task_id" value="1">
+    <input type="hidden" id="student_id" name="student_id" value="1">
+    <br>
+    comment: <input type="text" id="comment" name="comment" >
+    <br>
+    mark: <input type="text" id="mark" name="mark">
+    <br>
+    <input class="btn btn-primary" type="button" id="record_start" value="Start" ></input>
+    <input class="btn btn-primary" type="button" onclick="uploadRec()" value="upload the record"></input>
+
+</form>
+
+
+
+
+
+<script type="text/javascript">
+        $(document).ready(function doOnClick(){
+        $("#record_start").click(function(){
+            if(document.getElementById("record_start").value=="Finish"){
+                document.getElementById("record_start").value="Start";
+                document.getElementById("record_start").style.color='white';
+                stopRec();
+
+
+            }
+            else if (document.getElementById("record_start").value=="Start"){
+                document.getElementById("record_start").value="Finish";
+                document.getElementById("record_start").style.color='red';
+                startRec();
+            }
+        })
+    })
+        function startRec() {
+        rec = Recorder();//Use the default configuration, mp3 format
+        //Turn on the microphone and authorize resources
+        rec.open(function () {
+            //start recording
+            rec.start();
+        }, function (msg, isUserNotAllow) {
+            //The user has refused permission or the browser does not support it
+            alert((isUserNotAllow ? "User denied permission，" : "") + "not able to record:" + msg);
+        });
+    };
+
+
+    function stopRec() {
+        rec.stop(function (blob, duration) {
+            recFile = blob;
+        })
+    };
+
+
+
+
+    function uploadRec() {
+        //Stop recording and get the blob binary object of the recording file
+
+            /*
+            Blob file object, which can be read and fetched with FileReader
+            ，Or use FormData upload, which in this case uploads the binary directly
+            ，from normal application/x-www-form-urlencoded form upload
+            */
+            var form = document.getElementById("teacher_comment");
+            var formData = new FormData(form);
+            formData.append("upfile", recFile, "record.mp3"); //Similar to ordinary form forms, files with upfile parameters, named recorder. Mp3, are received by the back-end
+
+            //Upload directly with ajax
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/teacher_recorder");//This fake address can see the request data and format in the console network, and the result of the request is irrelevant
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4) {
+                    alert(xhr.status == 200 ? "upload successful" : "upload successful");
+                }
+            }
+
+            xhr.send(formData);
+        }
+</script>
+</body>
+</html>
