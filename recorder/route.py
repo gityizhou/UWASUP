@@ -283,7 +283,7 @@ def request_email_verification2(email):
     token = user.get_jwt()
     url = str(url_for("verify_email_by_token", token=token, _external=True))
     body = "link to verify password: " + url
-    htmlbody = 'to verify your email click <a href="' + url + '">here</a>'
+    htmlbody = 'Thanks for registering for SUP! To verify your email click <a href="' + url + '">here</a>'
     send_email(subject="", recipients=[user.email], text_body=body, html_body=htmlbody)
     return "Verification link sent to " + user.email + "Please check you Spam box as well"
 
@@ -293,7 +293,7 @@ def request_email_verification():
     token = current_user.get_jwt()
     url = str(url_for("verify_email_by_token", token=token, _external=True))
     body = "Link to verify password: " + url  # this is also can be a separate template but this msg can be enough
-    htmlbody = 'To verify your email click <a href="' + url + '">here</a>'
+    htmlbody = 'Thanks for registering for SUP! To verify your email click <a href="' + url + '">here</a>'
     send_email(subject="", recipients=[current_user.email], text_body=body, html_body=htmlbody)
     return "Verification link sent to " + current_user.email
 
@@ -562,19 +562,13 @@ def teacher_recorder():
                                           user_id=student_id_str).first()
     if task_id_str:
         mark = float(mark)
-        print(mark)
         task_id = int(task_id_str)
-        print(task_id)
         student_id = int(student_id_str)
-        print(student_id)
         this_task = db.session.query(Task).filter(Task.id == task_id).one()
-        print(this_task)
         this_student = db.session.query(User).filter(User.id == student_id).one()
-        print(this_student)
         task_name = this_task.task_name
         student_number = this_student.user_number
         name = task_id_str + "_" + task_name + "_" + student_number + ".mp3"
-        print(name)
     if request.method == 'POST' and 'upfile' in request.files:
         filename = files.save(
             request.files['upfile'])  # get the file from front end request, return the file name(String)

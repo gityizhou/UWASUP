@@ -1,4 +1,4 @@
-from recorder.models.task import Task
+from recorder.models.user_task import User_task
 from recorder.models.user_question import User_question
 from datetime import datetime, timedelta
 from recorder import route
@@ -11,8 +11,6 @@ def delete_old_recordings():
     all_submissions = User_question.query.all()
     for sub in all_submissions:
         if sub.update_time is not None:
-            t = str(sub.update_time)[:10]
-            t = datetime.strptime(t, '%Y-%m-%d')
             if sub.update_time < one_month_ago:
                 file_id = sub.record_id
                 file = route.drive.CreateFile({'id': file_id})
@@ -21,7 +19,15 @@ def delete_old_recordings():
                 sub.record_id = None
                 sub.record_title = None
                 sub.update()
-                print("file deleted")
-    #all_tasks = Task.query.all()
-    #for record in all_tasks:
-    #    print(record)
+    all_user_tasks = User_task.query.all()
+    for record in all_user_tasks:
+        if record.record_create_time is not None:
+            if record.record_create_time < one_month_ago:
+                file_id = record.record_id
+                file = route.drive.CreateFile({'id': file_id})
+                file.Delete()
+                record.record_url = 'deleted'
+                record.record_id = None
+                record.record_title = None
+                record.update()
+    all_user_tasks = User_task.query.all()

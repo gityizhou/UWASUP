@@ -687,7 +687,7 @@
                                                                                 <div class="card">
                                                                                     <div class="card-header" id="heading_student_{{ student.id }}">
                                                                                         <h5 class="mb-0">
-                                                                                            <button class="btn btn-link" data-toggle="collapse" data-target="#collapse_student_{{ student.id }}" aria-expanded="true" aria-controls="collapse_student_{{ student.id }}">
+                                                                                            <button id="btn-open-student-accordian-{{ student.id }}-{{ task.id }}" class="btn btn-link" data-toggle="collapse" data-target="#collapse_student_{{ student.id }}" aria-expanded="true" aria-controls="collapse_student_{{ student.id }}">
                                                                                                 {{ student.user_number }}: {{ student.first_name}} {{ student.last_name}}
                                                                                             </button>
                                                                                         </h5>
@@ -716,7 +716,7 @@
                                                                                                     <div class="card">
                                                                                                         <div class="card-header" id="heading_submitted_question_{{ submitted_question.id }}">
                                                                                                             <h5 class="mb-0">
-                                                                                                                <button class="btn btn-link" data-toggle="collapse" data-target="#collapse_submitted_question_{{ submitted_question.id }}" aria-expanded="true" aria-controls="collapse_submitted_question_{{ submitted_question.id }}">
+                                                                                                                <button id="btn_open_student_modal_{{ task.id }}-{{ student.id }}" class="btn btn-link" data-toggle="collapse" data-target="#collapse_submitted_question_{{ submitted_question.id }}" aria-expanded="true" aria-controls="collapse_submitted_question_{{ submitted_question.id }}">
                                                                                                                     {{ submitted_question.question_name }}
                                                                                                                 </button>
                                                                                                             </h5>
@@ -987,6 +987,7 @@
         function downloadPDF(pdfURL){
             document.location.href = pdfURL;
         }
+
     </script>
 
 {% endblock %}

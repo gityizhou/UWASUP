@@ -64,6 +64,7 @@
                     var form = document.getElementById("teacher_comment");
                     var formData = new FormData(form);
                     formData.append("upfile", recFile, "record.mp3"); //Similar to ordinary form forms, files with upfile parameters, named recorder. Mp3, are received by the back-end
+                    formData.append("current_student_button_id", "#btn-open-student-accordian-{{ student.id }}-{{ task.id }}") // pass through current student being marked to reopen accordians
 
                     //Upload directly with ajax
                     var xhr = new XMLHttpRequest();
