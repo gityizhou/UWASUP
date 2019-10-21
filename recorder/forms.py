@@ -288,7 +288,7 @@ class TaskFeedbackForm(FlaskForm):
     mark = StringField('Mark (format 00.0)')
     #feedbackRecorderUrl = StringField('feedbackURL')
     feedbackComment = TextAreaField('Comments')
-    task_feedback_submit = SubmitField('Publish Feedback')
+    task_feedback_submit = SubmitField('Update Mark and Comments')
 
     def validate_mark(self, mark):
         hasLetters = False

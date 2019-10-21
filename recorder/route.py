@@ -5,7 +5,8 @@ from flask_login import login_user, current_user, logout_user, login_required
 from recorder.email import send_email
 from recorder.forms import LoginForm, RegisterForm, SubscribeUnitForm, MakeTeacherForm, PasswdResetForm, \
     PasswdResetRequestForm, DeleteUserForm, DeleteUnitForm, DeleteTaskForm, DeleteQuestionForm, CreateUnitForm, \
-    EditUnitForm, AddTaskForm, EditTaskForm, AddQuestionForm, EditQuestionForm, UnsubscribeUnitForm, DeletePDFForm
+    EditUnitForm, AddTaskForm, EditTaskForm, AddQuestionForm, EditQuestionForm, UnsubscribeUnitForm, DeletePDFForm, \
+    TaskFeedbackForm
 from recorder.models.user import User
 from recorder.models.unit import Unit
 from recorder.models.user_unit import User_unit
@@ -114,6 +115,7 @@ def teacher_view(staff_number, current_student_button_id=None):
     form_add_question = AddQuestionForm()
     form_edit_question = EditQuestionForm()
     form_delete_question = DeleteQuestionForm()
+    form_task_feedback = TaskFeedbackForm()
 
     # make teacher form
     if form_make_teacher.make_teacher_submit.data and form_make_teacher.validate_on_submit():
@@ -210,6 +212,18 @@ def teacher_view(staff_number, current_student_button_id=None):
         flash('The PDF has been deleted.')
         # need to return redirect on successful submission to clear form fields
         return redirect(url_for('teacher_view', staff_number=staff_number))
+        # task feedback form
+    if form_task_feedback.task_feedback_submit.data and form_task_feedback.validate_on_submit():
+        mark = float(form_task_feedback.mark.data)
+        user_task = User_task.query.filter_by(task_id=form_task_feedback.feedbackTaskID.data,
+                                              user_id=form_task_feedback.feedbackStudentID.data).first()
+        user_task.comment = form_task_feedback.feedbackComment.data
+        # user_task.recorder_url=,
+        user_task.mark = mark
+        user_task.update()
+        flash('The feedback has been saved.')
+        # need to return redirect on successful submission to clear form fields
+        return redirect(url_for('teacher_view', staff_number=staff_number))
     # add question form
     if form_add_question.add_question_submit.data and form_add_question.validate_on_submit():
         question = Question(
@@ -248,7 +262,8 @@ def teacher_view(staff_number, current_student_button_id=None):
                            form_edit_unit=form_edit_unit, form_add_task=form_add_task,
                            form_edit_task=form_edit_task, form_add_question=form_add_question,
                            form_edit_question=form_edit_question, DOMAIN_NAME=DOMAIN_NAME,
-                           form_delete_pdf=form_delete_pdf, current_student_button_id=current_student_button_id)
+                           form_delete_pdf=form_delete_pdf, current_student_button_id=current_student_button_id,
+                           form_task_feedback=form_task_feedback)
 
 
 # logout function

@@ -738,10 +738,9 @@
 
                                                                                             <!-- TASK ORAL FEEDBACK recorder -->
                                                                                             <!-- APPLE AND SHEEP PUT IT HERE -->
-                                                                                            
+
                                                                                             <!-- .................... -->
 
-                                                                                            {% include 'teacher_recorder.html' %}
                                                                                             <p class="details last-detail">Playback:</p>
                                                                                             <div id="playback-{{task.id}}_{{student.id}}"></div>
                                                                                             <!-- TASK ORAL FEEDBACK recorder -->
@@ -975,6 +974,42 @@
         </div>
     {% endif %}
     <!-- end ADD QUESTION FORM ERRORS modal -->
+
+    <!-- TASK FEEDBACK FORM ERRORS modal -->
+    {% set ns = namespace(errors_present=false) %}
+    {% for field in form_task_feedback %}
+        {% if field.errors|length != 0 %}
+            {% set ns.errors_present = true %}
+        {% endif %}
+    {% endfor %}
+    {% if ns.errors_present == true %}
+        <script>
+            $(document).ready(function(){
+                $("#modal-task-feedback-form-errors").modal("show");
+            });
+        </script>
+        <!-- code for modal window -->
+        <div class="modal fade" id="modal-task-feedback-form-errors">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <!-- modal body -->
+                    <div class="modal-body show">
+                        <ul>
+                            {% for error in form_task_feedback.mark.errors %}
+                                <li style="color: red;">Error: {{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        <p>Please resubmit form.</p>
+                    </div>
+                    <!-- modal footer -->
+                    <div class="modal-footer">
+                        <button id="btn-btm-close-task-feedback-form-errors-modal" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    <!-- end TASK FEEDBACK FORM ERRORS modal -->
 
     <!-- EDIT QUESTION FORM ERRORS modal -->
     {% set ns = namespace(errors_present=false) %}
