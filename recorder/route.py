@@ -65,7 +65,6 @@ def index():
     return render_template('index.html', title="Index", form=form)
 
 def not_activated():
-    print("not_actiavted")
     return render_template('not_activated.html')
 
 # After login, student will be redirected to this page
