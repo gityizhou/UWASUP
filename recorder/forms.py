@@ -285,8 +285,8 @@ class AddQuestionForm(FlaskForm):
 class TaskFeedbackForm(FlaskForm):
     feedbackStudentID = StringField('studentID')
     feedbackTaskID = StringField('taskID')
+    feedbackUnitID = StringField('taskID')
     mark = StringField('Mark (format 00.0)')
-    #feedbackRecorderUrl = StringField('feedbackURL')
     feedbackComment = TextAreaField('Comments')
     task_feedback_submit = SubmitField('Update Mark and Comments')
 

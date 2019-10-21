@@ -34,11 +34,9 @@ class Task(db.Model):
             file = route.drive.CreateFile({'id': pdf_id})
             file.Delete()
         for question in self.questions:
-            print(question)
             question.delete()
         user_tasks = db.session.query(User_task).filter(User_task.task_id == self.id )
         for user_task in user_tasks:
-            print(user_task.task_id)
             user_task.delete()
         db.session.delete(self)
         db.session.commit()

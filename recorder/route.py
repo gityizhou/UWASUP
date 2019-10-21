@@ -101,7 +101,7 @@ def student_view(student_number):
 
 # After login, teacher will be redirected to this page
 @login_required
-def teacher_view(staff_number, current_student_button_id=None):
+def teacher_view(staff_number):
     teacher = current_user
     form_make_teacher = MakeTeacherForm()
     form_delete_user = DeleteUserForm()
@@ -117,6 +117,7 @@ def teacher_view(staff_number, current_student_button_id=None):
     form_delete_question = DeleteQuestionForm()
     form_task_feedback = TaskFeedbackForm()
 
+    incoming_current_student_button_id = None
     # make teacher form
     if form_make_teacher.make_teacher_submit.data and form_make_teacher.validate_on_submit():
         staff = User.query.filter_by(user_number=form_make_teacher.staffNumber.data).first()
@@ -172,10 +173,11 @@ def teacher_view(staff_number, current_student_button_id=None):
             description=form_add_task.taskDescription.data,
             due_time=datetime_obj,
             unit_id=form_add_task.task_unitID.data)
-        #task.add()
+        task.add()
         task = Task.query.filter_by(id=task.id).first()
         unit = Unit.query.filter_by(id=form_add_task.task_unitID.data).first()
-        #task.add_task2unit(unit)
+        task.add_task2unit(unit)
+        # deletes MP3s older than one month in Google Drive when new tasks are created
         autodelete.delete_old_recordings()
         flash('The task has been added.')
         # need to return redirect on successful submission to clear form fields
@@ -212,18 +214,33 @@ def teacher_view(staff_number, current_student_button_id=None):
         flash('The PDF has been deleted.')
         # need to return redirect on successful submission to clear form fields
         return redirect(url_for('teacher_view', staff_number=staff_number))
-        # task feedback form
+    # task feedback form
     if form_task_feedback.task_feedback_submit.data and form_task_feedback.validate_on_submit():
         mark = float(form_task_feedback.mark.data)
         user_task = User_task.query.filter_by(task_id=form_task_feedback.feedbackTaskID.data,
                                               user_id=form_task_feedback.feedbackStudentID.data).first()
         user_task.comment = form_task_feedback.feedbackComment.data
-        # user_task.recorder_url=,
         user_task.mark = mark
         user_task.update()
-        flash('The feedback has been saved.')
+        current_student_button_id =  "#btn-open-student-accordian-" + form_task_feedback.feedbackStudentID.data + "-" + form_task_feedback.feedbackTaskID.data
+        current_student_submissions_button_id = "#btn-open-submission-accordian-" + form_task_feedback.feedbackUnitID.data + "-" + form_task_feedback.feedbackTaskID.data
+        current_task_button_id = "#btn-open-task-accordian-" + form_task_feedback.feedbackUnitID.data + "-" + form_task_feedback.feedbackTaskID.data
+        current_unit_button_id = "#btn-open-unit-accordian-" + form_task_feedback.feedbackUnitID.data
         # need to return redirect on successful submission to clear form fields
-        return redirect(url_for('teacher_view', staff_number=staff_number))
+        all_units = Unit.query.all()
+        all_users = User.query.all()
+        return render_template('teacher_view.html', teacher=teacher, all_units=all_units, all_users=all_users,
+                            form_make_teacher=form_make_teacher, form_delete_user=form_delete_user,
+                            form_delete_unit=form_delete_unit, form_delete_task=form_delete_task,
+                            form_delete_question=form_delete_question, form_create_unit=form_create_unit,
+                            form_edit_unit=form_edit_unit, form_add_task=form_add_task,
+                            form_edit_task=form_edit_task, form_add_question=form_add_question,
+                            form_edit_question=form_edit_question, DOMAIN_NAME=DOMAIN_NAME,
+                            form_delete_pdf=form_delete_pdf, form_task_feedback=form_task_feedback,
+                            current_student_button_id=current_student_button_id,
+                            current_student_submissions_button_id=current_student_submissions_button_id,
+                            current_task_button_id=current_task_button_id,
+                            current_unit_button_id=current_unit_button_id)
     # add question form
     if form_add_question.add_question_submit.data and form_add_question.validate_on_submit():
         question = Question(
@@ -256,14 +273,13 @@ def teacher_view(staff_number, current_student_button_id=None):
     all_units = Unit.query.all()
     all_users = User.query.all()
     return render_template('teacher_view.html', teacher=teacher, all_units=all_units, all_users=all_users,
-                           form_make_teacher=form_make_teacher, form_delete_user=form_delete_user,
-                           form_delete_unit=form_delete_unit, form_delete_task=form_delete_task,
-                           form_delete_question=form_delete_question, form_create_unit=form_create_unit,
-                           form_edit_unit=form_edit_unit, form_add_task=form_add_task,
-                           form_edit_task=form_edit_task, form_add_question=form_add_question,
-                           form_edit_question=form_edit_question, DOMAIN_NAME=DOMAIN_NAME,
-                           form_delete_pdf=form_delete_pdf, current_student_button_id=current_student_button_id,
-                           form_task_feedback=form_task_feedback)
+                form_make_teacher=form_make_teacher, form_delete_user=form_delete_user,
+                form_delete_unit=form_delete_unit, form_delete_task=form_delete_task,
+                form_delete_question=form_delete_question, form_create_unit=form_create_unit,
+                form_edit_unit=form_edit_unit, form_add_task=form_add_task,
+                form_edit_task=form_edit_task, form_add_question=form_add_question,
+                form_edit_question=form_edit_question, DOMAIN_NAME=DOMAIN_NAME,
+                form_delete_pdf=form_delete_pdf, form_task_feedback=form_task_feedback)
 
 
 # logout function
