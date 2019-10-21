@@ -113,6 +113,9 @@ def teacher_view(staff_number):
     form_add_question = AddQuestionForm()
     form_edit_question = EditQuestionForm()
     form_delete_question = DeleteQuestionForm()
+
+
+
     # make teacher form
     if form_make_teacher.make_teacher_submit.data and form_make_teacher.validate_on_submit():
         staff = User.query.filter_by(user_number=form_make_teacher.staffNumber.data).first()
@@ -461,6 +464,10 @@ def pdf_upload():
 
 
 def task_result_downloader(task_id):
+    def delete_csv(task_id):
+        this_task = db.session.query(Task).filter(Task.id == task_id).one()
+        filename = this_task.task_name + "_" + str(this_task.id) + ".csv"
+        os.remove("../csv/" + filename)
     results = User_task.query.filter_by(task_id=task_id)
     this_task = db.session.query(Task).filter(Task.id == task_id).one()
     # print(os.getcwd())
@@ -488,8 +495,11 @@ def task_result_downloader(task_id):
     df = DataFrame(data)
     columns = ['student_number', 'first_name', 'last_name', 'mark']
     df.to_csv(filepath, encoding="utf_8_sig", index=False, columns=columns)
+    send_from_directory(path, filename, as_attachment=True)
+    delete_csv(task_id)
 
-    return send_from_directory(path, filename, as_attachment=True)  # as_attachment=True
+    # return redirect(url_for('teacher_view', staff_number=current_user.user_number))
+    # return send_from_directory(path, filename, as_attachment=True)  # as_attachment=True
 
 
 def reset_password_request():
@@ -541,7 +551,7 @@ def password_reset(token):
         return redirect(url_for('index'))
     form = PasswdResetForm()
     if form.validate_on_submit():
-        user.set_password(form.password.data)
+        user.set_password   (form.password.data)
         db.session.commit()
         flash("Congratulations. You have already reset your password !", "success")
         return redirect(url_for('index'))

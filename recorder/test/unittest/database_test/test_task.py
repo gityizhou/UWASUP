@@ -92,3 +92,6 @@ class TestTask(unittest.TestCase):
         # print(first_name)
         # print(last_name)
         # print(mark)
+
+    def test_delete_csv(self):
+        Task.delete_csv(1)
