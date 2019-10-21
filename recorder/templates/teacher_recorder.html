@@ -8,26 +8,27 @@
             </p>
             <p class="details">Comments:</p>
             <textarea class="bottom-margin" name="comment" form="teacher_comment" rows="5" cols="50"></textarea><br>
-            <input class="btn btn-primary btn-form-submit second-user-button recorder-buttons" type="button" id="record_start" value="Start" ></input>
-            <input class="btn btn-primary btn-form-submit second-user-button recorder-buttons" type="button" onclick="uploadRec()" value="Upload Feedback"></input>
+            <input class="btn btn-primary" type="button" id="Record_{{unit.id}}_{{task.id}}_{{student.id}}" value="Start" >
+            <!-- <input class="btn btn-primary btn-form-submit second-user-button recorder-buttons" type="button" id="record_start" value="Start" > -->
+            <input class="btn btn-primary" type="button" onclick="playRec('#playback-{{task.id}}_{{student.id}}')" value="Play">
+            <input class="btn btn-primary btn-form-submit second-user-button recorder-buttons" type="button" onclick="uploadRec()" value="Upload Feedback">
             <p class="details last-detail">Note: Uploading feedback overwrites comments and mark fields. Copy these from above if no changes are required.</p>
         </form>
 
 
         <script type="text/javascript">
             $(document).ready(function doOnClick(){
-                $("#record_start").click(function(){
-                    if(document.getElementById("record_start").value=="Finish"){
-                        document.getElementById("record_start").value="Start";
-                        document.getElementById("record_start").style.color='white';
+                $("#Record_{{unit.id}}_{{task.id}}_{{student.id}}").click(function(){
+                    if(document.getElementById("Record_{{unit.id}}_{{task.id}}_{{student.id}}").value=="Finish"){
+                        document.getElementById("Record_{{unit.id}}_{{task.id}}_{{student.id}}").value="Start";
+                        document.getElementById("Record_{{unit.id}}_{{task.id}}_{{student.id}}").style.color='white';
                         stopRec();
-
-
                     }
-                    else if (document.getElementById("record_start").value=="Start"){
-                        document.getElementById("record_start").value="Finish";
-                        document.getElementById("record_start").style.color='red';
+                    else if (document.getElementById("Record_{{unit.id}}_{{task.id}}_{{student.id}}").value=="Start"){
+                        document.getElementById("Record_{{unit.id}}_{{task.id}}_{{student.id}}").value="Finish";
+                        document.getElementById("Record_{{unit.id}}_{{task.id}}_{{student.id}}").style.color='red';
                         startRec();
+                        console.log("{{unit.id}}_{{task.id}}_{{student.id}}")
                     }
                 })
             })
@@ -50,8 +51,23 @@
                 })
             };
 
-
-
+            function playRec(divID) {
+                //Stop recording and get the blob binary object of the recording file
+                if(audio==null){
+                    audio = document.createElement("audio");
+                    audio.controls = true;
+                    console.log("divID = " + divID);
+                    //document.body.appendChild(audio)
+                    $(divID).append(audio);
+                    audio.src = URL.createObjectURL(recFile);
+                    audio.play();
+                }
+                else{
+                    $(divID).append(audio);
+                    audio.src = URL.createObjectURL(recFile);
+                    audio.play();
+                }
+            };
 
             function uploadRec() {
                 //Stop recording and get the blob binary object of the recording file
