@@ -18,6 +18,7 @@ def delete_old_recordings():
                 sub.record_url = 'deleted'
                 sub.record_id = None
                 sub.record_title = None
+                sub.update_time = None
                 sub.update()
     all_user_tasks = User_task.query.all()
     for record in all_user_tasks:
@@ -29,5 +30,6 @@ def delete_old_recordings():
                 record.record_url = 'deleted'
                 record.record_id = None
                 record.record_title = None
+                record.record_create_time = None
                 record.update()
     all_user_tasks = User_task.query.all()

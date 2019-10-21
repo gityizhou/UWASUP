@@ -177,6 +177,7 @@ def teacher_view(staff_number):
         task = Task.query.filter_by(id=task.id).first()
         unit = Unit.query.filter_by(id=form_add_task.task_unitID.data).first()
         task.add_task2unit(unit)
+        # deletes MP3s older than one month in Google Drive when new tasks are created
         autodelete.delete_old_recordings()
         flash('The task has been added.')
         # need to return redirect on successful submission to clear form fields
@@ -213,7 +214,7 @@ def teacher_view(staff_number):
         flash('The PDF has been deleted.')
         # need to return redirect on successful submission to clear form fields
         return redirect(url_for('teacher_view', staff_number=staff_number))
-        # task feedback form
+    # task feedback form
     if form_task_feedback.task_feedback_submit.data and form_task_feedback.validate_on_submit():
         mark = float(form_task_feedback.mark.data)
         user_task = User_task.query.filter_by(task_id=form_task_feedback.feedbackTaskID.data,
