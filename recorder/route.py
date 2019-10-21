@@ -40,13 +40,12 @@ def index():
     # Confirm the login status of the user
     # if authenticated, redirect to his page directly
     if current_user.is_authenticated:
-        if current_user.is_teacher == 1:
+        if current_user.is_teacher == 1 and current_user.is_activated == 1:
             return redirect(url_for('teacher_view', staff_number=current_user.user_number))
         if current_user.is_teacher == 0 and current_user.is_activated == 1:
             return redirect(url_for('student_view', student_number=current_user.user_number))
         else:
-            return ('Please verify you email Check your mail box')
-            # get the loginForm object
+            return redirect(url_for('not_activated'))
     form = LoginForm()
     if form.validate_on_submit():
         # print(form.username.data)
@@ -65,6 +64,9 @@ def index():
             flash("Invalid username or password, please try again.")
     return render_template('index.html', title="Index", form=form)
 
+def not_activated():
+    print("not_actiavted")
+    return render_template('not_activated.html')
 
 # After login, student will be redirected to this page
 @login_required

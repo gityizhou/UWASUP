@@ -28,11 +28,12 @@ def create_app(config_name='development'):
     mail.init_app(app)
 
     # app route url
-    from recorder.route import index, student_view, teacher_view, logout, register, upload, reset_password_request, \
+    from recorder.route import index, not_activated, student_view, teacher_view, logout, register, upload, reset_password_request, \
         password_reset, request_email_verification, verify_email_by_token, task_result_downloader, teacher_recorder, \
         pdf_upload, page_404, page_500
     app.add_url_rule('/', 'index', index, methods=['GET', 'POST'])
     app.add_url_rule('/index', 'index', index, methods=['GET', 'POST'])
+    app.add_url_rule('/not_activated', 'not_activated', not_activated)
     app.add_url_rule('/logout', 'logout', logout)
     app.add_url_rule('/register', 'register', register, methods=['GET', 'POST'])
     app.add_url_rule('/student/<student_number>', 'student_view', student_view, methods=['GET', 'POST'])

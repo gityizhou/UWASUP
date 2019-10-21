@@ -15,7 +15,7 @@ def delete_old_recordings():
                 file_id = sub.record_id
                 file = route.drive.CreateFile({'id': file_id})
                 file.Delete()
-                sub.record_url = 'deleted'
+                sub.record_url = None
                 sub.record_id = None
                 sub.record_title = None
                 sub.update_time = None
@@ -27,7 +27,7 @@ def delete_old_recordings():
                 file_id = record.record_id
                 file = route.drive.CreateFile({'id': file_id})
                 file.Delete()
-                record.record_url = 'deleted'
+                record.record_url = None
                 record.record_id = None
                 record.record_title = None
                 record.record_create_time = None
