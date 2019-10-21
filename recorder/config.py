@@ -10,8 +10,8 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     UPLOADS_DEFAULT_DEST = 'uploads'
     MAIL_DEFAULT_SENDER = os.environ.get('MAIL_DEFAULT_SENDER', 'noreply@recorder.com')
-    MAIL_SERVER = os.environ.get('MAIL_SERVER', 'smtp.googlemail.com')
-    MAIL_PORT = os.environ.get('MAIL_PORT', 587)
+    MAIL_SERVER = os.environ.get('MAIL_SERVER', 'smtp.gmail.com')
+    MAIL_PORT = os.environ.get('MAIL_PORT', 465)
     MAIL_USE_TLS = os.environ.get('MAIL_USE_TLS', 1)
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME', 'languageapp19@gmail.com')
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD', 'L@nguageapp19')
