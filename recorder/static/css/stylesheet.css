@@ -144,5 +144,9 @@ button > a {
  }
 
  .bottom-margin {
-     margin-bottom: 2rem;
+    margin-bottom: 2rem;
+ }
+
+ .upper-margin {
+    margin-top: 2rem;
  }

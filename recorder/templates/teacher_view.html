@@ -715,9 +715,19 @@
                                                                                         <div class="card-body sup-accordian-fourth-level">
                                                                                             
                                                                                             <!-- TASK FEEDBACK section -->
+
+                                                                                            <!-- TASK ORAL FEEDBACK recorder -->
+                                                                                            <!-- recording module -->
+                                                                                            {% include 'teacher_recorder.html' %}
+                                                                                            <!-- end recording module -->
+
+                                                                                            <p class="details">Playback:</p>
+                                                                                            <div id="playback-{{task.id}}_{{student.id}}"></div>
+                                                                                            <!-- TASK ORAL FEEDBACK recorder -->
+
                                                                                             <!-- TASK MARK and COMMENT form -->
                                                                                             <div>
-                                                                                                <form id="form-task-feedback-{{ student.id }}" class="form" action="" method="post" novalidate>
+                                                                                                <form id="form-task-feedback-{{ student.id }}" class="form upper-margin" action="" method="post" novalidate>
                                                                                                     {{ form_task_feedback.hidden_tag() }}
                                                                                                     <p>
                                                                                                         {% if student.get_task_mark(task.id) is not none %}
@@ -739,22 +749,10 @@
                                                                                                         {{ form_task_feedback.feedbackTaskID(value=task.id, style="display: none;") }}
                                                                                                         {{ form_task_feedback.feedbackUnitID(value=task.id, style="display: none;") }}
                                                                                                     </p>
-                                                                                                    <a>{{ form_task_feedback.task_feedback_submit(id="btn-task-feedback-{{ student.id }}-submit", size=32, class="form-field") }}</a>
+                                                                                                    <a>{{ form_task_feedback.task_feedback_submit(id="btn-task-feedback-{{ student.id }}-submit", size=32, class="btn btn-primary inner-accordian-button") }}</a>
                                                                                                 </form>
                                                                                             </div>
                                                                                             <!-- TASK MARK and COMMENT form -->
-
-                                                                                            <!-- TASK ORAL FEEDBACK recorder -->
-                                                                                            <!-- recording module -->
-                                                                                            {% include 'teacher_recorder.html' %}
-                                                                                            <!-- end recording module -->
-                                                                                            <!-- APPLE AND SHEEP PUT IT HERE -->
-
-                                                                                            <!-- .................... -->
-
-                                                                                            <p class="details last-detail">Playback:</p>
-                                                                                            <div id="playback-{{task.id}}_{{student.id}}"></div>
-                                                                                            <!-- TASK ORAL FEEDBACK recorder -->
                                                                                             <!-- end TASK FEEDBACK section -->
 
 
