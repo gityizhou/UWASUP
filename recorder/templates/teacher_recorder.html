@@ -1,50 +1,48 @@
 <form id="teacher_comment" action="#" method="post">
-    <input type="hidden" id="task_id" name="task_id" value="1">
-    <input type="hidden" id="student_id" name="student_id" value="1">
+    <input type="hidden" id="{{ task.id }}" name="task_id" value="{{ task.id }}">
+    <input type="hidden" id="{{ student.id }}" name="student_id" value="{{ student.id }}">
     <br>
     <p>
-    <p class="details">Mark (must be in format 00.0):</p>
-    <input pattern="^\d{2}/.\d{1}$" type="text" id="mark" name="mark">
+        <p class="details">Mark (must be in format 00.0):</p>
+        <input pattern="^\d{2}/.\d{1}$" type="text" id="mark" name="mark">
     </p>
     <p class="details">Comments:</p>
     <textarea class="bottom-margin" name="comment" form="teacher_comment" rows="5" cols="50"></textarea><br>
-    <input class="btn btn-primary btn-form-submit second-user-button recorder-buttons" type="button" id="record_start"
-           value="Start">
-    <input class="btn btn-primary btn-form-submit second-user-button recorder-buttons" type="button"
-           onclick="uploadRec()" value="Upload Feedback">
-    <p class="details last-detail">Note: Uploading feedback overwrites comments and mark fields. Copy these from above
-        if no changes are required.</p>
+    <input class="btn btn-primary" type="button" id="Record_{{unit.id}}_{{task.id}}_{{student.id}}" value="Start" >
+    <!-- <input class="btn btn-primary btn-form-submit second-user-button recorder-buttons" type="button" id="record_start" value="Start" > -->
+    <input class="btn btn-primary" type="button" onclick="playRec('#playback-{{task.id}}_{{student.id}}')" value="Play">
+    <input class="btn btn-primary btn-form-submit second-user-button recorder-buttons" type="button" onclick="uploadRec()" value="Upload Feedback">
+    <p class="details last-detail">Note: Uploading feedback overwrites comments and mark fields. Copy these from above if no changes are required.</p>
 </form>
 
 
 <script type="text/javascript">
-    $(document).ready(function doOnClick() {
-        $("#Rrecord_start").click(function () {
-            if (document.getElementById("record_start").value == "Finish") {
-                document.getElementById("record_start").value = "Start";
-                document.getElementById("record_start").style.color = 'white';
+    function doOnClick(){
+        $("#Record_{{unit.id}}_{{task.id}}_{{student.id}}").click(function(){
+            if(document.getElementById("Record_{{unit.id}}_{{task.id}}_{{student.id}}").value=="Finish"){
+                document.getElementById("Record_{{unit.id}}_{{task.id}}_{{student.id}}").value="Start";
+                document.getElementById("Record_{{unit.id}}_{{task.id}}_{{student.id}}").style.color='white';
                 stopRec();
-            } else if (document.getElementById("record_start").value == "Start") {
-                document.getElementById("record_start").value = "Finish";
-                document.getElementById("record_start").style.color = 'red';
+            }
+            else if (document.getElementById("Record_{{unit.id}}_{{task.id}}_{{student.id}}").value=="Start"){
+                document.getElementById("Record_{{unit.id}}_{{task.id}}_{{student.id}}").value="Finish";
+                document.getElementById("Record_{{unit.id}}_{{task.id}}_{{student.id}}").style.color='red';
                 startRec();
+                console.log("{{unit.id}}_{{task.id}}_{{student.id}}")
             }
         })
-    })
-
-    function startRec() {
-        var wave;
-        rec = Recorder();//Use the default configuration, mp3 format
-        //Turn on the microphone and authorize resources
-        rec.open(function () {
-            //start recording
-            rec.start();
-        }, function (msg, isUserNotAllow) {
+    }
+        function startRec() {
+            rec = Recorder();//Use the default configuration, mp3 format
+            //Turn on the microphone and authorize resources
+            rec.open(function () {
+                //start recording
+                rec.start();
+            },  function (msg, isUserNotAllow) {
             //The user has refused permission or the browser does not support it
             alert((isUserNotAllow ? "User denied permission，" : "") + "not able to record:" + msg);
-        });
-    };
-
+            });
+        };
 
     function stopRec() {
         rec.stop(function (blob, duration) {
@@ -75,4 +73,23 @@
             }
             xhr.send(formData);
         }
-    </script>
+    
+    function playRec(divID) {
+        //Stop recording and get the blob binary object of the recording file
+        if(audio==null){
+            audio = document.createElement("audio");
+            audio.controls = true;
+            console.log("divID = " + divID);
+            //document.body.appendChild(audio)
+            $(divID).append(audio);
+            audio.src = URL.createObjectURL(recFile);
+            audio.play();
+        }
+        else{
+            $(divID).append(audio);
+            audio.src = URL.createObjectURL(recFile);
+            audio.play();
+        }
+    };
+
+</script>

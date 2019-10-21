@@ -710,7 +710,10 @@
                                                                                             <!-- TASK FEEDBACK section -->
                                                                                             {% include 'teacher_recorder.html' %}
                                                                                             <!-- end TASK FEEDBACK section -->
-                            
+                                                                                            <p class="details last-detail">Playback:</p>
+                                                                                            <div id="playback-{{task.id}}_{{student.id}}"></div>
+
+
                                                                                             <!-- list of submitted questions for each student for this task -->
                                                                                             <div id="accordion_submitted_questions">
                                                                                                 {% for submitted_question in student.get_task_questions(task.id) %}
@@ -728,7 +731,7 @@
                                                                                                                 <!-- TODO: get recording from question.users.recorder_url -->
                                                                                                                 <p>Play submission: </p>
                                                                                                                 <!-- recording module -->
-
+                                                                                                                {% include "teacher_listen_student.html" %}
                                                                                                                 <!-- end recording module -->
                                                                                                             </div>
                                                                                                         </div>
@@ -989,6 +992,7 @@
             document.location.href = pdfURL;
         }
 
+        var audio
     </script>
 
 {% endblock %}
