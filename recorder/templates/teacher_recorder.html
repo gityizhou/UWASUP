@@ -1,10 +1,12 @@
 <form id="teacher_comment" action="#" method="post">
-    <input type="hidden" id="{{ task.id }}" name="task_id" value="{{ task.id }}">
-    <input type="hidden" id="{{ student.id }}" name="student_id" value="{{ student.id }}">
+    <!-- <input type="hidden" name="task_id" value="{{ task.id }}">
+    <input type="hidden" name="student_id" value="{{ student.id }}"> -->
+    {{student.id}}
+    {{task_id}}
     <input class="btn btn-primary btn-form-submit second-user-button recorder-buttons" type="button" id="Record_{{unit.id}}_{{task.id}}_{{student.id}}" value="Start" >
     <!-- <input class="btn btn-primary btn-form-submit second-user-button recorder-buttons" type="button" id="record_start" value="Start" > -->
     <input class="btn btn-primary btn-form-submit second-user-button recorder-buttons" type="button" onclick="playRec('#playback-{{task.id}}_{{student.id}}')" value="Play">
-    <input class="btn btn-primary btn-form-submit second-user-button recorder-buttons" type="button" onclick="uploadRec()" value="Upload Feedback">
+    <input class="btn btn-primary btn-form-submit second-user-button recorder-buttons" type="button" onclick="uploadRec({{task.id}}, {{student.id}})" value="Upload Feedback">
 </form>
 
 <script type="text/javascript">
@@ -59,7 +61,7 @@
         }
     };
 
-    function uploadRec() {
+    function uploadRec(task_id, student_id) {
         //Stop recording and get the blob binary object of the recording file
 
         /*
@@ -70,7 +72,8 @@
         var form = document.getElementById("teacher_comment");
         var formData = new FormData(form);
         formData.append("upfile", recFile, "record.mp3"); //Similar to ordinary form forms, files with upfile parameters, named recorder. Mp3, are received by the back-end
-
+        formData.append("task_id", task_id)   // change the question_id here
+        formData.append("student_id", student_id)   // change the question_id here
         //Upload directly with ajax
         var xhr = new XMLHttpRequest();
         xhr.open("POST", "/teacher_recorder");//This fake address can see the request data and format in the console network, and the result of the request is irrelevant
