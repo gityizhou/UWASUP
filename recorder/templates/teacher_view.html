@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 
 {% block content %}
-<p>current_student_button_id = {{ current_student_button_id }}</p>
     <!-- 
         As per the client's request, we have minimised movement to other pages by using nested modals within the teacher view.
         This has made the teacher view a complex nested structure, so for clarity we have summarised the structure below:
@@ -39,6 +38,14 @@
             Edit Question
         ...................
      -->
+    <!-- open accordian to last student marked -->
+    {% if current_student_button_id is not none %}
+        <script>
+            $(document).ready(function(){
+                keepStudentOpen('{{ current_unit_button_id }}', '{{ current_task_button_id }}', '{{ current_student_submissions_button_id }}', '{{ current_student_button_id }}');
+            })
+        </script>
+    {% endif %}
     <!-- start of card -->
     <div class="col-xl-7 col-lg-10 col-md-10 col-sm-12 col-12 mx-auto main-card">
         <div class="card-deck">
@@ -209,7 +216,7 @@
                     <div class="card">
                         <div class="card-header" id="heading_unit_{{ unit.id }}">
                             <h5 class="mb-0">
-                                <button class="btn btn-link" data-toggle="collapse" data-target="#collapse_unit_{{ unit.id }}" aria-expanded="true" aria-controls="collapse_unit_{{ unit.id }}">
+                                <button id="btn-open-unit-accordian-{{ unit.id }}" class="btn btn-link" data-toggle="collapse" data-target="#collapse_unit_{{ unit.id }}" aria-expanded="true" aria-controls="collapse_unit_{{ unit.id }}">
                                     {{ unit.unit_id }} {{ unit.unit_name }}
                                 </button>
                             </h5>
@@ -336,7 +343,7 @@
                                             <div class="card">
                                                 <div class="card-header" id="heading_task_{{ task.id }}">
                                                     <h5 class="mb-0">
-                                                        <button class="btn btn-link" data-toggle="collapse" data-target="#collapse_task_{{ task.id }}" aria-expanded="true" aria-controls="collapse_task_{{ task.id }}">
+                                                        <button id="btn-open-task-accordian-{{ unit.id }}-{{ task.id }}" class="btn btn-link" data-toggle="collapse" data-target="#collapse_task_{{ task.id }}" aria-expanded="true" aria-controls="collapse_task_{{ task.id }}">
                                                             Task: {{ task.task_name }}
                                                         </button>
                                                     </h5>
@@ -668,7 +675,7 @@
                                                             <div class="card">
                                                                 <div class="card-header" id="heading_task_{{ task.id }}_student_submissions">
                                                                     <h5 class="mb-0">
-                                                                        <button class="btn btn-link" data-toggle="collapse" data-target="#collapse_task_{{ task.id }}_student_submissions" aria-expanded="true" aria-controls="collapse_task_{{ task.id }}_student_submissions">
+                                                                        <button id="btn-open-submission-accordian-{{ unit.id }}-{{ task.id }}" class="btn btn-link" data-toggle="collapse" data-target="#collapse_task_{{ task.id }}_student_submissions" aria-expanded="true" aria-controls="collapse_task_{{ task.id }}_student_submissions">
                                                                             Student Submissions
                                                                         </button>
                                                                     </h5>
@@ -730,6 +737,7 @@
                                                                                                         <!-- add if statement here to test for comment and recorder URL -->
                                                                                                         {{ form_task_feedback.feedbackStudentID(value=student.id, style="display: none;") }}<br>
                                                                                                         {{ form_task_feedback.feedbackTaskID(value=task.id, style="display: none;") }}
+                                                                                                        {{ form_task_feedback.feedbackUnitID(value=task.id, style="display: none;") }}
                                                                                                     </p>
                                                                                                     <a>{{ form_task_feedback.task_feedback_submit(id="btn-task-feedback-{{ student.id }}-submit", size=32, class="form-field") }}</a>
                                                                                                 </form>
@@ -1059,6 +1067,14 @@
         // download pdf function
         function downloadPDF(pdfURL){
             document.location.href = pdfURL;
+        }
+
+        // keep previously marked student open
+        function keepStudentOpen(currentUnitButtonId, currentTaskButtonId, currentSubmissionButtonId, currentStudentButtonId){
+            $(currentUnitButtonId).click();
+            $(currentTaskButtonId).click();
+            $(currentSubmissionButtonId).click();
+            $(currentStudentButtonId).click();
         }
 
         var audio
