@@ -578,14 +578,9 @@ def teacher_recorder():
     files = UploadSet('files', ALL)
     task_id_str = request.form.get("task_id")
     student_id_str = request.form.get("student_id")
-    comment = request.form.get("comment")
-    mark = request.form.get("mark")
-    current_student_button_id = request.form.get("current_student_button_id")
-
     user_task = User_task.query.filter_by(task_id=task_id_str,
                                           user_id=student_id_str).first()
     if task_id_str:
-        mark = float(mark)
         task_id = int(task_id_str)
         student_id = int(student_id_str)
         this_task = db.session.query(Task).filter(Task.id == task_id).one()
@@ -596,14 +591,12 @@ def teacher_recorder():
     if request.method == 'POST' and 'upfile' in request.files:
         filename = files.save(
             request.files['upfile'])  # get the file from front end request, return the file name(String)
-        if user_task.mark:
+        if user_task.record_url:
             record_id = user_task.record_id
             upload_file = drive.CreateFile({'id': record_id})
             upload_file.SetContentFile("./uploads/files/" + filename)
             upload_file['title'] = name  # set the file name of this file
             upload_file.Upload()  # upload this file
-            user_task.comment = comment
-            user_task.mark = mark
             user_task.update()
         else:
             upload_file = drive.CreateFile()  # create the google drive file instance
@@ -617,8 +610,6 @@ def teacher_recorder():
             google_file_id = upload_file[
                 'id']  # can get this file's google drive-id and use it to save the id into database
             google_url = "https://drive.google.com/uc?authuser=0&id=" + google_file_id + "&export=download"
-            user_task.comment = comment
-            user_task.mark = mark
             user_task.record_url = google_url
             user_task.record_id = google_file_id
             user_task.record_title = name
