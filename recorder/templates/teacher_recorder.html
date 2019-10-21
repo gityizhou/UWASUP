@@ -1,13 +1,16 @@
 <form id="teacher_comment" action="#" method="post">
     <!-- <input type="hidden" name="task_id" value="{{ task.id }}">
     <input type="hidden" name="student_id" value="{{ student.id }}"> -->
-    {{student.id}}
-    {{task_id}}
+    <!-- {{student.id}}
+    {{task_id}} -->
     <input class="btn btn-primary btn-form-submit second-user-button recorder-buttons" type="button" id="Record_{{unit.id}}_{{task.id}}_{{student.id}}" value="Start" >
     <!-- <input class="btn btn-primary btn-form-submit second-user-button recorder-buttons" type="button" id="record_start" value="Start" > -->
     <input class="btn btn-primary btn-form-submit second-user-button recorder-buttons" type="button" onclick="playRec('#playback-{{task.id}}_{{student.id}}')" value="Play">
     <input class="btn btn-primary btn-form-submit second-user-button recorder-buttons" type="button" onclick="uploadRec({{task.id}}, {{student.id}})" value="Upload Feedback">
 </form>
+
+<p class="details">Previous comment:</p >
+    <audio src="{{student.get_task_feedbackURL(task.id)}}" controls></audio>
 
 <script type="text/javascript">
     $(document).ready(function doOnClick(){
