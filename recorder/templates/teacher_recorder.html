@@ -8,9 +8,9 @@
     </p>
     <p class="details">Comments:</p>
     <textarea class="bottom-margin" name="comment" form="teacher_comment" rows="5" cols="50"></textarea><br>
-    <input class="btn btn-primary" type="button" id="Record_{{unit.id}}_{{task.id}}_{{student.id}}" value="Start" >
+    <input class="btn btn-primary btn-form-submit second-user-button recorder-buttons" type="button" id="Record_{{unit.id}}_{{task.id}}_{{student.id}}" value="Start" >
     <!-- <input class="btn btn-primary btn-form-submit second-user-button recorder-buttons" type="button" id="record_start" value="Start" > -->
-    <input class="btn btn-primary" type="button" onclick="playRec('#playback-{{task.id}}_{{student.id}}')" value="Play">
+    <input class="btn btn-primary btn-form-submit second-user-button recorder-buttons" type="button" onclick="playRec('#playback-{{task.id}}_{{student.id}}')" value="Play">
     <input class="btn btn-primary btn-form-submit second-user-button recorder-buttons" type="button" onclick="uploadRec()" value="Upload Feedback">
     <p class="details last-detail">Note: Uploading feedback overwrites comments and mark fields. Copy these from above if no changes are required.</p>
 </form>
