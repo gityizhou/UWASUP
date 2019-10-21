@@ -30,7 +30,7 @@ def create_app(config_name='development'):
     # app route url
     from recorder.route import index, student_view, teacher_view, logout, register, upload, reset_password_request, \
         password_reset, request_email_verification, verify_email_by_token, task_result_downloader, teacher_recorder, \
-        pdf_upload
+        pdf_upload, page_404, page_500
     app.add_url_rule('/', 'index', index, methods=['GET', 'POST'])
     app.add_url_rule('/index', 'index', index, methods=['GET', 'POST'])
     app.add_url_rule('/logout', 'logout', logout)
@@ -64,5 +64,8 @@ def create_app(config_name='development'):
         password_reset,
         methods=['GET', 'POST']
     )
+
+    app.register_error_handler(404, page_404)
+    app.register_error_handler(500, page_500)
 
     return app

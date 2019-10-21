@@ -10,6 +10,7 @@ class User_task(db.Model):
     record_url = db.Column(db.String(140))
     record_id = db.Column(db.String(140))
     record_title = db.Column(db.String(140))
+    record_create_time = db.Column(db.DateTime)
     mark = db.Column(db.Float)
     task = db.relationship("Task", back_populates="users")
     user = db.relationship("User", back_populates="tasks")

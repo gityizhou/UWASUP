@@ -608,3 +608,9 @@ def teacher_recorder():
 
         os.remove("./uploads/files/" + filename)  # delete this file after uploading it to google drive
     return render_template('teacher_recorder.html')
+
+def page_404(e):
+    return render_template('404.html'), 404
+
+def page_500(e):
+    return render_template('500.html'), 500
