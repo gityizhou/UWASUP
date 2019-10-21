@@ -18,6 +18,7 @@ from recorder.models.user_question import User_question
 from recorder.models.user_task import User_task
 import os, jwt, time, datetime
 from pandas import DataFrame
+from recorder import autodelete
 
 # # google verification
 gauth = GoogleAuth()
@@ -168,10 +169,11 @@ def teacher_view(staff_number):
             description=form_add_task.taskDescription.data,
             due_time=datetime_obj,
             unit_id=form_add_task.task_unitID.data)
-        task.add()
+        #task.add()
         task = Task.query.filter_by(id=task.id).first()
         unit = Unit.query.filter_by(id=form_add_task.task_unitID.data).first()
-        task.add_task2unit(unit)
+        #task.add_task2unit(unit)
+        autodelete.delete_old_recordings()
         flash('The task has been added.')
         # need to return redirect on successful submission to clear form fields
         return redirect(url_for('teacher_view', staff_number=staff_number))

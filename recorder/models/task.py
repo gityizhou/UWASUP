@@ -29,9 +29,10 @@ class Task(db.Model):
         db.session.commit()
 
     def delete(self):
-        pdf_id = self.pdf_id
-        file = route.drive.CreateFile({'id': pdf_id})
-        file.Delete()
+        if self.pdf_url is not None and self.pdf_url != 'deleted':
+            pdf_id = self.pdf_id
+            file = route.drive.CreateFile({'id': pdf_id})
+            file.Delete()
         for question in self.questions:
             print(question)
             question.delete()
