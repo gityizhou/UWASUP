@@ -50,7 +50,7 @@ class RegisterForm(FlaskForm):
     lastname = StringField("Last Name (as per LMS)", validators=[DataRequired()])
     email = StringField("UWA Email Address", validators=[DataRequired(), Email()])
     password = PasswordField("Password", validators=[DataRequired(), Length(min=8, max=18,
-                                                                            message="Please use more than 7 characters.")])
+                                                                            message="Minimum length of 8 characters and no special characters.")])
     password2 = PasswordField(
         "Password Repeat", validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Register')

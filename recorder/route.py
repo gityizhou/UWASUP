@@ -100,7 +100,7 @@ def student_view(student_number):
 
 # After login, teacher will be redirected to this page
 @login_required
-def teacher_view(staff_number):
+def teacher_view(staff_number, current_student_button_id=None):
     teacher = current_user
     form_make_teacher = MakeTeacherForm()
     form_delete_user = DeleteUserForm()
@@ -114,8 +114,6 @@ def teacher_view(staff_number):
     form_add_question = AddQuestionForm()
     form_edit_question = EditQuestionForm()
     form_delete_question = DeleteQuestionForm()
-
-
 
     # make teacher form
     if form_make_teacher.make_teacher_submit.data and form_make_teacher.validate_on_submit():
@@ -250,7 +248,7 @@ def teacher_view(staff_number):
                            form_edit_unit=form_edit_unit, form_add_task=form_add_task,
                            form_edit_task=form_edit_task, form_add_question=form_add_question,
                            form_edit_question=form_edit_question, DOMAIN_NAME=DOMAIN_NAME,
-                           form_delete_pdf=form_delete_pdf)
+                           form_delete_pdf=form_delete_pdf, current_student_button_id=current_student_button_id)
 
 
 # logout function
@@ -567,6 +565,7 @@ def teacher_recorder():
     student_id_str = request.form.get("student_id")
     comment = request.form.get("comment")
     mark = request.form.get("mark")
+    current_student_button_id = request.form.get("current_student_button_id")
 
     user_task = User_task.query.filter_by(task_id=task_id_str,
                                           user_id=student_id_str).first()
