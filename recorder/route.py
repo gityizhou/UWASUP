@@ -22,10 +22,10 @@ from pandas import DataFrame
 from recorder import autodelete
 
 # # google verification
-gauth = GoogleAuth()
-gauth.LocalWebserverAuth()
-drive = GoogleDrive(gauth)
-DOMAIN_NAME = "http://localhost:5000"
+#gauth = GoogleAuth()
+#gauth.LocalWebserverAuth()
+#drive = GoogleDrive(gauth)
+#DOMAIN_NAME = "http://localhost:5000"
 
 """
 Index page but also our login page!
