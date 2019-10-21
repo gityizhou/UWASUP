@@ -1,57 +1,78 @@
-        <form id="teacher_comment" action="#" method="post">
-            <input type="hidden" id="task_id" name="task_id" value="1">
-            <input type="hidden" id="student_id" name="student_id" value="1">
-            <br>
-            <p>
-                <p class="details">Mark (must be in format 00.0):</p>
-                <input pattern="^\d{2}/.\d{1}$" type="text" id="mark" name="mark">
-            </p>
-            <p class="details">Comments:</p>
-            <textarea class="bottom-margin" name="comment" form="teacher_comment" rows="5" cols="50"></textarea><br>
-            <input class="btn btn-primary btn-form-submit second-user-button recorder-buttons" type="button" id="record_start" value="Start" ></input>
-            <input class="btn btn-primary btn-form-submit second-user-button recorder-buttons" type="button" onclick="uploadRec()" value="Upload Feedback"></input>
-            <p class="details last-detail">Note: Uploading feedback overwrites comments and mark fields. Copy these from above if no changes are required.</p>
-        </form>
+<form id="teacher_comment" action="#" method="post">
+    <input type="hidden" id="task_id" name="task_id" value="1">
+    <input type="hidden" id="student_id" name="student_id" value="1">
+    <br>
+    <p>
+    <p class="details">Mark (must be in format 00.0):</p>
+    <input pattern="^\d{2}/.\d{1}$" type="text" id="mark" name="mark">
+    </p>
+    <p class="details">Comments:</p>
+    <textarea class="bottom-margin" name="comment" form="teacher_comment" rows="5" cols="50"></textarea><br>
+    <input class="btn btn-primary btn-form-submit second-user-button recorder-buttons" type="button" id="record_start"
+           value="Start"></input>
+    <input class="btn btn-primary btn-form-submit second-user-button recorder-buttons" type="button"
+           onclick="uploadRec()" value="Upload Feedback"></input>
+    <p class="details last-detail">Note: Uploading feedback overwrites comments and mark fields. Copy these from above
+        if no changes are required.</p>
+</form>
 
 
-        <script type="text/javascript">
-            $(document).ready(function doOnClick(){
-                $("#record_start").click(function(){
-                    if(document.getElementById("record_start").value=="Finish"){
-                        document.getElementById("record_start").value="Start";
-                        document.getElementById("record_start").style.color='white';
-                        stopRec();
+<script type="text/javascript">
+    $(document).ready(function doOnClick() {
+        $("#Rrecord_start").click(function () {
+            if (document.getElementById("record_start").value == "Finish") {
+                document.getElementById("record_start").value = "Start";
+                document.getElementById("record_start").style.color = 'white';
+                stopRec();
+            } else if (document.getElementById("record_start").value == "Start") {
+                document.getElementById("record_start").value = "Finish";
+                document.getElementById("record_start").style.color = 'red';
+                startRec();
+            }
+        })
+    })
+
+    function startRec() {
+        var wave;
+        rec = Recorder();//Use the default configuration, mp3 format
+        //Turn on the microphone and authorize resources
+        rec.open(function () {
+            //start recording
+            rec.start();
+        }, function (msg, isUserNotAllow) {
+            //The user has refused permission or the browser does not support it
+            alert((isUserNotAllow ? "User denied permission，" : "") + "not able to record:" + msg);
+        });
+    };
 
 
-                    }
-                    else if (document.getElementById("record_start").value=="Start"){
-                        document.getElementById("record_start").value="Finish";
-                        document.getElementById("record_start").style.color='red';
-                        startRec();
-                    }
-                })
-            })
-                function startRec() {
-                rec = Recorder();//Use the default configuration, mp3 format
-                //Turn on the microphone and authorize resources
-                rec.open(function () {
-                    //start recording
-                    rec.start();
-                }, function (msg, isUserNotAllow) {
-                    //The user has refused permission or the browser does not support it
-                    alert((isUserNotAllow ? "User denied permission，" : "") + "not able to record:" + msg);
-                });
-            };
+    function stopRec() {
+        rec.stop(function (blob, duration) {
+            recFile = blob;
+        })
+    };
 
 
-            function stopRec() {
-                rec.stop(function (blob, duration) {
-                    recFile = blob;
-                })
-            };
+    function uploadRec() {
+        //Stop recording and get the blob binary object of the recording file
 
+        /*
+        Blob file object, which can be read and fetched with FileReader
+        ，Or use FormData upload, which in this case uploads the binary directly
+        ，from normal application/x-www-form-urlencoded form upload
+        */
+        var form = document.getElementById("teacher_comment");
+        var formData = new FormData(form);
+        formData.append("upfile", recFile, "record.mp3"); //Similar to ordinary form forms, files with upfile parameters, named recorder. Mp3, are received by the back-end
 
-
+        //Upload directly with ajax
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "/teacher_recorder");//This fake address can see the request data and format in the console network, and the result of the request is irrelevant
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4) {
+                alert(xhr.status == 200 ? "upload successful" : "upload successful");
+            }
+        }
 
             function uploadRec() {
                 //Stop recording and get the blob binary object of the recording file

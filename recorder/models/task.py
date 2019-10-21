@@ -3,7 +3,7 @@ from recorder import db
 from recorder.models.user import User
 from recorder.models.user_task import User_task
 from recorder import route
-
+import os
 
 class Task(db.Model):
     __tablename__ = 'task'
@@ -64,4 +64,7 @@ class Task(db.Model):
             user_id = user_task.user_id
             users.append(db.session.query(User).filter(User.id == user_id).one())
         return users
+
+
+
 

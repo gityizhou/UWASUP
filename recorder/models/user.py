@@ -127,6 +127,8 @@ class User(db.Model, UserMixin):
             if task.task_id == task_id:
                 return task
 
+
+
     @staticmethod
     def get_user_list():
         return db.session.query(User).all()
