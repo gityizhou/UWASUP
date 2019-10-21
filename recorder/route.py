@@ -398,51 +398,57 @@ def upload():
         os.remove("./uploads/files/" + filename)  # delete this file after uploading it to google drive
     return redirect(url_for('student_view', student_number=current_user.user_number))
 
+def teacher_recorder():
+    files = UploadSet('files', ALL)
+    task_id_str = request.form.get("task_id")
+    student_id_str = request.form.get("student_id")
+    user_task = User_task.query.filter_by(task_id=task_id_str,
+                                          user_id=student_id_str).first()
+    if task_id_str:
+        print(task_id_str)
+        print(student_id_str)
+        print(user_task)
+        task_id = int(task_id_str)
+        student_id = int(student_id_str)
+        this_task = db.session.query(Task).filter(Task.id == task_id).one()
+        this_student = db.session.query(User).filter(User.id == student_id).one()
+        task_name = this_task.task_name
+        student_number = this_student.user_number
+        name = task_id_str + "_" + task_name + "_" + student_number + ".mp3"
+        print(name)
+    if request.method == 'POST' and 'upfile' in request.files:
+        filename = files.save(
+            request.files['upfile'])  # get the file from front end request, return the file name(String)
+        if user_task.record_url:
+            record_id = user_task.record_id
+            print(record_id)
+            upload_file = drive.CreateFile({'id': record_id})
+            upload_file.SetContentFile("./uploads/files/" + filename)
+            upload_file['title'] = name  # set the file name of this file
+            upload_file.Upload()  # upload this file
+        else:
+            upload_file = drive.CreateFile()  # create the google drive file instance
+            upload_file.SetContentFile("./uploads/files/" + filename)  # set our file into this instance
+            upload_file['title'] = name  # set the file name of this file
+            upload_file.Upload()  # upload this file
+            permission = upload_file.InsertPermission({
+                'type': 'anyone',
+                'value': 'anyone',
+                'role': 'reader'})
+            google_file_id = upload_file[
+                'id']  # can get this file's google drive-id and use it to save the id into database
+            print(google_file_id)
+            google_url = "https://drive.google.com/uc?authuser=0&id=" + google_file_id + "&export=download"
+            print(google_url)
+            user_task.record_url = google_url
+            user_task.record_id = google_file_id
+            user_task.record_title = name
+            user_task.update()
 
-# def teacher_comment_record_upload():
-#     files = UploadSet('files', ALL)
-#     task_id_str = request.form.get("task_id")
-#     student_id_str = request.form.get("student_id")
-#     comment = request.form.get("comment")
-#     mark = request.form.get("mark")
-#
-#     user_task = User_task.query.filter_by(task_id=task_id_str,
-#                                           user_id=student_id_str).first()
-#     if task_id_str & student_id_str:
-#         mark = float(mark)
-#         task_id = int(task_id_str)
-#         student_id = int(student_id_str)
-#         this_task = db.session.query(Task).filter(Task.id == task_id).one()
-#         this_student = db.session.query(User).filter(User.id == student_id).one()
-#         task_name = this_task.task_name
-#         student_number = this_student.user_number
-#         name = task_id_str + "_" + task_name + "_" + student_number
-#
-#     if request.method == 'POST' and 'upfile' in request.files:
-#         filename = files.save(
-#             request.files['upfile'])  # get the file from front end request, return the file name(String)
-#         if user_task:
-#             record_id = user_task.record_id
-#             upload_file = drive.CreateFile({'id': record_id})
-#             upload_file.SetContentFile("./uploads/files/" + filename)
-#             upload_file['title'] = name  # set the file name of this file
-#             upload_file.Upload()  # upload this file
-#         else:
-#             upload_file = drive.CreateFile()  # create the google drive file instance
-#             upload_file.SetContentFile("./uploads/files/" + filename)  # set our file into this instance
-#             upload_file['title'] = name  # set the file name of this file
-#             upload_file.Upload()  # upload this file
-#             permission = upload_file.InsertPermission({
-#                 'type': 'anyone',
-#                 'value': 'anyone',
-#                 'role': 'reader'})
-#             google_file_id = upload_file[
-#                 'id']  # can get this file's google drive-id and use it to save the id into database
-#             google_url = "https://drive.google.com/uc?authuser=0&id=" + google_file_id + "&export=download"
-#             User_task.add_user_question(user=this_student, task=this_task, record_url=google_url,
-#                                             record_id=google_file_id, record_title=name, mark=mark, comment=comment)  # save user_question to db
-#
-#         os.remove("./uploads/files/" + filename)  # delete this file after uploading it to google drive
+        os.remove("./uploads/files/" + filename)  # delete this file after uploading it to google drive
+    return redirect(url_for('teacher_view', staff_number=current_user.user_number))
+
+
 def pdf_upload():
     files = UploadSet('files', ALL)
     task_id_str = request.form.get("task_id")
@@ -574,52 +580,7 @@ def password_reset(token):
     )
 
 
-def teacher_recorder():
-    files = UploadSet('files', ALL)
-    task_id_str = request.form.get("task_id")
-    student_id_str = request.form.get("student_id")
-    user_task = User_task.query.filter_by(task_id=task_id_str,
-                                          user_id=student_id_str).first()
-    if task_id_str:
-        print(task_id_str)
-        print(student_id_str)
-        print(user_task)
-        task_id = int(task_id_str)
-        student_id = int(student_id_str)
-        this_task = db.session.query(Task).filter(Task.id == task_id).one()
-        this_student = db.session.query(User).filter(User.id == student_id).one()
-        task_name = this_task.task_name
-        student_number = this_student.user_number
-        name = task_id_str + "_" + task_name + "_" + student_number + ".mp3"
-    if request.method == 'POST' and 'upfile' in request.files:
-        filename = files.save(
-            request.files['upfile'])  # get the file from front end request, return the file name(String)
-        if user_task.record_url:
-            record_id = user_task.record_id
-            upload_file = drive.CreateFile({'id': record_id})
-            upload_file.SetContentFile("./uploads/files/" + filename)
-            upload_file['title'] = name  # set the file name of this file
-            upload_file.Upload()  # upload this file
-            user_task.update()
-        else:
-            upload_file = drive.CreateFile()  # create the google drive file instance
-            upload_file.SetContentFile("./uploads/files/" + filename)  # set our file into this instance
-            upload_file['title'] = name  # set the file name of this file
-            upload_file.Upload()  # upload this file
-            permission = upload_file.InsertPermission({
-                'type': 'anyone',
-                'value': 'anyone',
-                'role': 'reader'})
-            google_file_id = upload_file[
-                'id']  # can get this file's google drive-id and use it to save the id into database
-            google_url = "https://drive.google.com/uc?authuser=0&id=" + google_file_id + "&export=download"
-            user_task.record_url = google_url
-            user_task.record_id = google_file_id
-            user_task.record_title = name
-            user_task.update()
 
-        os.remove("./uploads/files/" + filename)  # delete this file after uploading it to google drive
-    return redirect(url_for('teacher_view', staff_number=current_user.user_number))
 
 def page_404(e):
     return render_template('404.html'), 404
