@@ -581,6 +581,9 @@ def teacher_recorder():
     user_task = User_task.query.filter_by(task_id=task_id_str,
                                           user_id=student_id_str).first()
     if task_id_str:
+        print(task_id_str)
+        print(student_id_str)
+        print(user_task)
         task_id = int(task_id_str)
         student_id = int(student_id_str)
         this_task = db.session.query(Task).filter(Task.id == task_id).one()
