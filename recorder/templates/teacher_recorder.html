@@ -9,9 +9,9 @@
     <p class="details">Comments:</p>
     <textarea class="bottom-margin" name="comment" form="teacher_comment" rows="5" cols="50"></textarea><br>
     <input class="btn btn-primary btn-form-submit second-user-button recorder-buttons" type="button" id="record_start"
-           value="Start"></input>
+           value="Start">
     <input class="btn btn-primary btn-form-submit second-user-button recorder-buttons" type="button"
-           onclick="uploadRec()" value="Upload Feedback"></input>
+           onclick="uploadRec()" value="Upload Feedback">
     <p class="details last-detail">Note: Uploading feedback overwrites comments and mark fields. Copy these from above
         if no changes are required.</p>
 </form>
@@ -52,50 +52,27 @@
         })
     };
 
-
     function uploadRec() {
         //Stop recording and get the blob binary object of the recording file
 
-        /*
-        Blob file object, which can be read and fetched with FileReader
-        ，Or use FormData upload, which in this case uploads the binary directly
-        ，from normal application/x-www-form-urlencoded form upload
-        */
-        var form = document.getElementById("teacher_comment");
-        var formData = new FormData(form);
-        formData.append("upfile", recFile, "record.mp3"); //Similar to ordinary form forms, files with upfile parameters, named recorder. Mp3, are received by the back-end
+            /*
+            Blob file object, which can be read and fetched with FileReader
+            ，Or use FormData upload, which in this case uploads the binary directly
+            ，from normal application/x-www-form-urlencoded form upload
+            */
+            var form = document.getElementById("teacher_comment");
+            var formData = new FormData(form);
+            formData.append("upfile", recFile, "record.mp3"); //Similar to ordinary form forms, files with upfile parameters, named recorder. Mp3, are received by the back-end
+            formData.append("teacher_comment_record_upload", "#btn-open-student-accordian-{{ student.id }}-{{ task.id }}") // pass through current student being marked to reopen accordians
 
-        //Upload directly with ajax
-        var xhr = new XMLHttpRequest();
-        xhr.open("POST", "/teacher_recorder");//This fake address can see the request data and format in the console network, and the result of the request is irrelevant
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState == 4) {
-                alert(xhr.status == 200 ? "upload successful" : "upload successful");
-            }
-        }
-
-            function uploadRec() {
-                //Stop recording and get the blob binary object of the recording file
-
-                    /*
-                    Blob file object, which can be read and fetched with FileReader
-                    ，Or use FormData upload, which in this case uploads the binary directly
-                    ，from normal application/x-www-form-urlencoded form upload
-                    */
-                    var form = document.getElementById("teacher_comment");
-                    var formData = new FormData(form);
-                    formData.append("upfile", recFile, "record.mp3"); //Similar to ordinary form forms, files with upfile parameters, named recorder. Mp3, are received by the back-end
-                    formData.append("teacher_comment_record_upload", "#btn-open-student-accordian-{{ student.id }}-{{ task.id }}") // pass through current student being marked to reopen accordians
-
-                    //Upload directly with ajax
-                    var xhr = new XMLHttpRequest();
-                    xhr.open("POST", "/teacher_recorder");//This fake address can see the request data and format in the console network, and the result of the request is irrelevant
-                    xhr.onreadystatechange = function () {
-                        if (xhr.readyState == 4) {
-                            alert(xhr.status == 200 ? "upload successful" : "upload successful");
-                        }
-                    }
-
-                    xhr.send(formData);
+            //Upload directly with ajax
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/teacher_recorder");//This fake address can see the request data and format in the console network, and the result of the request is irrelevant
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4) {
+                    alert(xhr.status == 200 ? "upload successful" : "upload successful");
                 }
-            </script>
+            }
+            xhr.send(formData);
+        }
+    </script>
