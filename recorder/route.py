@@ -378,7 +378,7 @@ def upload():
                                             record_id=google_file_id, record_title=name)  # save user_question to db
 
         os.remove("./uploads/files/" + filename)  # delete this file after uploading it to google drive
-    return render_template('recorder.html')
+    return redirect(url_for('student_view', student_number=current_user.user_number))
 
 
 # def teacher_comment_record_upload():
@@ -606,7 +606,7 @@ def teacher_recorder():
             user_task.update()
 
         os.remove("./uploads/files/" + filename)  # delete this file after uploading it to google drive
-    return render_template('teacher_recorder.html')
+    return redirect(url_for('teacher_view', staff_number=current_user.user_number))
 
 def page_404(e):
     return render_template('404.html'), 404
