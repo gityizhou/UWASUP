@@ -1,6 +1,6 @@
         <form id="teacher_comment" action="#" method="post">
-            <input type="hidden" id="task_id" name="task_id" value="1">
-            <input type="hidden" id="student_id" name="student_id" value="1">
+            <input type="hidden" id="{{ task.id }}" name="task_id" value="{{ task.id }}">
+            <input type="hidden" id="{{ student.id }}" name="student_id" value="{{ student.id }}">
             <br>
             <p>
                 <p class="details">Mark (must be in format 00.0):</p>

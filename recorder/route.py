@@ -560,7 +560,7 @@ def teacher_recorder():
     user_task = User_task.query.filter_by(task_id=task_id_str,
                                           user_id=student_id_str).first()
     if task_id_str:
-        mark = float(mark)
+        # mark = float(mark)
         print(mark)
         task_id = int(task_id_str)
         print(task_id)
