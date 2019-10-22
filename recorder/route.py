@@ -310,7 +310,7 @@ def register():
         # add the new user to database
         user.add()
         flash(
-            'Congratulations. You have registered successfully! Please verify you email before logging in. Check your email inbox and spam folder.')
+            'Registration successful! Please verify your email before logging in. In a browser window, check your email inbox and spam folder.')
         request_email_verification2(form.email.data)
         return redirect(url_for('index'))
     return render_template('register.html', title='Registration', form=form)
