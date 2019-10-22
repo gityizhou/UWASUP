@@ -683,12 +683,14 @@
                                                                 <div id="collapse_task_{{ task.id }}_student_submissions" class="collapse" aria-labelledby="heading_task_{{ task.id }}_student_submissions" data-parent="#accordion_task_{{ task.id }}_student_submissions">
                                                                     <div class="card-body sup-accordian-third-level">
 
+                                                                        {% if task.get_task_users() is none %}
                                                                         <!-- download .csv of submitters button -->
                                                                         <button id="btn-download-csv-{{ task.id }}" class="btn btn-primary btn-form-submit publish-feedback-button" onclick="downloadCSV('{{ task.id }}')">
                                                                             Download Submission List
                                                                         </button>
                                                                         <!-- download .csv of submitters button -->
-
+                                                                        {% endif %}
+    
                                                                         <!-- list of students for each task -->
                                                                         <div id="accordion_students">
                                                                             {% for student in task.get_task_users() %}
@@ -729,26 +731,26 @@
                                                                                             <div>
                                                                                                 <form id="form-task-feedback-{{ student.id }}" class="form upper-margin" action="" method="post" novalidate>
                                                                                                     {{ form_task_feedback.hidden_tag() }}
-                                                                                                    <p>
-                                                                                                        {% if student.get_task_mark(task.id) is not none %}
-                                                                                                            {{ form_task_feedback.mark.label }}<br>
-                                                                                                            {{ form_task_feedback.mark(value=student.get_task_mark(task.id), size=32, class="form-field") }}<br>
-                                                                                                        {% else %}
-                                                                                                            {{ form_task_feedback.mark.label }}<br>
-                                                                                                            {{ form_task_feedback.mark(size=32, class="form-field") }}<br>
-                                                                                                        {% endif %}
-                                                                                                        {% if student.get_user_task(task.id).comment is not none %}
-                                                                                                            {{ form_task_feedback.feedbackComment.label }}<br>
-                                                                                                            {{ form_task_feedback.feedbackComment(value=student.get_user_task(task.id).comment, size=32, class="form-field", rows="10", cols="55") }}<br>
-                                                                                                        {% else %}
-                                                                                                            {{ form_task_feedback.feedbackComment.label }}<br>
-                                                                                                            {{ form_task_feedback.feedbackComment(size=32, class="form-field", rows="10", cols="55") }}<br>
-                                                                                                        {% endif %}
-                                                                                                        <!-- add if statement here to test for comment and recorder URL -->
-                                                                                                        {{ form_task_feedback.feedbackStudentID(value=student.id, style="display: none;") }}<br>
-                                                                                                        {{ form_task_feedback.feedbackTaskID(value=task.id, style="display: none;") }}
-                                                                                                        {{ form_task_feedback.feedbackUnitID(value=task.id, style="display: none;") }}
-                                                                                                    </p>
+                                                                                                        <p>
+                                                                                                            {% if student.get_task_mark(task.id) is not none %}
+                                                                                                                {{ form_task_feedback.mark.label }}<br>
+                                                                                                                {{ form_task_feedback.mark(value=student.get_task_mark(task.id), size=32, class="form-field") }}<br>
+                                                                                                            {% else %}
+                                                                                                                {{ form_task_feedback.mark.label }}<br>
+                                                                                                                {{ form_task_feedback.mark(size=32, class="form-field") }}<br>
+                                                                                                            {% endif %}
+                                                                                                            {% if student.get_user_task(task.id).comment is not none %}
+                                                                                                                {{ form_task_feedback.feedbackComment.label }}<br>
+                                                                                                                {{ form_task_feedback.feedbackComment(value=student.get_user_task(task.id).comment, size=32, class="form-field", rows="10", cols="55") }}<br>
+                                                                                                            {% else %}
+                                                                                                                {{ form_task_feedback.feedbackComment.label }}<br>
+                                                                                                                {{ form_task_feedback.feedbackComment(size=32, class="form-field", rows="10", cols="55") }}<br>
+                                                                                                            {% endif %}
+                                                                                                            <!-- add if statement here to test for comment and recorder URL -->
+                                                                                                            {{ form_task_feedback.feedbackStudentID(value=student.id, style="display: none;") }}<br>
+                                                                                                            {{ form_task_feedback.feedbackTaskID(value=task.id, style="display: none;") }}
+                                                                                                            {{ form_task_feedback.feedbackUnitID(value=task.id, style="display: none;") }}
+                                                                                                        </p>
                                                                                                     <a>{{ form_task_feedback.task_feedback_submit(id="btn-task-feedback-{{ student.id }}-submit", size=32, class="btn btn-primary inner-accordian-button") }}</a>
                                                                                                 </form>
                                                                                             </div>
