@@ -25,7 +25,7 @@ from recorder import autodelete
 gauth = GoogleAuth()
 gauth.LocalWebserverAuth()
 drive = GoogleDrive(gauth)
-DOMAIN_NAME = "http://localhost:5000"
+DOMAIN_NAME = "https://supuwa.herokuapp.com/"
 
 """
 Index page but also our login page!
