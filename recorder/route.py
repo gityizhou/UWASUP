@@ -217,7 +217,10 @@ def teacher_view(staff_number):
         return redirect(url_for('teacher_view', staff_number=staff_number))
     # task feedback form
     if form_task_feedback.task_feedback_submit.data and form_task_feedback.validate_on_submit():
-        mark = float(form_task_feedback.mark.data)
+        if form_task_feedback.mark.data == "":
+            mark = None
+        else:
+            mark = float(form_task_feedback.mark.data)
         user_task = User_task.query.filter_by(task_id=form_task_feedback.feedbackTaskID.data,
                                               user_id=form_task_feedback.feedbackStudentID.data).first()
         user_task.comment = form_task_feedback.feedbackComment.data

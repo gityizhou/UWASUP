@@ -694,7 +694,11 @@
                                                                         <!-- list of students for each task -->
                                                                         <div id="accordion_students">
                                                                             {% for student in task.get_task_users() %}
-                                                                                <div class="card">
+                                                                                {% if student.get_task_mark(task.id) is none %}
+                                                                                    <div class="card">
+                                                                                {% else %}
+                                                                                    <div class="card marked">
+                                                                                {% endif %}
                                                                                     <div class="card-header" id="heading_student_{{ student.id }}">
                                                                                         <h5 class="mb-0">
                                                                                             <button id="btn-open-student-accordian-{{ student.id }}-{{ task.id }}" class="btn btn-link" data-toggle="collapse" data-target="#collapse_student_{{ student.id }}" aria-expanded="true" aria-controls="collapse_student_{{ student.id }}">
@@ -704,13 +708,8 @@
                                                                                         {% if student.get_task_mark(task.id) is none %}
                                                                                             <p class="details">Task: unmarked</p>
                                                                                         {% else %}
-                                                                                            <p class="details">Task Mark: {{ student.get_task_mark(task.id) }}/100</p>
-                                                                                        {% endif %}
-                                                                                        {% if student.get_task_comment(task.id) is none %}
-                                                                                            <p class="details">Comments: no comments</p>
-                                                                                        {% else %}
-                                                                                            <p class="details">Comments: </p>
-                                                                                            <p class="details">{{ student.get_task_comment(task.id) }}</p>
+                                                                                            {% set str_mark = student.get_task_mark(task.id)|string() %}
+                                                                                            <p class="details">Task Mark: {{ str_mark[:-2] }}</p>
                                                                                         {% endif %}
                                                                                     </div>
                                                                                     <div id="collapse_student_{{ student.id }}" class="collapse" aria-labelledby="heading_student_{{ student.id }}" data-parent="#accordion_students">
@@ -726,6 +725,7 @@
                                                                                             <p class="details">Playback:</p>
                                                                                             <div id="playback-{{task.id}}_{{student.id}}"></div>
                                                                                             <!-- TASK ORAL FEEDBACK recorder -->
+                                                                                            <hr>
 
                                                                                             <!-- TASK MARK and COMMENT form -->
                                                                                             <div>
@@ -733,8 +733,9 @@
                                                                                                     {{ form_task_feedback.hidden_tag() }}
                                                                                                         <p>
                                                                                                             {% if student.get_task_mark(task.id) is not none %}
+                                                                                                                {% set str_mark = student.get_task_mark(task.id)|string() %}
                                                                                                                 {{ form_task_feedback.mark.label }}<br>
-                                                                                                                {{ form_task_feedback.mark(value=student.get_task_mark(task.id), size=32, class="form-field") }}<br>
+                                                                                                                {{ form_task_feedback.mark(value=str_mark[:-2], size=32, class="form-field") }}<br>
                                                                                                             {% else %}
                                                                                                                 {{ form_task_feedback.mark.label }}<br>
                                                                                                                 {{ form_task_feedback.mark(size=32, class="form-field") }}<br>

@@ -286,7 +286,7 @@ class TaskFeedbackForm(FlaskForm):
     feedbackStudentID = StringField('studentID')
     feedbackTaskID = StringField('taskID')
     feedbackUnitID = StringField('taskID')
-    mark = StringField('Mark (up to 3 numbers e.g. 8, 25, 100: students will see ???/100)')
+    mark = StringField('Mark (up to 3 numbers e.g. 8, 25, 100')
     feedbackComment = TextAreaField('Comments')
     task_feedback_submit = SubmitField('Update Mark and Comments')
 
@@ -299,7 +299,7 @@ class TaskFeedbackForm(FlaskForm):
             raise ValidationError("Mark must be up to 3 numbers or 'NA'")
         if len(mark.data) > 3:
             raise ValidationError('Mark must be three numbers or less.')
-        if mark.data != '100' and mark.data[0] != '1':
+        if len(mark.data) == 3 and mark.data != '100' and mark.data[0] != '1':
             raise ValidationError('Mark is out of 100')
 
 
