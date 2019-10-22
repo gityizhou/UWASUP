@@ -514,16 +514,16 @@ def task_result_downloader(task_id):
     # print(os.getcwd())
     path = os.getcwd() + "/recorder/csv/"
     # clear csv folder first to stop build up of files
-    # def empty_csv_folder():
-    #     files = os.listdir(path)
-    #     print("files = ", files)
-    #     for f in files:
-    #         print("f")
-    #         if files.endswith(".csv"):
-    #             print("removing")
-    #             print("os.path.join(path, f) = ", os.path.join(path, f))
-    #             os.remove(os.path.join(path, f))
-    # empty_csv_folder()
+    def empty_csv_folder():
+        files = os.listdir(path)
+        print("files = ", files)
+        for f in files:
+            print("f")
+            if files.endswith(".csv"):
+                print("removing")
+                print("os.path.join(path, f) = ", os.path.join(path, f))
+                os.remove(os.path.join(path, f))
+    empty_csv_folder()
     results = User_task.query.filter_by(task_id=task_id)
     this_task = db.session.query(Task).filter(Task.id == task_id).one()
     filename = this_task.task_name + "_" + str(this_task.id) + ".csv"
