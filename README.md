@@ -22,6 +22,8 @@ Unix:
 $ python3 -m venv venv
 $ source venv/bin/activate
 (venv) $ pip install -r requirements.txt
+NOTE: if Mac users encounter an bunch of errors when installing psycop2g run the below line of code first and then try installing requirments again:
+sudo installer -pkg /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10.14.pkg -target /
 
 Windows:
 $ python -m venv venv
