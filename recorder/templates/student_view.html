@@ -130,28 +130,41 @@
                                                         {% if task.pdf_url is not none %}  
                                                         <div>
                                                             <button id="btn-download-pdf-{{ task.id }}-submit" onclick="downloadPDF('{{ task.pdf_url }}')" class="btn btn-primary inner-accordian-button">
-                                                                Download PDF
+                                                                Download Attachment
                                                             </button>
                                                         </div>
                                                         {% endif %}
                                                         <!-- end DOWNLOAD PDF button -->
 
-                                                        <!-- section for feedback from teacher -->
-                                                        {% if student.get_task_mark(task.id) is none %}
-                                                            <p class="details">Task: unmarked</p>
+                                                        <!-- task details -->
+                                                        {% if task.due_time is none %}
+                                                            <p class="details last-detail">Due date: none specified</p>
                                                         {% else %}
-                                                            <p class="details">Task Mark: {{ student.get_task_mark(task.id) }}/100</p>
+                                                            {% set due_datetime_string = task.due_time|string() %}
+                                                            <p class="details">Due date: {{ due_datetime_string[:10] }}</p>
+                                                            <p class="details last-detail">Due time: {{ due_datetime_string[11:16] }}</p>
                                                         {% endif %}
-                                                        {% if student.get_task_comment(task.id) is none %}
-                                                            <p class="details">Comments: no comments</p>
+                                                        {% if task.description is not none %}
+                                                            <p class="details">Description: {{ task.description }}</p>
                                                         {% else %}
-                                                            <p class="details">Comments: </p>
-                                                            <p class="details last-detail">{{ student.get_task_comment(task.id) }}</p>
+                                                            <p class="details last-detail">Description: no description</p>
                                                         {% endif %}
-                                                        <!-- feedback recording module -->
+                                                        <!-- task details -->
+                                                        <hr>
 
+                                                        <!-- section for feedback from teacher -->
+                                                        {% if student.get_task_comment(task.id) is none %}
+                                                            <p class="details bottom-margin">Teacher comments: no comments</p>
+                                                        {% else %}
+                                                            <p class="details">Teacher comments: </p>
+                                                            <p class="details bottom-margin">{{ student.get_task_comment(task.id) }}</p>
+                                                        {% endif %}
+                                                        
                                                         <!-- feedback recording module -->
+                                                        <p class="details">Oral feedback: </p>
+                                                        <div class="bottom-margin">
                                                         {% include "student_listen_teacher.html" %}
+                                                        </div>
                                                         <!-- end section for feedback from teacher -->
 
                                                         <div id="accordion_questions">

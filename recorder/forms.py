@@ -286,21 +286,21 @@ class TaskFeedbackForm(FlaskForm):
     feedbackStudentID = StringField('studentID')
     feedbackTaskID = StringField('taskID')
     feedbackUnitID = StringField('taskID')
-    mark = StringField('Mark (format 00.0)')
+    mark = StringField('Mark (up to 3 numbers e.g. 8, 25, 100: students will see ???/100)')
     feedbackComment = TextAreaField('Comments')
     task_feedback_submit = SubmitField('Update Mark and Comments')
 
     def validate_mark(self, mark):
         hasLetters = False
         for char in mark.data:
-            if not char.isdigit() and char != '.':
+            if not char.isdigit() and char != 'N' and char != 'A':
                 hasLetters = True
         if hasLetters:
-            raise ValidationError("Mark must not include letters or characters other than '.'")
-        if len(mark.data) != 4:
-            raise ValidationError('Mark must be four characters.')
-        if mark.data[2] != '.':
-            raise ValidationError('Mark must be in the format 00.0')
+            raise ValidationError("Mark must be up to 3 numbers or 'NA'")
+        if len(mark.data) > 3:
+            raise ValidationError('Mark must be three numbers or less.')
+        if mark.data != '100' and mark.data[0] != '1':
+            raise ValidationError('Mark is out of 100')
 
 
 class EditQuestionForm(FlaskForm):
@@ -322,7 +322,7 @@ class DeleteTaskForm(FlaskForm):
 # validators not needed as this form will only be generated for existing tasks
 class DeletePDFForm(FlaskForm):
     del_pdf_taskID = StringField()
-    delete_pdf_submit = SubmitField('Delete PDF')
+    delete_pdf_submit = SubmitField('Delete File')
 
 # validators not needed as this form will only be generated for existing questions
 class DeleteQuestionForm(FlaskForm):

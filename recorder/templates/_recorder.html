@@ -4,7 +4,7 @@
 
 <input class="btn btn-primary btn-form-submit second-user-button recorder-buttons" type="button" onclick="playRec('#playback-{{ question.id }}')" value="Play">
 
-<input class="btn btn-primary btn-form-submit second-user-button recorder-buttons" type="button" onclick="uploadRec({{question.id}})" value="Submit">
+<input class="btn btn-primary inner-accordian-button student-submit-btn" type="button" onclick="uploadRec({{question.id}})" value="Submit">
 
 <p class="details">Previous submission:</p >
 <audio src="{{current_user.get_question_record_url(question.id)}}" controls></audio>

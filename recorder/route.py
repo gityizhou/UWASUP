@@ -212,7 +212,7 @@ def teacher_view(staff_number):
     if form_delete_pdf.delete_pdf_submit.data and form_delete_pdf.validate_on_submit():
         task = Task.query.filter_by(id=form_delete_pdf.del_pdf_taskID.data).first()
         task.delete_pdf()
-        flash('The PDF has been deleted.')
+        flash('The file has been deleted.')
         # need to return redirect on successful submission to clear form fields
         return redirect(url_for('teacher_view', staff_number=staff_number))
     # task feedback form

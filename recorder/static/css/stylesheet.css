@@ -150,3 +150,12 @@ button > a {
  .upper-margin {
     margin-top: 2rem;
  }
+
+ .student-submit-btn {
+    font-size: 2rem;
+    margin-left: 2rem;
+ }
+
+ .marked {
+    background-color: rgb(73, 165, 73);
+ }

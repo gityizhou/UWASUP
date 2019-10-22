@@ -484,79 +484,79 @@
                                                         </div>
                                                         <!-- end ADD QUESTION modal -->
                                                         
-                                                        <!-- UPLOAD PDF modal -->
-                                                        <!-- button to open the modal -->
-                                                        <button id="btn-upload-pdf-{{ task.id }}" type="button" class="btn btn-primary inner-accordian-button" data-toggle="modal" data-target="#modal-upload-pdf-{{ task.id }}">
-                                                            Upload PDF
-                                                        </button>
-                                                        <!-- code for modal window -->
-                                                        <div class="modal" id="modal-upload-pdf-{{ task.id }}">
-                                                            <div class="modal-dialog sup-modal-dialog">
-                                                                <div class="modal-content sup-modal">
-                                                                    <!-- modal header -->
-                                                                    <div class="modal-header">
-                                                                    <h4 class="modal-title">Upload PDF</h4>
-                                                                        <button  id="btn-top-close-upload-pdf-{{ task.id }}-modal" type="button" class="close" data-dismiss="modal">&times;</button>
-                                                                    </div>
-                                                                    <!-- modal body -->
-                                                                    <div class="modal-body show">
-                                                                        <p class="details">Note: this will overwrite any existing PDFs for this task.</p>
-                                                                        <form id="form-upload-pdf-{{ task.id }}" class="form" action="/pdf_upload" enctype="multipart/form-data" method="post">
-                                                                            <input type="hidden" id="task_id" name="task_id" value="{{ task.id }}">
-                                                                            <input type="file" name="file">
-                                                                            <input type="submit" id="btn-upload-pdf-{{ task.id }}-submit" class="form-field btn btn-primary btn-form-submit" value="upload">
-                                                                        </form>
-                                                                    </div>
-                                                                    <!-- modal footer -->
-                                                                    <div class="modal-footer">
-                                                                        <button id="btn-btm-close-upload-pdf-{{ task.id }}-modal" type="button" class="btn btn-form-secondary" data-dismiss="modal">Close</button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <!-- end UPLOAD PDF modal -->    
-
-                                                        {% if task.pdf_url is not none %}
-                                                        <!-- DELETE PDF form -->
-                                                        <!-- button to open the modal -->
-                                                        <button id="btn-delete-pdf-{{ task.id }}" type="button" class="btn btn-primary inner-accordian-button" data-toggle="modal" data-target="#modal-delete-pdf-{{ task.id }}">
-                                                            Delete PDF
-                                                        </button>
-                                                        <!-- code for modal window -->
-                                                        <div class="modal" id="modal-delete-pdf-{{ task.id }}">
-                                                            <div class="modal-dialog sup-modal-dialog">
-                                                                <div class="modal-content sup-modal">
-                                                                    <!-- modal header -->
-                                                                    <div class="modal-header">
-                                                                    <h4 class="modal-title">Delete PDF</h4>
-                                                                        <button  id="btn-top-close-delete-pdf-{{ task.id }}-modal" type="button" class="close" data-dismiss="modal">&times;</button>
-                                                                    </div>
-                                                                    <!-- modal body -->
-                                                                    <div class="modal-body">
-                                                                        <h5>Are you sure?</h5>
-                                                                        <form class="form" action="" method="post" novalidate>
-                                                                            {{ form_delete_pdf.hidden_tag() }}
-                                                                            {{ form_delete_pdf.del_pdf_taskID(value=task.id, style="display: none;") }}
-                                                                            <a>{{ form_delete_pdf.delete_pdf_submit(class="btn btn-primary btn-form-submit") }}</a>
-                                                                        </form>
-                                                                    </div>
-                                                                    <!-- modal footer -->
-                                                                    <div class="modal-footer">
-                                                                        <button type="button" class="btn btn-form-secondary" data-dismiss="modal">Cancel</button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <!-- end DELETE PDF modal -->
-
-                                                        <!-- DOWNLOAD PDF form -->
                                                         <div>
-                                                            <button id="btn-download-pdf-{{ task.id }}-submit" onclick="downloadPDF('{{ task.pdf_url }}')" class="btn btn-primary inner-accordian-button">
-                                                                Download PDF
+                                                            <!-- UPLOAD PDF modal -->
+                                                            <!-- button to open the modal -->
+                                                            <button id="btn-upload-pdf-{{ task.id }}" type="button" class="btn btn-primary inner-accordian-button" data-toggle="modal" data-target="#modal-upload-pdf-{{ task.id }}">
+                                                                Upload File
                                                             </button>
+                                                            <!-- code for modal window -->
+                                                            <div class="modal" id="modal-upload-pdf-{{ task.id }}">
+                                                                <div class="modal-dialog sup-modal-dialog">
+                                                                    <div class="modal-content sup-modal">
+                                                                        <!-- modal header -->
+                                                                        <div class="modal-header">
+                                                                        <h4 class="modal-title">Upload File</h4>
+                                                                            <button  id="btn-top-close-upload-pdf-{{ task.id }}-modal" type="button" class="close" data-dismiss="modal">&times;</button>
+                                                                        </div>
+                                                                        <!-- modal body -->
+                                                                        <div class="modal-body show">
+                                                                            <p class="details">Note: delete existing files for this task first.</p>
+                                                                            <form id="form-upload-pdf-{{ task.id }}" class="form" action="/pdf_upload" enctype="multipart/form-data" method="post">
+                                                                                <input type="hidden" id="task_id" name="task_id" value="{{ task.id }}">
+                                                                                <input type="file" name="file">
+                                                                                <input type="submit" id="btn-upload-pdf-{{ task.id }}-submit" class="form-field btn btn-primary btn-form-submit" value="upload">
+                                                                            </form>
+                                                                        </div>
+                                                                        <!-- modal footer -->
+                                                                        <div class="modal-footer">
+                                                                            <button id="btn-btm-close-upload-pdf-{{ task.id }}-modal" type="button" class="btn btn-form-secondary" data-dismiss="modal">Close</button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <!-- end UPLOAD PDF modal -->    
+
+                                                            {% if task.pdf_url is not none %}
+                                                            <!-- DELETE PDF form -->
+                                                            <!-- button to open the modal -->
+                                                            <button id="btn-delete-pdf-{{ task.id }}" type="button" class="btn btn-primary inner-accordian-button" data-toggle="modal" data-target="#modal-delete-pdf-{{ task.id }}">
+                                                                Delete File
+                                                            </button>
+                                                            <!-- code for modal window -->
+                                                            <div class="modal" id="modal-delete-pdf-{{ task.id }}">
+                                                                <div class="modal-dialog sup-modal-dialog">
+                                                                    <div class="modal-content sup-modal">
+                                                                        <!-- modal header -->
+                                                                        <div class="modal-header">
+                                                                        <h4 class="modal-title">Delete File</h4>
+                                                                            <button  id="btn-top-close-delete-pdf-{{ task.id }}-modal" type="button" class="close" data-dismiss="modal">&times;</button>
+                                                                        </div>
+                                                                        <!-- modal body -->
+                                                                        <div class="modal-body">
+                                                                            <h5>Are you sure?</h5>
+                                                                            <form class="form" action="" method="post" novalidate>
+                                                                                {{ form_delete_pdf.hidden_tag() }}
+                                                                                {{ form_delete_pdf.del_pdf_taskID(value=task.id, style="display: none;") }}
+                                                                                <a>{{ form_delete_pdf.delete_pdf_submit(class="btn btn-primary btn-form-submit") }}</a>
+                                                                            </form>
+                                                                        </div>
+                                                                        <!-- modal footer -->
+                                                                        <div class="modal-footer">
+                                                                            <button type="button" class="btn btn-form-secondary" data-dismiss="modal">Cancel</button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <!-- end DELETE PDF modal -->
+
+                                                            <!-- DOWNLOAD PDF form -->
+                                                            <button id="btn-download-pdf-{{ task.id }}-submit" onclick="downloadPDF('{{ task.pdf_url }}')" class="btn btn-primary inner-accordian-button">
+                                                                Download File
+                                                            </button>
+                                                            <!-- end DOWNLOAD PDF form -->
+                                                            {% endif %}  
                                                         </div>
-                                                        <!-- end DOWNLOAD PDF form -->
-                                                        {% endif %}  
 
                                                         <!-- list of questions for this task outer modal -->
                                                         <div id="accordion_task_{{ task.id }}_questions">
