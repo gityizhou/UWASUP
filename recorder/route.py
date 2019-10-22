@@ -45,7 +45,8 @@ def index():
         if current_user.is_teacher == 0 and current_user.is_activated == 1:
             return redirect(url_for('student_view', student_number=current_user.user_number))
         else:
-            return redirect(url_for('not_activated'))
+            return "error"
+            #return redirect(url_for('not_activated'))
     form = LoginForm()
     if form.validate_on_submit():
         # print(form.username.data)
@@ -65,6 +66,7 @@ def index():
     return render_template('index.html', title="Index", form=form)
 
 def not_activated():
+    print("")
     return render_template('not_activated.html')
 
 # After login, student will be redirected to this page
@@ -541,7 +543,7 @@ def task_result_downloader(task_id):
     columns = ['student_number', 'first_name', 'last_name', 'mark']
     df.to_csv(filepath, encoding="utf_8_sig", index=False, columns=columns)
     send_from_directory(path, filename, as_attachment=True)
-    delete_csv(task_id)
+    #delete_csv(task_id)
 
     # return redirect(url_for('teacher_view', staff_number=current_user.user_number))
     # return send_from_directory(path, filename, as_attachment=True)  # as_attachment=True
