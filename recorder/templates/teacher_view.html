@@ -350,21 +350,21 @@
                                                 </div>
                                                 <div id="collapse_task_{{ task.id }}" class="collapse" aria-labelledby="heading_task_{{ task.id }}" data-parent="#accordion_tasks">
                                                     <div class="card-body sup-accordian-second-level">
-                                                        <!-- display due date and time if any -->
+                                                        <!-- display description, due date and time if any -->
                                                         {% if task.due_time is not none %}
                                                             {% set due_datetime_string = task.due_time|string() %}
                                                             <p class="details">Due date: {{ due_datetime_string[:10] }}</p>
-                                                            <p class="details">Due time: {{ due_datetime_string[11:16] }}</p>
+                                                            <p class="details last-detail">Due time: {{ due_datetime_string[11:16] }}</p>
                                                         {% else %}
                                                             <p class="details">Due date: not set</p>
-                                                            <p class="details">Due time: not set</p>
+                                                            <p class="details last-detail">Due time: not set</p>
                                                         {% endif %}
                                                         {% if task.description is not none %}
-                                                            <p class="details last-detail">Description: {{ task.description }}</p>
+                                                            <p class="details">Description: {{ task.description }}</p>
                                                         {% else %}
                                                             <p class="details last-detail">Description: no description</p>
                                                         {% endif %}
-                                                        <!-- display due date and time if any -->
+                                                        <!-- display description, due date and time if any -->
 
                                                         <!-- EDIT TASK modal -->
                                                         <!-- button to open the modal -->
