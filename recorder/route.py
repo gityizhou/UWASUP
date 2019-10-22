@@ -17,7 +17,7 @@ from recorder.models.question import Question
 from recorder.models.task import Task
 from recorder.models.user_question import User_question
 from recorder.models.user_task import User_task
-import os, jwt, time, datetime
+import os, jwt, time, datetime, sys
 from pandas import DataFrame
 from recorder import autodelete
 
@@ -511,19 +511,23 @@ def pdf_upload():
 
 
 def task_result_downloader(task_id):
-    def delete_csv(task_id):
-        this_task = db.session.query(Task).filter(Task.id == task_id).one()
-        filename = this_task.task_name + "_" + str(this_task.id) + ".csv"
-        os.remove("../csv/" + filename)
-    results = User_task.query.filter_by(task_id=task_id)
-    this_task = db.session.query(Task).filter(Task.id == task_id).one()
     # print(os.getcwd())
     path = os.getcwd() + "/recorder/csv/"
-    # print(path)
-    filepath = os.getcwd() + "/recorder/csv/" + this_task.task_name + "_" + str(this_task.id) + ".csv"
-    # print(filepath)
+    # clear csv folder first to stop build up of files
+    # def empty_csv_folder():
+    #     files = os.listdir(path)
+    #     print("files = ", files)
+    #     for f in files:
+    #         print("f")
+    #         if files.endswith(".csv"):
+    #             print("removing")
+    #             print("os.path.join(path, f) = ", os.path.join(path, f))
+    #             os.remove(os.path.join(path, f))
+    # empty_csv_folder()
+    results = User_task.query.filter_by(task_id=task_id)
+    this_task = db.session.query(Task).filter(Task.id == task_id).one()
     filename = this_task.task_name + "_" + str(this_task.id) + ".csv"
-    # print(filename)
+    filepath = path + filename
     student_number = []
     first_name = []
     last_name = []
@@ -542,11 +546,7 @@ def task_result_downloader(task_id):
     df = DataFrame(data)
     columns = ['student_number', 'first_name', 'last_name', 'mark']
     df.to_csv(filepath, encoding="utf_8_sig", index=False, columns=columns)
-    send_from_directory(path, filename, as_attachment=True)
-    delete_csv(task_id)
-
-    # return redirect(url_for('teacher_view', staff_number=current_user.user_number))
-    # return send_from_directory(path, filename, as_attachment=True)  # as_attachment=True
+    return send_from_directory(path, filename, as_attachment=True)  # as_attachment=True
 
 
 def reset_password_request():

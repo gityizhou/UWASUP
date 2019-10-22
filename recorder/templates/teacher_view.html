@@ -683,13 +683,13 @@
                                                                 <div id="collapse_task_{{ task.id }}_student_submissions" class="collapse" aria-labelledby="heading_task_{{ task.id }}_student_submissions" data-parent="#accordion_task_{{ task.id }}_student_submissions">
                                                                     <div class="card-body sup-accordian-third-level">
 
-                                                                        {% if task.get_task_users() is not none %}
-                                                                            <!-- download .csv of submitters button -->
+                                                                        <!-- download .csv of submitters button -->
+                                                                        {% if task.get_task_users()[0] %}
                                                                             <button id="btn-download-csv-{{ task.id }}" class="btn btn-primary btn-form-submit publish-feedback-button" onclick="downloadCSV('{{ task.id }}')">
                                                                                 Download Submission List
                                                                             </button>
                                                                         {% else %}
-                                                                            <p class="details last-detail"></p>
+                                                                            <p class="details last-detail">No submissions yet.</p>
                                                                         {% endif %}
                                                                         <!-- download .csv of submitters button -->
     
