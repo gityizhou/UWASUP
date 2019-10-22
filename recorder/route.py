@@ -40,30 +40,46 @@ def index():
     # Confirm the login status of the user
     # if authenticated, redirect to his page directly
     if current_user.is_authenticated:
+        print("authenticated")
         if current_user.is_teacher == 1 and current_user.is_activated == 1:
             return redirect(url_for('teacher_view', staff_number=current_user.user_number))
         if current_user.is_teacher == 0 and current_user.is_activated == 1:
             return redirect(url_for('student_view', student_number=current_user.user_number))
         else:
-            return "error"
-            #return redirect(url_for('not_activated'))
-    form = LoginForm()
-    if form.validate_on_submit():
-        # print(form.username.data)
-        user = User.query.filter_by(user_number=form.username.data).first()
-        # Verify that the user exists and that the password is correct
-        if user is not None and user.check_password(form.password.data):
-            # Determine user identity
-            if user.is_teacher == 1:  # teacher
-                login_user(user, remember=form.remember_me.data)
-                return redirect(url_for('teacher_view', staff_number=current_user.user_number))
-            if user.is_teacher == 0:  # student
-                login_user(user, remember=form.remember_me.data)
-                return redirect(url_for('student_view', student_number=current_user.user_number))
+            return redirect(url_for('not_activated'))
+    else:
+        print("not authenticated")
+        form = LoginForm()
+        if form.validate_on_submit():
+            print("form validated")
+            # print(form.username.data)
+            user = User.query.filter_by(user_number=form.username.data).first()
+            print("user = ", user)
+            # Verify that the user exists and that the password is correct
+            if user is not None and user.check_password(form.password.data):
+                print("user is not none")
+                # check they have activated their email
+                if current_user.is_activated == 0:
+                    print("not activated")
+                    return redirect(url_for('not_activated'))
+                # Determine user identity
+                print("activated")
+                if user.is_teacher == 1:  # teacher
+                    print("is teacher")
+                    login_user(user, remember=form.remember_me.data)
+                    return redirect(url_for('teacher_view', staff_number=current_user.user_number))
+                if user.is_teacher == 0:  # student
+                    print("is student")
+                    login_user(user, remember=form.remember_me.data)
+                    return redirect(url_for('student_view', student_number=current_user.user_number))
+            else:
+                # if user not exist or wrong password, give error message
+                flash("Invalid username or password, please try again.")
+                return render_template('index.html', title="Index", form=form)
         else:
-            # if user not exist or wrong password, give error message
-            flash("Invalid username or password, please try again.")
-    return render_template('index.html', title="Index", form=form)
+            # return form with vaildation errors
+            print("form errors")
+            return render_template('index.html', title="Index", form=form)
 
 def not_activated():
     print("")
