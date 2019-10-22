@@ -36,8 +36,8 @@ class User(db.Model, UserMixin):
     questions = db.relationship("User_question", back_populates="user")
 
     def __repr__(self):
-        return 'id={}, user_number={}, first_name={}, last_name={}, email={},password_hash={}, is_teacher={}'.format(
-            self.id, self.user_number, self.first_name, self.last_name, self.email, self.password_hash, self.is_teacher
+        return 'id={}, user_number={}, first_name={}, last_name={}, email={},password_hash={}, is_teacher={}, is_activated={}'.format(
+            self.id, self.user_number, self.first_name, self.last_name, self.email, self.password_hash, self.is_teacher, self.is_activated
         )
 
     def as_dict(self):

@@ -59,7 +59,7 @@ def index():
             if user is not None and user.check_password(form.password.data):
                 print("user is not none")
                 # check they have activated their email
-                if current_user.is_activated == 0:
+                if user.is_activated == 0:
                     print("not activated")
                     return redirect(url_for('not_activated'))
                 # Determine user identity
