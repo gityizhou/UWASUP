@@ -543,7 +543,7 @@ def task_result_downloader(task_id):
     columns = ['student_number', 'first_name', 'last_name', 'mark']
     df.to_csv(filepath, encoding="utf_8_sig", index=False, columns=columns)
     send_from_directory(path, filename, as_attachment=True)
-    #delete_csv(task_id)
+    delete_csv(task_id)
 
     # return redirect(url_for('teacher_view', staff_number=current_user.user_number))
     # return send_from_directory(path, filename, as_attachment=True)  # as_attachment=True
