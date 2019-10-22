@@ -516,12 +516,8 @@ def task_result_downloader(task_id):
     # clear csv folder first to stop build up of files
     def empty_csv_folder():
         files = os.listdir(path)
-        print("files = ", files)
         for f in files:
-            print("f")
             if files.endswith(".csv"):
-                print("removing")
-                print("os.path.join(path, f) = ", os.path.join(path, f))
                 os.remove(os.path.join(path, f))
     empty_csv_folder()
     results = User_task.query.filter_by(task_id=task_id)
