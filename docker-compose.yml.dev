@@ -1,0 +1,20 @@
+version: '2'
+
+services:
+  web:
+    build:
+      context: .
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=mysql+pymysql://root:root@172.31.17.151:3306/record
+      - MAIL_USERNAME=joeyrecorder@gmail.com
+      - MAIL_PASSWORD=zxc47POI!
+
+  nginx:
+    restart: always
+    build: ./nginx/
+    ports:
+      - "80:80"
+    links:
+      - web

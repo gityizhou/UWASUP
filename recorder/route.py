@@ -22,10 +22,10 @@ from pandas import DataFrame
 from recorder import autodelete
 
 # # google verification
-gauth = GoogleAuth()
-gauth.LocalWebserverAuth()
-drive = GoogleDrive(gauth)
-DOMAIN_NAME = "http://localhost:5000"
+# gauth = GoogleAuth()
+# gauth.LocalWebserverAuth()
+# drive = GoogleDrive(gauth)
+# DOMAIN_NAME = "http://localhost:5000"
 
 """
 Index page but also our login page!
@@ -522,20 +522,20 @@ def pdf_upload():
             this_task.pdf_id = google_file_id
             this_task.update()
         os.remove("./uploads/files/" + filename)  # delete this file after uploading it to google drive
-    flash("The PDF has been uploaded successfully.")
+    flash("The file has been uploaded successfully.")
     return redirect(url_for('teacher_view', staff_number=current_user.user_number))
 
 
 def task_result_downloader(task_id):
-    # print(os.getcwd())
+    print(os.getcwd())
     path = os.getcwd() + "/recorder/csv/"
-    # clear csv folder first to stop build up of files
-    def empty_csv_folder():
-        files = os.listdir(path)
-        for f in files:
-            if files.endswith(".csv"):
-                os.remove(os.path.join(path, f))
-    empty_csv_folder()
+    # # clear csv folder first to stop build up of files
+    # def empty_csv_folder():
+    #     files = os.listdir(path)
+    #     for f in files:
+    #         if files.endswith(".csv"):
+    #             os.remove(os.path.join(path, f))
+    # empty_csv_folder()
     results = User_task.query.filter_by(task_id=task_id)
     this_task = db.session.query(Task).filter(Task.id == task_id).one()
     filename = this_task.task_name + "_" + str(this_task.id) + ".csv"
